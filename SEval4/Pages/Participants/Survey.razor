@@ -1,0 +1,128 @@
+﻿@page "/Survey"
+@inject NavigationManager NavigationManager
+@using SEval4.Models
+@using SEval4.Models.Enums
+
+<div id="survey">
+    <h3>Survey</h3>
+    <div class="alert">
+        <EditForm Model="@Participant" OnValidSubmit="Submit">
+
+            <p>
+                <label>
+                    <b>What is your age group?</b>
+                    <InputSelect class="custom-select" @bind-Value="Participant.AgeGroup">
+                        <option value="">Please select...</option>
+                        @foreach (string opt in AgeGroups)
+                        {
+                            <option value="@opt">@opt</option>
+                        }
+                    </InputSelect>
+                </label>
+            </p>
+
+            <p>
+                <label>
+                    <b>Confidence?</b>
+                    <InputSelect class="custom-select" @bind-Value="Participant.SelfConfidence">
+                        <option value="">Please select...</option>
+                        @foreach (string opt in AgeGroups)
+                        {
+                            <option value="@opt">@opt</option>
+                        }
+                    </InputSelect>
+                </label>
+            </p>
+
+            <p>
+                <label>
+                    <b>Which of the following describes your past employment the best?</b>
+                    <InputRadioGroup Name="JobExperience" @bind-Value="Participant.JobExperience">
+                        @foreach (string opt in JobExperience)
+                        {
+                            <br />
+                            <InputRadio Name="JobExperience" Value="@opt" />
+                            <label class="form-check-label">@opt</label>
+                        }
+                    </InputRadioGroup>
+                </label>
+            </p>
+
+            <p>
+                <label>
+                    <b>Training?</b>
+                    <InputRadioGroup Name="JobExperience" @bind-Value="Participant.TrainingExperience">
+                        @foreach (string opt in JobExperience)
+                        {
+                            <br />
+                            <InputRadio Name="JobExperience" Value="@opt" />
+                            <label class="form-check-label">@opt</label>
+                        }
+                    </InputRadioGroup>
+
+                </label>
+            </p>
+
+            <p>
+                <label>
+                    <b>Game?</b>
+                    <InputRadioGroup Name="JobExperience" @bind-Value="Participant.GameExperience">
+                        @foreach (string opt in JobExperience)
+                        {
+                            <br />
+                            <InputRadio Name="JobExperience" Value="@opt" />
+                            <label class="form-check-label">@opt</label>
+                        }
+                    </InputRadioGroup>
+
+                </label>
+            </p>
+
+            <p>
+                <label>
+
+                </label>
+            </p>
+
+            <button class="btn btn-primary" type="submit">Continue</button>
+            <div class="alert">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+            </div>
+        </EditForm>
+
+    </div>
+
+</div>
+
+
+@code
+{
+    private IEnumerable<string> AgeGroups =>
+        new List<string>
+        {
+            "18 - 24",
+            "25 - 34",
+            "35 - 44",
+            "45 - 54",
+            "55 - 64",
+            "65 +",
+        };
+
+    private List<ExperienceOption> ExperienceOptions { get; set; }
+
+    protected override Task
+
+    private ParticipantSurvey Participant = new ParticipantSurvey();
+
+    private void Submit()
+    {
+        AgeGroupEnum.AG_18to24.ToString();
+    }
+
+    private void SetJobExperience(string option)
+    {
+        this.Participant.JobExperience = option;
+    }
+
+}
