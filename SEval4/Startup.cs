@@ -1,3 +1,4 @@
+using Cloudcrate.AspNetCore.Blazor.Browser.Storage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,9 @@ namespace SEval4
                 opt.UseSqlite($"Data Source=Private/{nameof(SurveyContext.SurveyDb)}.db"));
 
             //services.AddScoped<SurveyServices>();
+
+            // Add local- and sessionStorage support (3rd party)
+            services.AddStorage();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

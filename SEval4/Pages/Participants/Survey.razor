@@ -6,7 +6,9 @@
 <div id="survey">
     <h3>Survey</h3>
     <div id="form">
-        <EditForm Model="@ParticipantSurvey" OnValidSubmit="Submit">
+        <EditForm Model="@ParticipantSurvey" 
+                  OnValidSubmit="@(async () => await Submit(true))" 
+                  OnInvalidSubmit="@(async () => await Submit(false))">
 
             @* AGE GROUP *@
             <p>
@@ -14,7 +16,7 @@
                     <b>Please indicate your age.</b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.AgeGroup">
-                    <option value=""></option>
+                    <option value="" selected>--</option>
                     @foreach (var option in this.AgeGroups)
                     {
                         <option value="@option.Value">@option.Text</option>
@@ -28,7 +30,7 @@
                     <b>What is your highest level of education?</b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.EducationGroup">
-                    <option value=""></option>
+                    <option value="" selected>--</option>
                     @foreach (var option in this.EducationGroups)
                     {
                         <option value="@option.Value">@option.Text</option>
@@ -47,7 +49,7 @@
                     </b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.ProfessionalExperience">
-                    <option value=""></option>
+                    <option value="" selected>--</option>
                     @foreach (var option in this.YearGroups)
                     {
                         <option value="@option.Value">@option.Text</option>
@@ -65,7 +67,7 @@
                     </b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.HasFormalTraining">
-                    <option value=""></option>
+                    <option value="" selected>--</option>
                     <option value="2">Yes</option>
                     <option value="1">No</option>
                 </InputSelect>
@@ -83,7 +85,7 @@
                     </b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.HasInformalTraining">
-                    <option value=""></option>
+                    <option value="" selected>--</option>
                     <option value="2">Yes</option>
                     <option value="1">No</option>
                 </InputSelect>
@@ -94,7 +96,7 @@
                     <b>Indicate your confidence in detecting phishing attacks received by email, telephone, paper maile etc.</b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.PhishingConfidence">
-                    <option value=""></option>
+                    <option value="" selected>--</option>
                     @foreach (var opt in this.ConfidenceGroups)
                     {
                         <option value="@opt.Value">@opt.Text</option>
@@ -107,7 +109,7 @@
                     <b>Indicate your confidence in detecting a deception attempt in active correspondence.</b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.HumanConfidence">
-                    <option value=""></option>
+                    <option value="" selected>--</option>
                     @foreach (var opt in this.ConfidenceGroups)
                     {
                         <option value="@opt.Value">@opt.Text</option>
@@ -115,11 +117,13 @@
                 </InputSelect>
             </p>
 
-            <button class="btn btn-primary" type="submit">Continue</button>
+            <div>
+                <button class="btn btn-primary" type="submit">Continue</button>
+                <label class="alert text-danger">@ErrorMsg</label>
+            </div>
             <div class="alert">
                 <DataAnnotationsValidator />
-                <ValidationSummary />
-                <label >@ErrorMsg</label>
+                @*<ValidationSummary />*@
             </div>
         </EditForm>
 
@@ -142,7 +146,25 @@
 
     #endregion
 
-    private string ErrorMsg { get; set; } = string.Empty;
+    private string ErrorMsg { get; set; } = " ";
+
+    private Guid UserGuid { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        string storedGuid = await Storage.GetItemAsync("guid");
+
+        if (string.IsNullOrEmpty(storedGuid))
+        {
+            NavigationManager.NavigateTo("Introduction");
+        }
+        else
+        {
+            UserGuid = new Guid(storedGuid);
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
 
     protected async override Task OnParametersSetAsync()
     {
@@ -156,9 +178,16 @@
 
     #region Private methods
 
-    private async Task Submit()
+    private async Task Submit(bool isValid)
     {
         ErrorMsg = string.Empty;
+
+        // I don't need a separate message for each field
+        if (!isValid)
+        {
+            ErrorMsg = "All fields are required.";
+            return;
+        }
 
         if (Busy)
         {
@@ -167,21 +196,25 @@
         }
 
         Busy = true;
+
+        ParticipantSurvey.Id = UserGuid;
+
         using var context = DbFactory.CreateDbContext();
         context.ParticipantSurveys.Add(ParticipantSurvey);
 
         try
         {
-            int id = (context.ParticipantSurveys.Any())
-                ? 1 + context.ParticipantSurveys.Max(ps => ps.Id)
-                : 1;
-
-            ParticipantSurvey.Id = id;
             await context.SaveChangesAsync();
+
+        }
+        catch (DbUpdateException)
+        {
+            ErrorMsg = "The database believes you have already completed this form before. Cannot continue...";
+            throw;
         }
         catch (Exception ex)
         {
-            // To some magic
+            // Do some magic
             ErrorMsg = ex.InnerException.Message;
             throw;
         }
@@ -190,11 +223,6 @@
             Busy = false;
         }
 
-    }
-
-    private void SetJobExperience(string option)
-    {
-        this.ParticipantSurvey.ProfessionalExperience = Convert.ToInt32(option);
     }
 
     private async Task GetOptions()

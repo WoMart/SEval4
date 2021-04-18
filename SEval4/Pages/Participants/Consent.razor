@@ -26,10 +26,11 @@
 @code {
     private bool Consented = false;
 
-    private void GoToSurvey()
+    private async void GoToSurvey()
     {
         if (Consented)
         {
+            await Storage.SetItemAsync("guid", Guid.NewGuid().ToString());
             NavigationManager.NavigateTo("Survey");
         }
     }
