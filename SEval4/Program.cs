@@ -16,9 +16,9 @@ namespace SEval4
     {
         public static void Main(string[] args)
         {
-//#if DEBUG
-//            ClearDatabase();
-//#endif
+#if DEBUG
+            ClearDatabase();
+#endif
             CreateHostBuilder(args).Build().Run();
         }
 
