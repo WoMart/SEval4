@@ -61,13 +61,13 @@ namespace SEval4.Data
             },
             new YearGroup
             {
-                Id = 4,
+                Id = 3,
                 Text = "4 - 5 years",
                 Value = 3,
             },
             new YearGroup
             {
-                Id = 6,
+                Id = 4,
                 Text = "6 years or more",
                 Value = 4,
             },
@@ -135,15 +135,15 @@ namespace SEval4.Data
             },
             new ConfidenceGroup
             {
-                Id = 5,
+                Id = 4,
                 Text = "High confidence",
-                Value = 5,
+                Value = 4,
             },
             new ConfidenceGroup
             {
-                Id = 6,
+                Id = 5,
                 Text = "Full confidence",
-                Value = 6,
+                Value = 5,
             },
 
         };
