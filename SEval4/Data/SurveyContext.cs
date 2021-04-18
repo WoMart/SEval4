@@ -77,7 +77,7 @@ namespace SEval4.Data
         #region Private methods
 
         private void SetupTextValueEntity<T>(
-            ModelBuilder modelBuilder, IList<T> seedData) 
+            ModelBuilder modelBuilder, T[] seedData) 
             where T : BaseTextValuePair
         {
             var entity = modelBuilder.Entity<T>();

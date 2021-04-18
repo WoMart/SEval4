@@ -5,7 +5,7 @@ namespace SEval4.Data
 {
     public static class SeedSurvey
     {
-        public static readonly List<AgeGroup> AgeGroupsSeed = new()
+        public static readonly AgeGroup[] AgeGroupsSeed = 
         {
             new AgeGroup
             {
@@ -45,7 +45,7 @@ namespace SEval4.Data
             },
         };
 
-        public static readonly List<YearGroup> YearGroupsSeed = new()
+        public static readonly YearGroup[] YearGroupsSeed = 
         {
             new YearGroup
             {
@@ -73,7 +73,7 @@ namespace SEval4.Data
             },
         };
 
-        public static readonly List<EducationGroup> EducationGroupsSeed = new()
+        public static readonly EducationGroup[] EducationGroupsSeed = 
         {
             new EducationGroup
             {
@@ -113,7 +113,7 @@ namespace SEval4.Data
             },
         };
 
-        public static readonly List<ConfidenceGroup> ConfidenceGroupsSeed = new()
+        public static readonly ConfidenceGroup[] ConfidenceGroupsSeed = 
         {
             new ConfidenceGroup
             {
