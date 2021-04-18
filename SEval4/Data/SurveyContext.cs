@@ -8,85 +8,95 @@ using System.Threading.Tasks;
 
 namespace SEval4.Data
 {
-    //public class SurveyContext : DbContext
-    //{
-    //    public static readonly string RowVersion = nameof(RowVersion);
-
-    //    public static readonly string SurveyDb = nameof(SurveyDb).ToLower();
-
-    //    public SurveyContext(DbContextOptions<SurveyContext> options)
-    //        : base(options)
-    //    {
-    //        Debug.WriteLine($"{ContextId} context created.");
-    //        Database.EnsureCreated();
-    //    }
-
-    //    public DbSet<ExperienceYear> ExperienceYears { get; set; }
-
-    //    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    //    {
-    //        modelBuilder.Entity<ExperienceYear>()
-    //            .Property<byte[]>(RowVersion)
-    //            .IsRowVersion();
-
-    //        base.OnModelCreating(modelBuilder);
-    //    }
-
-    //    public override void Dispose()
-    //    {
-    //        Debug.WriteLine($"{ContextId} context disposed.");
-    //        base.Dispose();
-    //    }
-
-    //    public override ValueTask DisposeAsync()
-    //    {
-    //        Debug.WriteLine($"{ContextId} context disposed async.")
-    //        return base.DisposeAsync();
-    //    }
-    //}
     public class SurveyContext : DbContext
     {
-        public DbSet<ExperienceOption> ExperienceOption { get; set; }
+        #region Magic numbers
+
+        //public static readonly string RowVersion = nameof(RowVersion);
+
+        public static readonly string SurveyDb = nameof(SurveyDb).ToLower();
+
+        #endregion
+
+        #region Database sets
+
+        public DbSet<AgeGroup> AgeGroups { get; private set; }
+
+        public DbSet<YearGroup> YearGroups { get; private set; }
+
+        public DbSet<EducationGroup> EducationGroups { get; private set; }
+
+        public DbSet<ConfidenceGroup> ConfidenceGroups { get; private set; }
+
+        public DbSet<ParticipantSurvey> ParticipantSurveys { get; set; }
+
+        #endregion
+
+        #region Public methods
 
         public SurveyContext(DbContextOptions<SurveyContext> options)
             : base(options)
         {
+            Debug.WriteLine($"{ContextId} context created.");
             Database.EnsureCreated();
         }
 
+        public override void Dispose()
+        {
+            Debug.WriteLine($"{ContextId} context disposed.");
+            base.Dispose();
+        }
+
+        public override ValueTask DisposeAsync()
+        {
+            Debug.WriteLine($"{ContextId} context disposed async.");
+            return base.DisposeAsync();
+        }
+
+        #endregion
+
+        #region Protected methods
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ExperienceOption>().HasData(GetExperienceOptions());
+            // Seed website data
+            SetupTextValueEntity(modelBuilder, SeedSurvey.AgeGroupsSeed);
+            SetupTextValueEntity(modelBuilder, SeedSurvey.YearGroupsSeed);
+            SetupTextValueEntity(modelBuilder, SeedSurvey.EducationGroupsSeed);
+            SetupTextValueEntity(modelBuilder, SeedSurvey.ConfidenceGroupsSeed);
+
+            //modelBuilder.Entity<ParticipantSurvey>()
+            //    .Property(RowVersion)
+            //    .IsRowVersion();
+
             base.OnModelCreating(modelBuilder);
         }
 
-        private List<ExperienceOption> GetExperienceOptions() =>
-            new List<ExperienceOption>
-            {
-                new ExperienceOption {
-                    Text = "18 - 24",
-                    Value = "1",
-                    },
-                new ExperienceOption {
-                    Text = "25 - 34",
-                    Value = "2",
-                    },
-                new ExperienceOption {
-                    Text = "35 - 44",
-                    Value = "3",
-                    },
-                new ExperienceOption {
-                    Text = "45 - 54",
-                    Value = "4",
-                    },
-                new ExperienceOption {
-                    Text = "55 - 64",
-                    Value = "5",
-                    },
-                new ExperienceOption {
-                    Text = "65 +",
-                    Value = "6",
-                    },
-            };
+        #endregion
+
+        #region Private methods
+
+        private void SetupTextValueEntity<T>(
+            ModelBuilder modelBuilder, IList<T> seedData) 
+            where T : BaseTextValuePair
+        {
+            var entity = modelBuilder.Entity<T>();
+
+            //// Set up row versioning for concurrency (unnecessary tbf)
+            //entity.Property<byte[]>(RowVersion)
+            //    .IsRowVersion();
+
+            // Set autoincrement on Primary Key
+            // The HasKey is not necessary, since EF recognises "*id*" properties as PK
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd();
+
+            // Seed values
+            entity.HasData(seedData);
         }
+
+        #endregion
+
     }
+}

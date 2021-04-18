@@ -29,14 +29,12 @@ namespace SEval4
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
 
-            services.AddDbContext<SurveyContext>(options =>
-            {
-                options.UseSqlite("Data Source = Survey.db");
-            });
+            // Add Survey context to the context factory
+            services.AddDbContextFactory<SurveyContext>(opt =>
+                opt.UseSqlite($"Data Source=Private/{nameof(SurveyContext.SurveyDb)}.db"));
 
-            services.AddScoped<SurveyServices>();
+            //services.AddScoped<SurveyServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
