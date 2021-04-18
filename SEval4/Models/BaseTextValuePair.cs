@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace SEval4.Models
 {
-    public class BaseTextValuePair
+    public abstract class BaseTextValuePair
     {
-        public int Id => Convert.ToInt32(Value);
-
+        public int Id { get; set; }
         public string Text { get; set; }
 
-        public string Value { get; set; }
+        public int Value { get; set; }
     }
 }

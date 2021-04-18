@@ -9,25 +9,34 @@
  */
 using System;
 using System.ComponentModel.DataAnnotations;
-using SEval4.Models.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SEval4.Models
 {
     public class ParticipantSurvey
     {
-        [Required]
-        public string AgeGroup { get; set; }
+        [Key]
+        public int Id { get; set; }
 
         [Required]
-        public string JobExperience { get; set; }
-        
-        [Required]
-        public string TrainingExperience { get; set; }
+        public int AgeGroup { get; set; }
 
         [Required]
-        public string GameExperience { get; set; }
+        public int EducationGroup { get; set; }
 
         [Required]
-        public string SelfConfidence { get; set; }
+        public int ProfessionalExperience { get; set; }
+
+        [Required]
+        public int HasFormalTraining { get; set; }
+
+        [Required]
+        public int HasInformalTraining { get; set; }
+
+        [Required]
+        public int PhishingConfidence { get; set; }
+
+        [Required]
+        public int HumanConfidence { get; set; }
     }
 }
