@@ -37,6 +37,8 @@ namespace SEval4
 
             //services.AddScoped<SurveyServices>();
 
+            services.AddTransient(sp => new EasyStorage(sp.GetService<Microsoft.JSInterop.IJSRuntime>()));
+
             // Add local- and sessionStorage support (3rd party)
             services.AddStorage();
         }
