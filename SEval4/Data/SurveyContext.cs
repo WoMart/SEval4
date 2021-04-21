@@ -86,11 +86,8 @@ namespace SEval4.Data
             //entity.Property<byte[]>(RowVersion)
             //    .IsRowVersion();
 
-            // Set autoincrement on Primary Key
-            // The HasKey is not necessary, since EF recognises "*id*" properties as PK
+            // The HasKey is technically not necessary, since EF recognises "*id*" properties as PK
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd();
 
             // Seed values
             entity.HasData(seedData);
