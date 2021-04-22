@@ -1,13 +1,4 @@
-﻿/*
- * Questions:
- * 1. Age
- * 2. Experience with games (?)
- * 3. Worked in communicative job
- * 4. Training in social engineering detection
- * 5. Confidence in own skills
- * 
- */
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
