@@ -1,11 +1,18 @@
 ﻿@page "/Baseline"
 
-<h3>BaselineSurvey</h3>
+<div id="scenarioSurvey">
+    <h1>BaselineSurvey</h1>
+    <div id="form">
+        <EditForm >
 
+        </EditForm>
+    </div>
 @code {
 
+</div>
     private Guid UserGuid { get; set; }
 
+@code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
