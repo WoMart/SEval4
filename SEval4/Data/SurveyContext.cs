@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SEval4.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,7 +12,7 @@ namespace SEval4.Data
 {
     public class SurveyContext : DbContext
     {
-        #region Magic numbers
+        #region Database name
 
         //public static readonly string RowVersion = nameof(RowVersion);
 
@@ -29,6 +31,8 @@ namespace SEval4.Data
         public DbSet<ConfidenceGroup> ConfidenceGroups { get; private set; }
 
         public DbSet<ParticipantSurvey> ParticipantSurveys { get; set; }
+
+        public DbSet<Scenario> Scenarios { get; set; }
 
         #endregion
 
@@ -65,6 +69,7 @@ namespace SEval4.Data
             SetupTextValueEntity(modelBuilder, SeedSurvey.EducationGroupsSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.ConfidenceGroupsSeed);
 
+            FetchScenariosFromJson();
             //modelBuilder.Entity<ParticipantSurvey>()
             //    .Property(RowVersion)
             //    .IsRowVersion();
@@ -91,6 +96,55 @@ namespace SEval4.Data
 
             // Seed values
             entity.HasData(seedData);
+        }
+
+        private void SetupTextValueEntityFromJson<T>(
+            ModelBuilder modelBuilder)
+            where T: BaseTextValuePair<int>
+        {
+
+        }
+
+        private void FetchScenariosFromJson()
+        {
+            string path = @"Data\Json\Scenarios.json";
+
+            using StreamReader sr = new(path);
+
+            string json = sr.ReadToEnd();
+            var jsonScenarios = JsonConvert
+                .DeserializeObject<List<JsonScenario>>(json);
+
+            // Convert json scenarios to entity framework models
+            List<Scenario> scenarios = new();
+            foreach (var scene in jsonScenarios)
+            {
+                Guid scenarioId = Guid.NewGuid();
+
+                // Convert json scenario responses to entity framework models
+                List<ScenarioResponse> responses = new();
+                foreach (var resp in scene.Responses)
+                {
+                    responses.Add(new ScenarioResponse
+                    {
+                        Id         = Guid.NewGuid(),
+                        Text       = resp.Text,
+                        Value      = resp.Value,
+                        Correct    = resp.Correct,
+                        Tag        = resp.Tag,
+                        ScenarioId = scenarioId,
+                    });
+                }
+
+                scenarios.Add(new Scenario
+                {
+                    ScenarioId = scenarioId,
+                    Context = scene.Context,
+                    Correct = responses.Single(r => r.Correct).Id,
+                    Responses = responses,
+                });
+            }
+
         }
 
         #endregion
