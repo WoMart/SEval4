@@ -1,11 +1,16 @@
 ﻿@page "/Baseline"
+@using SEval4.Models
+@inject IDbContextFactory<SurveyContext> DbFactory
 
 <div id="scenarioSurvey">
     <h1>BaselineSurvey</h1>
     <div id="form">
-        <EditForm >
+        <p>
 
-        </EditForm>
+        </p>
+        @*<EditForm >
+
+        </EditForm>*@
     </div>
 </div>
 
@@ -27,6 +32,34 @@
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    //private List<ScenarioResponse> Responses { get; set; } = new();
+
+    private List<ScenarioTest> Scenarios { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        // Fetch Scenarios and shuffle their order
+        // Must be Enumarable for LINQ to correctly translate the OrderBy query
+        var scenarios = context.Scenarios
+            .AsEnumerable()
+            .OrderBy(s => Guid.NewGuid());
+
+        foreach (Scenario scenario in scenarios)
+        {
+            ScenarioTest newScenario = new(scenario);
+            newScenario.Responses = context.ScenarioResponses
+                .AsEnumerable()
+                .Where(sr => sr.ScenarioId == newScenario.ScenarioId)
+                .OrderBy(s => Guid.NewGuid())
+                .ToList();
+            Scenarios.Add(newScenario);
+        }
+
+        await base.OnParametersSetAsync();
     }
 
 }
