@@ -143,8 +143,9 @@ namespace SEval4.Data
                 scenarios.Add(new Scenario
                 {
                     ScenarioId = scenarioId,
-                    Context = scene.Context,
-                    Correct = responses.Single(r => r.Correct).Id,
+                    Order      = scene.Order,
+                    Context    = scene.Context,
+                    Correct    = responses.Single(r => r.Correct).Id,
                     //Responses = responses,
                 });
             }

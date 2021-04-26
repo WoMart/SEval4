@@ -1,6 +1,7 @@
 [
     {
       "Context": "This is the first sample scenario",
+      "Order": 1,
       "Responses": [
         {
           "Text": "Scenario1:1",
@@ -27,6 +28,7 @@
     },
     {
       "Context": "This is the second sample scenario",
+      "Order": 2,
       "Responses": [
         {
           "Text": "Scenario2:1",

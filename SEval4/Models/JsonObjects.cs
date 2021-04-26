@@ -11,6 +11,8 @@ namespace SEval4.Models
     {
         [JsonProperty("Context")]
         public string Context { get; set; }
+        [JsonProperty("Order")]
+        public int Order { get; set; }
         [JsonProperty("Responses")]
         public JsonScenarioResponse[] Responses { get; set; }
     }
