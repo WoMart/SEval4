@@ -8,9 +8,29 @@
         <p>
 
         </p>
-        @*<EditForm >
+        <EditForm Model="@ParticipantBaseline" >
 
-        </EditForm>*@
+            @foreach (var scenario in Scenarios)
+                {
+                    <p>
+                        <label for="@($"scenario{scenario.ScenarioId.ToString()}")">
+                            <b>@scenario.Context</b>
+                        </label>
+                    </p>
+                    <InputSelect class="form-control" @bind-Value="scenario.Correct" >
+                        <option value="">--</option>
+                        @*@foreach (var resp in scenario.Responses)
+                        {
+                            <option value="@resp.Value">@resp.Text</option>
+                        }*@
+                    </InputSelect>
+                }
+
+            <div>
+                <button class="btn btn-primary" type="submit">Continue</button>
+                <label class="alert text-danger"></label>
+            </div>
+        </EditForm>
     </div>
 </div>
 
@@ -38,6 +58,8 @@
 
     private List<ScenarioTest> Scenarios { get; set; } = new();
 
+    private ParticipantBaseline ParticipantBaseline { get; set; } = new();
+
     protected override async Task OnParametersSetAsync()
     {
         using var context = DbFactory.CreateDbContext();
@@ -60,6 +82,12 @@
         }
 
         await base.OnParametersSetAsync();
+    }
+
+    private Task OnValueChanged(ScenarioTest scenario, string value)
+    {
+
+        return Task.CompletedTask;
     }
 
 }
