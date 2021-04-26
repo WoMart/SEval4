@@ -1,5 +1,4 @@
 ﻿@page "/Survey"
-@inject NavigationManager NavigationManager
 @inject IDbContextFactory<SurveyContext> DbFactory
 @using SEval4.Models
 
@@ -152,15 +151,15 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        string storedGuid = await Storage.GetItemAsync("guid");
+        Guid? guid = await Storage.GetUserGuidOrNullAsync();
 
-        if (string.IsNullOrEmpty(storedGuid))
+        if (guid != null)
         {
-            NavigationManager.NavigateTo("Introduction");
+            UserGuid = guid.Value;
         }
         else
         {
-            UserGuid = new Guid(storedGuid);
+            NavigationManager.NavigateTo("Introduction");
         }
 
         await base.OnAfterRenderAsync(firstRender);

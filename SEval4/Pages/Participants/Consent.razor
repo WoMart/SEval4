@@ -1,5 +1,4 @@
 ﻿@page "/Consent"
-@inject NavigationManager NavigationManager
 
 <div id="consent">
     <h1>Consent Form</h1>
@@ -30,7 +29,7 @@
     {
         if (Consented)
         {
-            await Storage.SetItemAsync("guid", Guid.NewGuid().ToString());
+            await Storage.SetUserGuidAsync(Guid.NewGuid());
             NavigationManager.NavigateTo("Survey");
         }
     }
