@@ -34,6 +34,8 @@ namespace SEval4.Data
 
         public DbSet<Scenario> Scenarios { get; set; }
 
+        public DbSet<ScenarioResponse> ScenarioResponses { get; set; }
+
         #endregion
 
         #region Public methods
@@ -69,7 +71,7 @@ namespace SEval4.Data
             SetupTextValueEntity(modelBuilder, SeedSurvey.EducationGroupsSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.ConfidenceGroupsSeed);
 
-            FetchScenariosFromJson();
+            FetchScenariosFromJson(modelBuilder);
             //modelBuilder.Entity<ParticipantSurvey>()
             //    .Property(RowVersion)
             //    .IsRowVersion();
@@ -105,7 +107,7 @@ namespace SEval4.Data
 
         }
 
-        private void FetchScenariosFromJson()
+        private void FetchScenariosFromJson(ModelBuilder modelBuilder)
         {
             string path = @"Data\Json\Scenarios.json";
 
@@ -136,15 +138,18 @@ namespace SEval4.Data
                     });
                 }
 
+                modelBuilder.Entity<ScenarioResponse>().HasData(responses);
+
                 scenarios.Add(new Scenario
                 {
                     ScenarioId = scenarioId,
                     Context = scene.Context,
                     Correct = responses.Single(r => r.Correct).Id,
-                    Responses = responses,
+                    //Responses = responses,
                 });
             }
 
+            modelBuilder.Entity<Scenario>().HasData(scenarios);
         }
 
         #endregion
