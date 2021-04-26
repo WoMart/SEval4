@@ -11,7 +11,7 @@
           "Text": "Scenario1:2",
           "Value": 2,
           "Tag": "",
-          "Correct": 1
+          "Correct": true
         },
         {
           "Text": "Scenario1:3",
@@ -47,7 +47,7 @@
           "Text": "Scenario2:4",
           "Value": 4,
           "Tag": "",
-          "Correct": 1
+          "Correct": true
         }
       ]
     }
