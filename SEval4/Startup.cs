@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using SEval4.Data;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,6 +18,8 @@ namespace SEval4
 {
     public class Startup
     {
+        private static readonly string _dataDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,10 +35,16 @@ namespace SEval4
             services.AddServerSideBlazor();
 
             // Add Survey context to the context factory
-            services.AddDbContextFactory<SurveyContext>(opt =>
-                opt.UseSqlite($"Data Source=Private/{nameof(SurveyContext.SurveyDb)}.db"));
+            //services.AddDbContextFactory<SurveyContext>(opt =>
+            //    opt.UseSqlite($"Data Source=Private/{nameof(SurveyContext.SurveyDb)}.db"));
 
-            //services.AddScoped<SurveyServices>();
+            // SQL Server implementation
+            services.AddScoped<SurveyService>();
+            services.AddDbContext<SEvalDBContext>(
+                context => context.UseSqlServer(
+                    Configuration.GetConnectionString("SevalDev")
+                    .Replace("%DataDirectory%", _dataDirectory)
+                    ));
 
             services.AddTransient(sp => new CustomStorage(sp.GetService<Microsoft.JSInterop.IJSRuntime>()));
 
