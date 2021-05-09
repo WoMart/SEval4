@@ -10,7 +10,7 @@ namespace TestingGrounds.SEADM.Models
 
         public string StateId { get; private set; }
         public StateTypeEnum StateType { get; private set; }
-        public string PreviousStateId { get; private set; }
+        public string PreviousStateId { get; set; }
 
         // Questions
         protected List<Question> Questions { get; private set; }
@@ -33,10 +33,39 @@ namespace TestingGrounds.SEADM.Models
             Questions = QuestionsSource
                 .Where(q => q.StateId == stateId)
                 .ToList();
-            Answers = new List<bool>(QuestionCount);
+            Answers = new List<bool>(new bool[QuestionCount]);
             
             QuestionIndex = 0;
-            PreviousStateId = string.Empty;
+        }
+
+        public string GetCurrentQuestion() =>
+            Questions[QuestionIndex].Text;
+
+        public bool NextQuestion(bool value)
+        {
+            Answers[QuestionIndex] = value;
+            if (QuestionCount - QuestionIndex == 1)
+            {
+                return true;
+            }
+            else
+            {
+                QuestionIndex++;
+                return false;
+            }
+        }
+
+        public bool PreviousQuestion()
+        {
+            if (QuestionIndex == 0)
+            {
+                return true;
+            }
+            else
+            {
+                QuestionIndex--;
+                return false;
+            }
         }
 
         public void Reset()
@@ -69,8 +98,6 @@ namespace TestingGrounds.SEADM.Models
         }
 
         #endregion
-
-
 
         public static readonly List<Question> QuestionsSource = new()
         {

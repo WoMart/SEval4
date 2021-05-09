@@ -25,44 +25,25 @@ namespace TestingGrounds.SEADM.Models
             }
         }
 
-        #region State navigation
+        #region Public methods
 
-        public void NextState()
+        public string GetQuestion() =>
+            Current.GetCurrentQuestion();
+
+        public void NextQuestion(bool value)
         {
-            if (Current.StateType == StateTypeEnum.Terminal)
+            if (Current.NextQuestion(value))
             {
-                return;
+                NextState();
             }
-
-            Transition nextState = Transitions
-                .SingleOrDefault(t =>
-                t.StateID == Current.StateId &&
-                t.YesCount == Current.YesCount);
-
-            // If no transition result found or its ID is empty, throw
-            if (string.IsNullOrEmpty(nextState?.NextStateId))
-            {
-                throw new ArgumentNullException(
-                    $"NextState(): No transition found for (State: {Current.StateId}, YesCount: {Current.YesCount}).");
-            }
-
-            SetState(nextState?.StateID ?? string.Empty);
         }
 
-        public void PreviousState()
+        public void PreviousQuestion()
         {
-            if (Current.StateType == StateTypeEnum.Starting)
+            if (Current.PreviousQuestion())
             {
-                return;
+                PreviousState();
             }
-
-            if (string.IsNullOrEmpty(Current.PreviousStateId))
-            {
-                throw new ArgumentNullException(
-                    $"NextState(): State {Current.StateId} lacks memory of the previous state.");
-            }
-
-            SetState(Current.PreviousStateId);
         }
 
         public void Reset()
@@ -81,20 +62,62 @@ namespace TestingGrounds.SEADM.Models
         public void PrintInfo()
         {
             Console.WriteLine("STATES\n");
-            for (int i = 0; 
-                i < States.Count; 
-                States[i++].PrintInfo());
+            for (int i = 0;
+                i < States.Count;
+                States[i++].PrintInfo()) ;
 
             Console.WriteLine("\n\nTRANSITIONS\n");
             for (int i = 0; i < Transitions.Count; i++)
             {
                 Transition transition = Transitions[i];
                 Console.WriteLine(
-                    $"Q{i+1}: ({transition.StateID}, {transition.YesCount}) => {transition.NextStateId}");
+                    $"Q{i + 1}: ({transition.StateId}, {transition.YesCount}) => {transition.NextStateId}");
             };
         }
 
-        protected void SetState(string stateId)
+        #endregion
+
+        #region Protected methods
+
+        protected void NextState()
+        {
+            if (Current.StateType == StateTypeEnum.Terminal)
+            {
+                return;
+            }
+
+            Transition transition = Transitions
+                .SingleOrDefault(t =>
+                t.StateId == Current.StateId &&
+                t.YesCount == Current.YesCount);
+
+            // If no transition result found or its ID is empty, throw
+            if (string.IsNullOrEmpty(transition?.NextStateId))
+            {
+                throw new ArgumentNullException(
+                    $"NextState(): No transition found for (State: {Current.StateId}, YesCount: {Current.YesCount}).");
+            }
+
+            SetState(transition.NextStateId, Current.StateId);
+        }
+
+        protected void PreviousState()
+        {
+            if (Current.StateType == StateTypeEnum.Starting)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(Current.PreviousStateId))
+            {
+                throw new ArgumentNullException(
+                    $"NextState(): State {Current.StateId} lacks memory of the previous state.");
+            }
+
+            SetState(Current.PreviousStateId);
+        }
+
+        protected void SetState(string stateId, string previousStateId = null)
         {
             State state = States
                 .SingleOrDefault(s =>
@@ -107,6 +130,11 @@ namespace TestingGrounds.SEADM.Models
             }
             else
             {
+                if (!string.IsNullOrEmpty(previousStateId))
+                {
+                    state.PreviousStateId = previousStateId;
+                }
+
                 Current = state;
             }
         }
@@ -118,213 +146,213 @@ namespace TestingGrounds.SEADM.Models
             // Transition States
             new Transition
             {
-                StateID = "S1",
+                StateId = "S1",
                 YesCount = 1,
                 NextStateId = "S3",
             },
             new Transition
             {
-                StateID = "S1",
+                StateId = "S1",
                 YesCount = 0,
                 NextStateId = "S2",
             },
             new Transition
             {
-                StateID = "S2",
+                StateId = "S2",
                 YesCount = 1,
                 NextStateId = "SE",
             },
             new Transition
             {
-                StateID = "S2",
+                StateId = "S2",
                 YesCount = 0,
                 NextStateId = "SR",
             },
             new Transition
             {
-                StateID = "S3",
+                StateId = "S3",
                 YesCount = 1,
                 NextStateId = "S4",
             },
             new Transition
             {
-                StateID = "S3",
+                StateId = "S3",
                 YesCount = 0,
                 NextStateId = "SR",
             },
             new Transition
             {
-                StateID = "S4",
+                StateId = "S4",
                 YesCount = 1,
                 NextStateId = "S5",
             },
             new Transition
             {
-                StateID = "S4",
+                StateId = "S4",
                 YesCount = 0,
                 NextStateId = "SR",
             },
             new Transition
             {
-                StateID = "S5",
+                StateId = "S5",
                 YesCount = 1,
                 NextStateId = "S6",
             },
             new Transition
             {
-                StateID = "S5",
+                StateId = "S5",
                 YesCount = 0,
                 NextStateId = "SR",
             },
             new Transition
             {
-                StateID = "S6",
+                StateId = "S6",
                 YesCount = 1,
                 NextStateId = "SA",
             },
             new Transition
             {
-                StateID = "S6",
+                StateId = "S6",
                 YesCount = 0,
                 NextStateId = "S7",
             },
             new Transition
             {
-                StateID = "S7",
+                StateId = "S7",
                 YesCount = 1,
                 NextStateId = "SA",
             },
             new Transition
             {
-                StateID = "S7",
+                StateId = "S7",
                 YesCount = 0,
                 NextStateId = "S8",
             },
             new Transition
             {
-                StateID = "S8",
+                StateId = "S8",
                 YesCount = 1,
                 NextStateId = "S12",
             },
             new Transition
             {
-                StateID = "S8",
+                StateId = "S8",
                 YesCount = 0,
                 NextStateId = "S9",
             },
             new Transition
             {
-                StateID = "S9",
+                StateId = "S9",
                 YesCount = 1,
                 NextStateId = "S12",
             },
             new Transition
             {
-                StateID = "S9",
+                StateId = "S9",
                 YesCount = 0,
                 NextStateId = "S10",
             },
             new Transition
             {
-                StateID = "S10",
+                StateId = "S10",
                 YesCount = 1,
                 NextStateId = "S12",
             },
             new Transition
             {
-                StateID = "S10",
+                StateId = "S10",
                 YesCount = 0,
                 NextStateId = "S11",
             },
             new Transition
             {
-                StateID = "S11",
+                StateId = "S11",
                 YesCount = 1,
                 NextStateId = "S12",
             },
             new Transition
             {
-                StateID = "S11",
+                StateId = "S11",
                 YesCount = 0,
                 NextStateId = "SA",
             },
             new Transition
             {
-                StateID = "S12",
+                StateId = "S12",
                 YesCount = 1,
                 NextStateId = "S13",
             },
             new Transition
             {
-                StateID = "S12",
+                StateId = "S12",
                 YesCount = 0,
-                NextStateId = "SF",
+                NextStateId = "SR",
             },
             new Transition
             {
-                StateID = "S13",
+                StateId = "S13",
                 YesCount = 0,
-                NextStateId = "SF",
+                NextStateId = "SR",
             },
             new Transition
             {
-                StateID = "S13",
+                StateId = "S13",
                 YesCount = 1,
                 NextStateId = "S14",
             },
             new Transition
             {
-                StateID = "S13",
+                StateId = "S13",
                 YesCount = 2,
                 NextStateId = "S14",
             },
             new Transition
             {
-                StateID = "S13",
+                StateId = "S13",
                 YesCount = 3,
                 NextStateId = "S16",
             },
             new Transition
             {
-                StateID = "S13",
+                StateId = "S13",
                 YesCount = 4,
                 NextStateId = "S16",
             },
             new Transition
             {
-                StateID = "S14",
+                StateId = "S14",
                 YesCount = 1,
                 NextStateId = "S15",
             },
             new Transition
             {
-                StateID = "S14",
+                StateId = "S14",
                 YesCount = 0,
-                NextStateId = "SF",
+                NextStateId = "SR",
             },
             new Transition
             {
-                StateID = "S15",
+                StateId = "S15",
                 YesCount = 1,
                 NextStateId = "S16",
             },
             new Transition
             {
-                StateID = "S15",
+                StateId = "S15",
                 YesCount = 0,
-                NextStateId = "SF",
+                NextStateId = "SR",
             },
             new Transition
             {
-                StateID = "S16",
+                StateId = "S16",
                 YesCount = 1,
                 NextStateId = "SA",
             },
             new Transition
             {
-                StateID = "S16",
+                StateId = "S16",
                 YesCount = 0,
-                NextStateId = "SF",
+                NextStateId = "SR",
             },
         };
         private static readonly List<State> _States = new()

@@ -8,7 +8,7 @@ namespace TestingGrounds.SEADM.Models
 {
     class Transition
     {
-        public string StateID { get; set; }
+        public string StateId { get; set; }
         public int YesCount { get; set; }
         public string NextStateId { get; set; }
     }
