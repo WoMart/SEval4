@@ -78,6 +78,22 @@ namespace TestingGrounds.SEADM.Models
             }
         }
 
+        public void PrintInfo()
+        {
+            Console.WriteLine("STATES\n");
+            for (int i = 0; 
+                i < States.Count; 
+                States[i++].PrintInfo());
+
+            Console.WriteLine("\n\nTRANSITIONS\n");
+            for (int i = 0; i < Transitions.Count; i++)
+            {
+                Transition transition = Transitions[i];
+                Console.WriteLine(
+                    $"Q{i+1}: ({transition.StateID}, {transition.YesCount}) => {transition.NextStateId}");
+            };
+        }
+
         protected void SetState(string stateId)
         {
             State state = States
@@ -99,25 +115,6 @@ namespace TestingGrounds.SEADM.Models
 
         public static readonly List<Transition> Transitions = new()
         {
-            // Terminal States
-            new Transition
-            {
-                StateID = "SA",
-                YesCount = 1,
-                NextStateId = string.Empty,
-            },
-            new Transition
-            {
-                StateID = "SF",
-                YesCount = 0,
-                NextStateId = string.Empty,
-            },
-            new Transition
-            {
-                StateID = "SE",
-                YesCount = 1,
-                NextStateId = string.Empty,
-            },
             // Transition States
             new Transition
             {

@@ -48,6 +48,26 @@ namespace TestingGrounds.SEADM.Models
                 i < Answers.Count; 
                 Answers[i++] = false);
         }
+
+        public void PrintInfo()
+        {
+            string type = StateType switch
+            {
+                StateTypeEnum.Starting => "starting",
+                StateTypeEnum.Terminal => "terminal",
+                _ => "regular",
+            };
+
+            Console.WriteLine($"State {StateId} => {type} state with {QuestionCount} questions.");
+
+            for (int i = 0; i < Questions.Count; i++)
+            {
+                Console.WriteLine($"\t{i+1} {Questions[i].Text}");
+            }
+
+            Console.WriteLine("\n");
+        }
+
         #endregion
 
 
