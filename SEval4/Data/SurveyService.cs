@@ -44,5 +44,11 @@ namespace SEval4.Data
                 .ToListAsync();
         }
 
+        public async Task<int> InsertNewParticipantAsync(ParticipantSurvey survey)
+        {
+            await _context.ParticipantSurveys.AddAsync(survey);
+            return await _context.SaveChangesAsync();
+        }
+
     }
 }
