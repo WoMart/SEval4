@@ -1,16 +1,13 @@
-﻿@page "/sqltest"
-
-@inject SurveyService SurveyService
-
-<h3>TestSqlServer</h3>
+﻿@page "/Survey"
+@inject IDbContextFactory<SurveyContext> DbFactory
 @using SEval4.Models
 
 <div id="survey">
     <h3>Survey</h3>
     <div id="form">
-        <EditForm Model="@ParticipantSurvey"
-                  OnValidSubmit="@(async () => Submit(true))"
-                  OnInvalidSubmit="@(async () => Submit(false))">
+        <EditForm Model="@ParticipantSurvey" 
+                  OnValidSubmit="@(async () => await Submit(true))" 
+                  OnInvalidSubmit="@(async () => await Submit(false))">
 
             @* AGE GROUP *@
             <p>
@@ -132,27 +129,110 @@
     </div>
 
 </div>
-@code {
-    private ParticipantSurvey ParticipantSurvey = new();
-    private List<AgeGroup> AgeGroups = new();
-    private List<YearGroup> YearGroups = new();
-    private List<EducationGroup> EducationGroups = new();
-    private List<ConfidenceGroup> ConfidenceGroups = new();
-    private string ErrorMsg = string.Empty;
 
-    protected override async Task OnInitializedAsync()
+
+@code
+{
+    #region Input Options
+
+    private List<AgeGroup> AgeGroups { get; set; }
+
+    private List<YearGroup> YearGroups { get; set; }
+
+    private List<EducationGroup> EducationGroups { get; set; }
+
+    private List<ConfidenceGroup> ConfidenceGroups { get; set; }
+
+    #endregion
+
+    private string ErrorMsg { get; set; } = string.Empty;
+
+    private Guid UserGuid { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        AgeGroups        = await SurveyService.GetAgeGroupsAsync();
-        YearGroups       = await SurveyService.GetYearGroupsAsync();
-        EducationGroups  = await SurveyService.GetEducationGroupsAsync();
-        ConfidenceGroups = await SurveyService.GetConfidenceGroupsAsync();
-        await base.OnInitializedAsync();
+        Guid? guid = await Storage.GetUserGuidOrNullAsync();
+
+        if (guid != null)
+        {
+            UserGuid = guid.Value;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("Introduction");
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
     }
 
-    private void Submit(bool valid)
+    protected async override Task OnParametersSetAsync()
     {
-        ErrorMsg = valid
-            ? "Correct"
-            : "False";
+        await GetOptions();
+        await base.OnParametersSetAsync();
     }
+
+    private ParticipantSurvey ParticipantSurvey = new ParticipantSurvey();
+
+    private bool Busy { get; set; }
+
+    #region Private methods
+
+    private async Task Submit(bool isValid)
+    {
+        ErrorMsg = string.Empty;
+
+        // I don't need a separate message for each field
+        if (!isValid)
+        {
+            ErrorMsg = "All fields are required.";
+            return;
+        }
+
+        if (Busy)
+        {
+            ErrorMsg = "Processing update... try again.";
+            return;
+        }
+
+        Busy = true;
+
+        ParticipantSurvey.Id = UserGuid;
+
+        using var context = DbFactory.CreateDbContext();
+        context.ParticipantSurveys.Add(ParticipantSurvey);
+
+        try
+        {
+            await context.SaveChangesAsync();
+
+        }
+        catch (DbUpdateException)
+        {
+            ErrorMsg = "The database believes you have already completed this form before. Cannot continue...";
+            throw;
+        }
+        catch (Exception ex)
+        {
+            // Do some magic
+            ErrorMsg = ex.InnerException.Message;
+            throw;
+        }
+        finally
+        {
+            Busy = false;
+        }
+
+    }
+
+    private async Task GetOptions()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        AgeGroups        = await context.AgeGroups.ToListAsync();
+        YearGroups       = await context.YearGroups.ToListAsync();
+        EducationGroups  = await context.EducationGroups.ToListAsync();
+        ConfidenceGroups = await context.ConfidenceGroups.ToListAsync();
+    }
+
+    #endregion
 }
