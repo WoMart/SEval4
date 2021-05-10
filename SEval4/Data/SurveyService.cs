@@ -20,5 +20,20 @@ namespace SEval4.Data
         {
             return await _context.AgeGroup.ToListAsync();
         }
+
+        public async Task<List<YearGroup>> GetYearGroupsAsync()
+        {
+            return await _context.YearGroups.ToListAsync();
+        }
+
+        public async Task<List<EducationGroup>> GetEducationGroupsAsync()
+        {
+            return await _context.EducationGroups.ToListAsync();
+        }
+
+        public async Task<List<ConfidenceGroup>> GetConfidenceGroupsAsync()
+        {
+            return await _context.ConfidenceGroups.ToListAsync();
+        }
     }
 }
