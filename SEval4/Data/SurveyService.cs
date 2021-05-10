@@ -18,22 +18,31 @@ namespace SEval4.Data
 
         public async Task<List<AgeGroup>> GetAgeGroupsAsync()
         {
-            return await _context.AgeGroup.ToListAsync();
+            return await _context.AgeGroup
+                .OrderBy(g => g.Value)
+                .ToListAsync();
         }
 
         public async Task<List<YearGroup>> GetYearGroupsAsync()
         {
-            return await _context.YearGroups.ToListAsync();
+            return await _context.YearGroups
+                .OrderBy(g => g.Value)
+                .ToListAsync();
         }
 
         public async Task<List<EducationGroup>> GetEducationGroupsAsync()
         {
-            return await _context.EducationGroups.ToListAsync();
+            return await _context.EducationGroups
+                .OrderBy(g => g.Value)
+                .ToListAsync();
         }
 
         public async Task<List<ConfidenceGroup>> GetConfidenceGroupsAsync()
         {
-            return await _context.ConfidenceGroups.ToListAsync();
+            return await _context.ConfidenceGroups
+                .OrderBy(g => g.Value)
+                .ToListAsync();
         }
+
     }
 }
