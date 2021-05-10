@@ -33,7 +33,7 @@
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.EducationGroup">
                     <option value="" selected>--</option>
-                    @foreach (var option in this.AgeGroups)
+                    @foreach (var option in this.EducationGroups)
                     {
                         <option value="@option.Value">@option.Text</option>
                     }
@@ -52,7 +52,7 @@
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.ProfessionalExperience">
                     <option value="" selected>--</option>
-                    @foreach (var option in this.AgeGroups)
+                    @foreach (var option in this.YearGroups)
                     {
                         <option value="@option.Value">@option.Text</option>
                     }
@@ -99,7 +99,7 @@
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.PhishingConfidence">
                     <option value="" selected>--</option>
-                    @foreach (var opt in this.AgeGroups)
+                    @foreach (var opt in this.ConfidenceGroups)
                     {
                         <option value="@opt.Value">@opt.Text</option>
                     }
@@ -112,7 +112,7 @@
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.HumanConfidence">
                     <option value="" selected>--</option>
-                    @foreach (var opt in this.AgeGroups)
+                    @foreach (var opt in this.ConfidenceGroups)
                     {
                         <option value="@opt.Value">@opt.Text</option>
                     }
@@ -135,11 +135,17 @@
 @code {
     private ParticipantSurvey ParticipantSurvey = new();
     private List<AgeGroup> AgeGroups = new();
+    private List<YearGroup> YearGroups = new();
+    private List<EducationGroup> EducationGroups = new();
+    private List<ConfidenceGroup> ConfidenceGroups = new();
     private string ErrorMsg = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        AgeGroups = await SurveyService.GetAgeGroupsAsync();
+        AgeGroups        = await SurveyService.GetAgeGroupsAsync();
+        YearGroups       = await SurveyService.GetYearGroupsAsync();
+        EducationGroups  = await SurveyService.GetEducationGroupsAsync();
+        ConfidenceGroups = await SurveyService.GetConfidenceGroupsAsync();
         await base.OnInitializedAsync();
     }
 
