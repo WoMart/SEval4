@@ -7,10 +7,16 @@ namespace TestingGrounds
     {
         static void Main(string[] args)
         {
+            TestSeadmAutomata();
+        }
+
+        private static void TestSeadmAutomata()
+        {
             SeadmAutomat fsa = new();
 
             string allowed = "ynbqr";
-            char input = '\0';
+            ConsoleKeyInfo key;
+            char input;
             while (true)
             {
                 Console.WriteLine(fsa.GetQuestion());
@@ -18,8 +24,16 @@ namespace TestingGrounds
                 do
                 {
                     Console.Write($"[{allowed}] >>> ");
-                    input = Console.ReadKey(false).KeyChar;
-                    Console.WriteLine();
+
+                    // Allowing ReadKey to print the character
+                    // results in corrupted Out buffer on next line.
+                    // Therefore, skip Escape
+                    key   = Console.ReadKey(true);
+                    input = (key.Key == ConsoleKey.Escape)
+                        ? '\0'
+                        : key.KeyChar;
+
+                    Console.WriteLine(input);
                 } while (!allowed.Contains(input));
 
                 switch (input)
@@ -41,7 +55,11 @@ namespace TestingGrounds
                         break;
 
                     case 'q':
+                        Console.WriteLine("\nExiting the test...");
                         return;
+
+                    default:
+                        throw new Exception($"Recieved unexpected input: {input}.");
                 }
 
                 Console.Clear();
