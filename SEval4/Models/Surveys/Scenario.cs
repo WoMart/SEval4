@@ -7,11 +7,12 @@ namespace SEval4.Models
     public class Scenario
     {
         [Key]
-        public Guid ScenarioId { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        public int Order { get; set; }
+        public int ScenarioId { get; set; }
 
         public string Context { get; set; }
+
 
         public Guid Correct { get; set; }
 
@@ -34,8 +35,8 @@ namespace SEval4.Models
 
         public ScenarioTest(Scenario scenario)
         {
-            ScenarioId = scenario.ScenarioId;
-            Order = scenario.Order;
+            ScenarioId = scenario.Id;
+            Order = scenario.ScenarioId;
             Context = scenario.Context;
             Correct = scenario.Correct;
 

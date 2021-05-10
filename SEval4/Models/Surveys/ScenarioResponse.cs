@@ -5,6 +5,13 @@ using System.Threading.Tasks;
 
 namespace SEval4.Models
 {
+    public class Response : BaseTextValuePair<int>
+    {
+        public int ScenarioId { get; set; }
+        public string Description { get; set; }
+
+    }
+
     public class ScenarioResponse : BaseTextValuePair<int>
     {
         public string Tag { get; set; }

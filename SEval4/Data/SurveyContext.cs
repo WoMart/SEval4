@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using SEval4.Models;
 using System;
 using System.Collections.Generic;
@@ -12,14 +11,6 @@ namespace SEval4.Data
 {
     public class SurveyContext : DbContext
     {
-        #region Database name
-
-        //public static readonly string RowVersion = nameof(RowVersion);
-
-        public static readonly string SurveyDb = nameof(SurveyDb).ToLower();
-
-        #endregion
-
         #region Database sets
 
         public DbSet<AgeGroup> AgeGroups { get; private set; }
@@ -32,9 +23,11 @@ namespace SEval4.Data
 
         public DbSet<ParticipantSurvey> ParticipantSurveys { get; set; }
 
-        public DbSet<Scenario> Scenarios { get; set; }
+        public DbSet<Scenario> Scenarios { get; private set; }
 
-        public DbSet<ScenarioResponse> ScenarioResponses { get; set; }
+        //public DbSet<ScenarioResponse> ScenarioResponses { get; set; }
+
+        public DbSet<Response> Responses { get; private set; }
 
         #endregion
 
@@ -71,10 +64,8 @@ namespace SEval4.Data
             SetupTextValueEntity(modelBuilder, SeedSurvey.EducationGroupsSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.ConfidenceGroupsSeed);
 
-            FetchScenariosFromJson(modelBuilder);
-            //modelBuilder.Entity<ParticipantSurvey>()
-            //    .Property(RowVersion)
-            //    .IsRowVersion();
+            SetupScenarios(modelBuilder);
+            SetupTextValueEntity(modelBuilder, SeedSurvey.ResponsesSeed);
 
             base.OnModelCreating(modelBuilder);
         }
@@ -82,6 +73,14 @@ namespace SEval4.Data
         #endregion
 
         #region Private methods
+
+        private void SetupScenarios(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<Scenario>();
+
+            entity.HasKey(e => e.Id);
+            entity.HasData(SeedSurvey.ScenariosSeed);
+        }
 
         private void SetupTextValueEntity<T>(
             ModelBuilder modelBuilder, T[] seedData) 
@@ -98,59 +97,6 @@ namespace SEval4.Data
 
             // Seed values
             entity.HasData(seedData);
-        }
-
-        private void SetupTextValueEntityFromJson<T>(
-            ModelBuilder modelBuilder)
-            where T: BaseTextValuePair<int>
-        {
-
-        }
-
-        private void FetchScenariosFromJson(ModelBuilder modelBuilder)
-        {
-            string path = @"Data\Json\Scenarios.json";
-
-            using StreamReader sr = new(path);
-
-            string json = sr.ReadToEnd();
-            var jsonScenarios = JsonConvert
-                .DeserializeObject<List<JsonScenario>>(json);
-
-            // Convert json scenarios to entity framework models
-            List<Scenario> scenarios = new();
-            foreach (var scene in jsonScenarios)
-            {
-                Guid scenarioId = Guid.NewGuid();
-
-                // Convert json scenario responses to entity framework models
-                List<ScenarioResponse> responses = new();
-                foreach (var resp in scene.Responses)
-                {
-                    responses.Add(new ScenarioResponse
-                    {
-                        Id         = Guid.NewGuid(),
-                        Text       = resp.Text,
-                        Value      = resp.Value,
-                        Correct    = resp.Correct,
-                        Tag        = resp.Tag,
-                        ScenarioId = scenarioId,
-                    });
-                }
-
-                modelBuilder.Entity<ScenarioResponse>().HasData(responses);
-
-                scenarios.Add(new Scenario
-                {
-                    ScenarioId = scenarioId,
-                    Order      = scene.Order,
-                    Context    = scene.Context,
-                    Correct    = responses.Single(r => r.Correct).Id,
-                    //Responses = responses,
-                });
-            }
-
-            modelBuilder.Entity<Scenario>().HasData(scenarios);
         }
 
         #endregion

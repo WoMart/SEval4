@@ -62,24 +62,24 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        using var context = DbFactory.CreateDbContext();
+        //using var context = DbFactory.CreateDbContext();
 
-        // Fetch Scenarios and shuffle their order
-        // Must be Enumarable for LINQ to correctly translate the OrderBy query
-        var scenarios = context.Scenarios
-            .AsEnumerable()
-            .OrderBy(s => Guid.NewGuid());
+        //// Fetch Scenarios and shuffle their order
+        //// Must be Enumarable for LINQ to correctly translate the OrderBy query
+        //var scenarios = context.Scenarios
+        //    .AsEnumerable()
+        //    .OrderBy(s => Guid.NewGuid());
 
-        foreach (Scenario scenario in scenarios)
-        {
-            ScenarioTest newScenario = new(scenario);
-            newScenario.Responses = context.ScenarioResponses
-                .AsEnumerable()
-                .Where(sr => sr.ScenarioId == newScenario.ScenarioId)
-                .OrderBy(s => Guid.NewGuid())
-                .ToList();
-            Scenarios.Add(newScenario);
-        }
+        //foreach (Scenario scenario in scenarios)
+        //{
+        //    ScenarioTest newScenario = new(scenario);
+        //    newScenario.Responses = context.ScenarioResponses
+        //        .AsEnumerable()
+        //        .Where(sr => sr.ScenarioId == newScenario.ScenarioId)
+        //        .OrderBy(s => Guid.NewGuid())
+        //        .ToList();
+        //    Scenarios.Add(newScenario);
+        //}
 
         await base.OnParametersSetAsync();
     }
