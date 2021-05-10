@@ -10,6 +10,29 @@ namespace SEval4.Data
 {
     public class SEvalDBContext : DbContext
     {
+
+        #region Database sets
+
+        public DbSet<AgeGroup> AgeGroup { get; set; }
+
+        public DbSet<YearGroup> YearGroups { get; set; }
+
+        public DbSet<EducationGroup> EducationGroups { get;  set; }
+
+        public DbSet<ConfidenceGroup> ConfidenceGroups { get;  set; }
+
+        public DbSet<ParticipantSurvey> ParticipantSurveys { get; set; }
+
+        public DbSet<Scenario> Scenarios { get;  set; }
+
+        //public DbSet<ScenarioResponse> ScenarioResponses { get; set; }
+
+        public DbSet<Response> Responses { get;  set; }
+
+        #endregion
+
+        #region Public methods
+
         public SEvalDBContext(DbContextOptions<SEvalDBContext> options)
             : base(options)
         {
@@ -23,13 +46,53 @@ namespace SEval4.Data
             Debug.WriteLine($"Context created: {ContextId}.");
         }
 
+        #endregion
+
+        #region Protected methods
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AgeGroup>().HasData(SeedSurvey.AgeGroupsSeed);
+            // Seed website data
+            SetupTextValueEntity(modelBuilder, SeedSurvey.AgeGroupsSeed);
+            SetupTextValueEntity(modelBuilder, SeedSurvey.YearGroupsSeed);
+            SetupTextValueEntity(modelBuilder, SeedSurvey.EducationGroupsSeed);
+            SetupTextValueEntity(modelBuilder, SeedSurvey.ConfidenceGroupsSeed);
+
+            SetupScenarios(modelBuilder);
+            SetupTextValueEntity(modelBuilder, SeedSurvey.ResponsesSeed);
 
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<AgeGroup> AgeGroup { get; set; }
+        #endregion
+
+        #region Private methods
+
+        private void SetupScenarios(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<Scenario>();
+
+            entity.HasKey(e => e.Id);
+            entity.HasData(SeedSurvey.ScenariosSeed);
+        }
+
+        private void SetupTextValueEntity<T>(
+            ModelBuilder modelBuilder, T[] seedData)
+            where T : BaseTextValuePair<int>
+        {
+            var entity = modelBuilder.Entity<T>();
+
+            //// Set up row versioning for concurrency (unnecessary tbf)
+            //entity.Property<byte[]>(RowVersion)
+            //    .IsRowVersion();
+
+            // The HasKey is technically not necessary, since EF recognises "*id*" properties as PK
+            entity.HasKey(e => e.Id);
+
+            // Seed values
+            entity.HasData(seedData);
+        }
+
+        #endregion
     }
 }
