@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TestingGrounds.SEADM.Models
 {
-    class State
+    class SeadmState
     {
         #region Member variables
 
@@ -13,7 +13,7 @@ namespace TestingGrounds.SEADM.Models
         public string PreviousStateId { get; set; }
 
         // Questions
-        protected List<Question> Questions { get; private set; }
+        protected List<SeadmQuestion> Questions { get; private set; }
         public int QuestionCount => Questions?.Count ?? 0;
         public int QuestionIndex { get; private set; }
 
@@ -25,7 +25,7 @@ namespace TestingGrounds.SEADM.Models
 
         #region Public methods
 
-        public State(string stateId, StateTypeEnum stateType = StateTypeEnum.Regular)
+        public SeadmState(string stateId, StateTypeEnum stateType = StateTypeEnum.Regular)
         {
             StateId   = stateId;
             StateType = stateType;
@@ -99,114 +99,114 @@ namespace TestingGrounds.SEADM.Models
 
         #endregion
 
-        public static readonly List<Question> QuestionsSource = new()
+        public static readonly List<SeadmQuestion> QuestionsSource = new()
         {
-            new Question
+            new SeadmQuestion
             {
                 StateId = "SA",
                 Text = "Accept",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "SR",
                 Text = "Reject",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "SE",
                 Text = "Elaborate",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S1",
                 Text = "Do you understand what is requested?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S2",
                 Text = "Can you ask the requester to elaborate further on the request?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S3",
                 Text = "Do you understand how to perform the request?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S4",
                 Text = "Are you capable of performing the request?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S5",
                 Text = "Do you have the authority to perform the request?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S6",
                 Text = "Is the requested action or information avaiable to the public?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S7",
                 Text = "Is this a pre-approved request that can be perofrmed to avoid a life-threatening emergency?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S8",
                 Text = "Are there any administrative reasons for refusal?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S9",
                 Text = "Are there any procedural reasons for refusal?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S10",
                 Text = "Is this a new or an unusual type of request?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S11",
                 Text = "Are there any other reasons for refusal?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S12",
                 Text = "Is the requester's identity verifiable?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S13",
                 Text = "Can the authority level of the requester be verified?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S13",
                 Text = "Can the credibility of the requester be verified?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S13",
                 Text = "Did you have previous interaction with the requester?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S13",
                 Text = "Are you aware of the existence of the requester?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S14",
                 Text = "Can you verify the requester through a third party source?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S15",
                 Text = "Does the verification process reflect the same information as verification requirements?",
             },
-            new Question
+            new SeadmQuestion
             {
                 StateId = "S16",
                 Text = "Does the requester have the necessary authority to request the action or the information?",

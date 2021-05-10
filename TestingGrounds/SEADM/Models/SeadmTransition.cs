@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TestingGrounds.SEADM.Models
 {
-    class Transition
+    class SeadmTransition
     {
         public string StateId { get; set; }
         public int YesCount { get; set; }

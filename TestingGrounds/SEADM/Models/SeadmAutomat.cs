@@ -8,8 +8,8 @@ namespace TestingGrounds.SEADM.Models
 {
     class SeadmAutomat
     {
-        public List<State> States { get; private set; }
-        public State Current { get; set; }
+        public List<SeadmState> States { get; private set; }
+        public SeadmState Current { get; set; }
 
         public SeadmAutomat()
         {
@@ -69,7 +69,7 @@ namespace TestingGrounds.SEADM.Models
             Console.WriteLine("\n\nTRANSITIONS\n");
             for (int i = 0; i < Transitions.Count; i++)
             {
-                Transition transition = Transitions[i];
+                SeadmTransition transition = Transitions[i];
                 Console.WriteLine(
                     $"Q{i + 1}: ({transition.StateId}, {transition.YesCount}) => {transition.NextStateId}");
             };
@@ -86,7 +86,7 @@ namespace TestingGrounds.SEADM.Models
                 return;
             }
 
-            Transition transition = Transitions
+            SeadmTransition transition = Transitions
                 .SingleOrDefault(t =>
                 t.StateId == Current.StateId &&
                 t.YesCount == Current.YesCount);
@@ -119,7 +119,7 @@ namespace TestingGrounds.SEADM.Models
 
         protected void SetState(string stateId, string previousStateId = null)
         {
-            State state = States
+            SeadmState state = States
                 .SingleOrDefault(s =>
                 s.StateId == stateId);
 
@@ -141,241 +141,241 @@ namespace TestingGrounds.SEADM.Models
 
         #endregion
 
-        public static readonly List<Transition> Transitions = new()
+        public static readonly List<SeadmTransition> Transitions = new()
         {
             // Transition States
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S1",
                 YesCount = 1,
                 NextStateId = "S3",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S1",
                 YesCount = 0,
                 NextStateId = "S2",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S2",
                 YesCount = 1,
                 NextStateId = "SE",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S2",
                 YesCount = 0,
                 NextStateId = "SR",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S3",
                 YesCount = 1,
                 NextStateId = "S4",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S3",
                 YesCount = 0,
                 NextStateId = "SR",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S4",
                 YesCount = 1,
                 NextStateId = "S5",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S4",
                 YesCount = 0,
                 NextStateId = "SR",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S5",
                 YesCount = 1,
                 NextStateId = "S6",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S5",
                 YesCount = 0,
                 NextStateId = "SR",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S6",
                 YesCount = 1,
                 NextStateId = "SA",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S6",
                 YesCount = 0,
                 NextStateId = "S7",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S7",
                 YesCount = 1,
                 NextStateId = "SA",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S7",
                 YesCount = 0,
                 NextStateId = "S8",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S8",
                 YesCount = 1,
                 NextStateId = "S12",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S8",
                 YesCount = 0,
                 NextStateId = "S9",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S9",
                 YesCount = 1,
                 NextStateId = "S12",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S9",
                 YesCount = 0,
                 NextStateId = "S10",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S10",
                 YesCount = 1,
                 NextStateId = "S12",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S10",
                 YesCount = 0,
                 NextStateId = "S11",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S11",
                 YesCount = 1,
                 NextStateId = "S12",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S11",
                 YesCount = 0,
                 NextStateId = "SA",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S12",
                 YesCount = 1,
                 NextStateId = "S13",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S12",
                 YesCount = 0,
                 NextStateId = "SR",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S13",
                 YesCount = 0,
                 NextStateId = "SR",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S13",
                 YesCount = 1,
                 NextStateId = "S14",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S13",
                 YesCount = 2,
                 NextStateId = "S14",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S13",
                 YesCount = 3,
                 NextStateId = "S16",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S13",
                 YesCount = 4,
                 NextStateId = "S16",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S14",
                 YesCount = 1,
                 NextStateId = "S15",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S14",
                 YesCount = 0,
                 NextStateId = "SR",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S15",
                 YesCount = 1,
                 NextStateId = "S16",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S15",
                 YesCount = 0,
                 NextStateId = "SR",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S16",
                 YesCount = 1,
                 NextStateId = "SA",
             },
-            new Transition
+            new SeadmTransition
             {
                 StateId = "S16",
                 YesCount = 0,
                 NextStateId = "SR",
             },
         };
-        private static readonly List<State> _States = new()
+        private static readonly List<SeadmState> _States = new()
         {
-            new State("SA", StateTypeEnum.Terminal),
-            new State("SR", StateTypeEnum.Terminal),
-            new State("SE", StateTypeEnum.Terminal),
-            new State("S1", StateTypeEnum.Starting),
-            new State("S2"),
-            new State("S3"),
-            new State("S4"),
-            new State("S5"),
-            new State("S6"),
-            new State("S7"),
-            new State("S8"),
-            new State("S9"),
-            new State("S10"),
-            new State("S11"),
-            new State("S12"),
-            new State("S13"),
-            new State("S14"),
-            new State("S15"),
-            new State("S16"),
+            new SeadmState("SA", StateTypeEnum.Terminal),
+            new SeadmState("SR", StateTypeEnum.Terminal),
+            new SeadmState("SE", StateTypeEnum.Terminal),
+            new SeadmState("S1", StateTypeEnum.Starting),
+            new SeadmState("S2"),
+            new SeadmState("S3"),
+            new SeadmState("S4"),
+            new SeadmState("S5"),
+            new SeadmState("S6"),
+            new SeadmState("S7"),
+            new SeadmState("S8"),
+            new SeadmState("S9"),
+            new SeadmState("S10"),
+            new SeadmState("S11"),
+            new SeadmState("S12"),
+            new SeadmState("S13"),
+            new SeadmState("S14"),
+            new SeadmState("S15"),
+            new SeadmState("S16"),
         };
     }
 }
