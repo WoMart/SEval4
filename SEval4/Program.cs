@@ -16,9 +16,6 @@ namespace SEval4
     {
         public static void Main(string[] args)
         {
-#if DEBUG
-            ClearDatabase();
-#endif
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -28,13 +25,5 @@ namespace SEval4
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-        private static void ClearDatabase()
-        {
-            if (File.Exists("Private/SurveyDb.db"))
-            {
-                File.Delete("Private/SurveyDb.db");
-            }
-        }
     }
 }
