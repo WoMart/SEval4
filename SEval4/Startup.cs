@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using SEval4.Data;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,6 +18,13 @@ namespace SEval4
 {
     public class Startup
     {
+        #region DataDirectory placeholder string
+
+        private static readonly string _dataDirectory = 
+            Path.Combine(Directory.GetCurrentDirectory(), "Data");
+
+        #endregion
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,16 +39,31 @@ namespace SEval4
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            // Add Survey context to the context factory
-            services.AddDbContextFactory<SurveyContext>(opt =>
-                opt.UseSqlite($"Data Source=Private/{nameof(SurveyContext.SurveyDb)}.db"));
+            #region Database
 
-            //services.AddScoped<SurveyServices>();
+            // Define database context
+            services.AddDbContext<SEvalDBContext>(
+                context => context.UseSqlServer(
+                    Configuration.GetConnectionString("SevalDev")
+                    .Replace("%DataDirectory%", _dataDirectory)
+                    ));
 
-            services.AddTransient(sp => new EasyStorage(sp.GetService<Microsoft.JSInterop.IJSRuntime>()));
+            // Define Service to utilise the database
+            services.AddScoped<SurveyService>();
 
-            // Add local- and sessionStorage support (3rd party)
+            #endregion
+
+            #region Client-side storage
+
+            // Enables Cloudcrate's Local- and SessionStorage
             services.AddStorage();
+
+            // Add a custom service to operate on SessionStorage
+            services.AddTransient(
+                sp => new CustomStorage(
+                    sp.GetService<Microsoft.JSInterop.IJSRuntime>()));
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

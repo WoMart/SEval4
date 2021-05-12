@@ -5,3 +5,16 @@
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+@code{
+
+#if DEBUG
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await Storage.ClearAsync();
+        await base.OnAfterRenderAsync(firstRender);
+    }
+#endif
+
+}

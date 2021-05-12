@@ -1,5 +1,4 @@
 ﻿@page "/Results"
-@inject IDbContextFactory<SurveyContext> DbFactory
 @using SEval4.Models
 
 <h3>Survey Results</h3>
@@ -32,30 +31,29 @@
     </thead>
     <tbody>
         @{
-            using var context = DbFactory.CreateDbContext();
             foreach (var survey in Surveys)
             {
                 <tr>
                     <td>
-                        @context.AgeGroups.SingleOrDefault(ag => ag.Value == survey.AgeGroup).Text
+                        @AgeGroups.SingleOrDefault(ag => ag.Value == survey.AgeGroup).Text
                     </td>
                     <td>
-                        @context.EducationGroups.SingleOrDefault(ag => ag.Value == survey.EducationGroup).Text
+                        @EducationGroups.SingleOrDefault(ag => ag.Value == survey.EducationGroup).Text
                     </td>
                     <td>
-                        @context.YearGroups.SingleOrDefault(ag => ag.Value == survey.ProfessionalExperience).Text
+                        @YearGroups.SingleOrDefault(ag => ag.Value == survey.ProfessionalExperience).Text
                     </td>
                     <td>
-                        @(Convert.ToBoolean(survey?.HasFormalTraining))
+                        @Convert.ToBoolean(survey?.HasFormalTraining)
                     </td>
                     <td>
-                        @(Convert.ToBoolean(survey?.HasInformalTraining))
+                        @Convert.ToBoolean(survey?.HasInformalTraining)
                     </td>
                     <td>
-                        @context.ConfidenceGroups.SingleOrDefault(ag => ag.Value == survey.PhishingConfidence).Text
+                        @ConfidenceGroups.SingleOrDefault(ag => ag.Value == survey.PhishingConfidence).Text
                     </td>
                     <td>
-                        @context.ConfidenceGroups.SingleOrDefault(ag => ag.Value == survey.HumanConfidence).Text
+                        @ConfidenceGroups.SingleOrDefault(ag => ag.Value == survey.HumanConfidence).Text
                     </td>
                 </tr>
             }
@@ -65,13 +63,20 @@
 
 @code {
 
-    private List<ParticipantSurvey> Surveys = new List<ParticipantSurvey>();
+    private List<ParticipantSurvey> Surveys = new();
+
+    private List<AgeGroup> AgeGroups = new();
+    private List<YearGroup> YearGroups = new();
+    private List<EducationGroup> EducationGroups = new();
+    private List<ConfidenceGroup> ConfidenceGroups = new();
 
     protected override async Task OnParametersSetAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        
-        Surveys = await context.ParticipantSurveys.ToListAsync();
+        AgeGroups = await SurveyService.GetAgeGroupsAsync();
+        YearGroups = await SurveyService.GetYearGroupsAsync();
+        EducationGroups = await SurveyService.GetEducationGroupsAsync();
+        ConfidenceGroups = await SurveyService.GetConfidenceGroupsAsync();
+        Surveys = await SurveyService.GetParticipantSurveysAsync();
         await base.OnParametersSetAsync();
     }
 }

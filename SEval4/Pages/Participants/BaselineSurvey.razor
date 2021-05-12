@@ -1,10 +1,34 @@
 ﻿@page "/Baseline"
+@using SEval4.Models
 
 <div id="scenarioSurvey">
     <h1>BaselineSurvey</h1>
     <div id="form">
-        <EditForm >
+        <p>
 
+        </p>
+        <EditForm Model="@ParticipantBaseline" >
+
+            @foreach (var scenario in Scenarios)
+                {
+                    <p>
+                        <label for="@($"scenario{scenario.ScenarioId.ToString()}")">
+                            <b>@scenario.Context</b>
+                        </label>
+                    </p>
+                    <InputSelect class="form-control" @bind-Value="scenario.Correct" >
+                        <option value="">--</option>
+                        @*@foreach (var resp in scenario.Responses)
+                        {
+                            <option value="@resp.Value">@resp.Text</option>
+                        }*@
+                    </InputSelect>
+                }
+
+            <div>
+                <button class="btn btn-primary" type="submit">Continue</button>
+                <label class="alert text-danger"></label>
+            </div>
         </EditForm>
     </div>
 </div>
@@ -15,7 +39,56 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        Guid? guid = await Storage.GetUserGuidOrNullAsync();
+
+        if (guid != null)
+        {
+            UserGuid = guid.Value;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("Introduction");
+        }
+
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    //private List<ScenarioResponse> Responses { get; set; } = new();
+
+    private List<ScenarioTest> Scenarios { get; set; } = new();
+
+    private ParticipantBaseline ParticipantBaseline { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        //using var context = DbFactory.CreateDbContext();
+
+        //// Fetch Scenarios and shuffle their order
+        //// Must be Enumarable for LINQ to correctly translate the OrderBy query
+        //var scenarios = context.Scenarios
+        //    .AsEnumerable()
+        //    .OrderBy(s => Guid.NewGuid());
+
+        //foreach (Scenario scenario in scenarios)
+        //{
+        //    ScenarioTest newScenario = new(scenario);
+        //    newScenario.Responses = context.ScenarioResponses
+        //        .AsEnumerable()
+        //        .Where(sr => sr.ScenarioId == newScenario.ScenarioId)
+        //        .OrderBy(s => Guid.NewGuid())
+        //        .ToList();
+        //    Scenarios.Add(newScenario);
+        //}
+
+        // TODO
+
+        await base.OnParametersSetAsync();
+    }
+
+    private Task OnValueChanged(ScenarioTest scenario, string value)
+    {
+
+        return Task.CompletedTask;
     }
 
 }

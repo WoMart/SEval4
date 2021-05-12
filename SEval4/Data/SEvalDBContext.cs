@@ -8,54 +8,50 @@ using System.Threading.Tasks;
 
 namespace SEval4.Data
 {
-    public class SurveyContext : DbContext
+    public class SEvalDBContext : DbContext
     {
-        #region Magic numbers
-
-        //public static readonly string RowVersion = nameof(RowVersion);
-
-        public static readonly string SurveyDb = nameof(SurveyDb).ToLower();
-
-        #endregion
 
         #region Database sets
 
-        public DbSet<AgeGroup> AgeGroups { get; private set; }
+        public DbSet<AgeGroup> AgeGroup { get; set; }
 
-        public DbSet<YearGroup> YearGroups { get; private set; }
+        public DbSet<YearGroup> YearGroups { get; set; }
 
-        public DbSet<EducationGroup> EducationGroups { get; private set; }
+        public DbSet<EducationGroup> EducationGroups { get;  set; }
 
-        public DbSet<ConfidenceGroup> ConfidenceGroups { get; private set; }
+        public DbSet<ConfidenceGroup> ConfidenceGroups { get;  set; }
 
         public DbSet<ParticipantSurvey> ParticipantSurveys { get; set; }
+
+        public DbSet<Scenario> Scenarios { get;  set; }
+
+        //public DbSet<ScenarioResponse> ScenarioResponses { get; set; }
+
+        public DbSet<Response> Responses { get;  set; }
 
         #endregion
 
         #region Public methods
 
-        public SurveyContext(DbContextOptions<SurveyContext> options)
+        public SEvalDBContext(DbContextOptions<SEvalDBContext> options)
             : base(options)
         {
-            Debug.WriteLine($"{ContextId} context created.");
-            Database.EnsureCreated();
-        }
+            // Apply any pending migrations
 
-        public override void Dispose()
-        {
-            Debug.WriteLine($"{ContextId} context disposed.");
-            base.Dispose();
-        }
-
-        public override ValueTask DisposeAsync()
-        {
-            Debug.WriteLine($"{ContextId} context disposed async.");
-            return base.DisposeAsync();
+            Database.Migrate();
+//#if DEBUG
+//            Database.EnsureDeleted();
+//            Database.EnsureCreated();
+//#else
+//            Database.Migrate();
+//#endif
+            Debug.WriteLine($"Context created: {ContextId}.");
         }
 
         #endregion
 
         #region Protected methods
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,9 +61,8 @@ namespace SEval4.Data
             SetupTextValueEntity(modelBuilder, SeedSurvey.EducationGroupsSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.ConfidenceGroupsSeed);
 
-            //modelBuilder.Entity<ParticipantSurvey>()
-            //    .Property(RowVersion)
-            //    .IsRowVersion();
+            SetupScenarios(modelBuilder);
+            SetupTextValueEntity(modelBuilder, SeedSurvey.ResponsesSeed);
 
             base.OnModelCreating(modelBuilder);
         }
@@ -76,8 +71,16 @@ namespace SEval4.Data
 
         #region Private methods
 
+        private void SetupScenarios(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<Scenario>();
+
+            entity.HasKey(e => e.Id);
+            entity.HasData(SeedSurvey.ScenariosSeed);
+        }
+
         private void SetupTextValueEntity<T>(
-            ModelBuilder modelBuilder, T[] seedData) 
+            ModelBuilder modelBuilder, T[] seedData)
             where T : BaseTextValuePair<int>
         {
             var entity = modelBuilder.Entity<T>();
@@ -94,6 +97,5 @@ namespace SEval4.Data
         }
 
         #endregion
-
     }
 }

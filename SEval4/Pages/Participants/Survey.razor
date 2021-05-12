@@ -1,13 +1,11 @@
 ﻿@page "/Survey"
-@inject NavigationManager NavigationManager
-@inject IDbContextFactory<SurveyContext> DbFactory
 @using SEval4.Models
 
 <div id="survey">
     <h3>Survey</h3>
     <div id="form">
-        <EditForm Model="@ParticipantSurvey" 
-                  OnValidSubmit="@(async () => await Submit(true))" 
+        <EditForm Model="@ParticipantSurvey"
+                  OnValidSubmit="@(async () => await Submit(true))"
                   OnInvalidSubmit="@(async () => await Submit(false))">
 
             @* AGE GROUP *@
@@ -130,81 +128,85 @@
     </div>
 
 </div>
+@code {
+
+    #region Fetch options
+
+    private List<AgeGroup> AgeGroups = new();
+    private List<YearGroup> YearGroups = new();
+    private List<EducationGroup> EducationGroups = new();
+    private List<ConfidenceGroup> ConfidenceGroups = new();
 
 
-@code
-{
-    #region Input Options
+    protected override async Task OnInitializedAsync()
+    {
+        // Populate options
+        //AgeGroups = await SurveyService.GetAgeGroupsAsync();
+        //YearGroups = await SurveyService.GetYearGroupsAsync();
+        //EducationGroups = await SurveyService.GetEducationGroupsAsync();
+        //ConfidenceGroups = await SurveyService.GetConfidenceGroupsAsync();
 
-    private List<AgeGroup> AgeGroups { get; set; }
+        AgeGroups = await SurveyService.GetAgeGroupsAsync();
+        YearGroups = await SurveyService.GetYearGroupsAsync();
+        EducationGroups = await SurveyService.GetEducationGroupsAsync();
+        ConfidenceGroups = await SurveyService.GetConfidenceGroupsAsync();
 
-    private List<YearGroup> YearGroups { get; set; }
-
-    private List<EducationGroup> EducationGroups { get; set; }
-
-    private List<ConfidenceGroup> ConfidenceGroups { get; set; }
+        await base.OnInitializedAsync();
+    }
 
     #endregion
 
-    private string ErrorMsg { get; set; } = string.Empty;
+    #region Check UserGuid
 
-    private Guid UserGuid { get; set; }
+    private Guid UserGuid = Guid.Empty;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        string storedGuid = await Storage.GetItemAsync("guid");
+        Guid? guid = await Storage.GetUserGuidOrNullAsync();
 
-        if (string.IsNullOrEmpty(storedGuid))
+        if (guid is null)
         {
             NavigationManager.NavigateTo("Introduction");
         }
         else
         {
-            UserGuid = new Guid(storedGuid);
+            UserGuid = guid.Value;
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    protected async override Task OnParametersSetAsync()
-    {
-        await GetOptions();
-        await base.OnParametersSetAsync();
-    }
+    #endregion
 
-    private ParticipantSurvey ParticipantSurvey = new ParticipantSurvey();
+    #region Submit and continue
 
-    private bool Busy { get; set; }
-
-    #region Private methods
+    private ParticipantSurvey ParticipantSurvey = new();
+    private string ErrorMsg = string.Empty;
+    private bool IsBusy = false;
 
     private async Task Submit(bool isValid)
     {
         ErrorMsg = string.Empty;
 
-        // I don't need a separate message for each field
+        // One message for any missing field
         if (!isValid)
         {
             ErrorMsg = "All fields are required.";
             return;
         }
 
-        if (Busy)
+        if (IsBusy)
         {
-            ErrorMsg = "Processing update... try again.";
+            ErrorMsg = "Did you just double click me?";
             return;
         }
 
-        Busy = true;
-
-        ParticipantSurvey.Id = UserGuid;
-
-        using var context = DbFactory.CreateDbContext();
-        context.ParticipantSurveys.Add(ParticipantSurvey);
+        IsBusy = true;
 
         try
         {
-            await context.SaveChangesAsync();
+            await SurveyService.InsertNewParticipantAsync(ParticipantSurvey);
+            NavigationManager.NavigateTo("Baseline");
 
         }
         catch (DbUpdateException)
@@ -220,19 +222,8 @@
         }
         finally
         {
-            Busy = false;
+            IsBusy = false;
         }
-
-    }
-
-    private async Task GetOptions()
-    {
-        using var context = DbFactory.CreateDbContext();
-
-        AgeGroups        = await context.AgeGroups.ToListAsync();
-        YearGroups       = await context.YearGroups.ToListAsync();
-        EducationGroups  = await context.EducationGroups.ToListAsync();
-        ConfidenceGroups = await context.ConfidenceGroups.ToListAsync();
     }
 
     #endregion
