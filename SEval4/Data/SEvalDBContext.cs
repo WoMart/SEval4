@@ -37,18 +37,21 @@ namespace SEval4.Data
             : base(options)
         {
             // Apply any pending migrations
-#if DEBUG
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
-#else
+
             Database.Migrate();
-#endif
+//#if DEBUG
+//            Database.EnsureDeleted();
+//            Database.EnsureCreated();
+//#else
+//            Database.Migrate();
+//#endif
             Debug.WriteLine($"Context created: {ContextId}.");
         }
 
         #endregion
 
         #region Protected methods
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
