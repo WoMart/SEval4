@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <Folder Include="Data\Database\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="Pages\Test\" />
   </ItemGroup>
 
 </Project>

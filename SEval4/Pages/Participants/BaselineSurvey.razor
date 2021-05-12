@@ -1,6 +1,5 @@
 ﻿@page "/Baseline"
 @using SEval4.Models
-@inject IDbContextFactory<SurveyContext> DbFactory
 
 <div id="scenarioSurvey">
     <h1>BaselineSurvey</h1>
@@ -80,6 +79,8 @@
         //        .ToList();
         //    Scenarios.Add(newScenario);
         //}
+
+        // TODO
 
         await base.OnParametersSetAsync();
     }
