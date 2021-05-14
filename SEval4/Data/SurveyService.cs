@@ -64,10 +64,10 @@ namespace SEval4.Data
 
         #region Baseline Survey
 
-        public async Task<List<Scenario>> GetBaselineScenariosAsync(bool randomOrder = false)
+        public async Task<List<Scenario>> GetBaselineScenariosAsync(bool isRandomOrder = false)
         {
             // Select in random order or by ScenarioId (pre-defined order)
-            var orderedScenarios = randomOrder
+            var orderedScenarios = isRandomOrder
                 ? _context.Scenarios
                     .OrderBy(s => Guid.NewGuid())
                 : _context.Scenarios
@@ -77,10 +77,10 @@ namespace SEval4.Data
                 .ToListAsync();
         }
 
-        public async Task<List<Response>> GetBaselineResponsesAsync(bool randomOrder = false)
+        public async Task<List<Response>> GetBaselineResponsesAsync(bool isRandomOrder = false)
         {
             // Select in random order or by ScenarioId (pre-defined order)
-            var orderedResponses = randomOrder
+            var orderedResponses = isRandomOrder
                 ? _context.Responses
                     .OrderBy(s => Guid.NewGuid())
                 : _context.Responses
