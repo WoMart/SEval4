@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace SEval4.Models
 {
-    public class ParticipantBaseline
+    public class BaselineFormAnswer
     {
         [Key]
-        public Guid Id { get; set; }
-
+        public Guid Id { get; set; } = Guid.NewGuid();
+        [Required]
         public Guid UserGuid { get; set; }
-
-
+        [Required]
+        public int ScenarioId { get; set; }
+        [Required]
+        public string Value { get; set; }
     }
 }
