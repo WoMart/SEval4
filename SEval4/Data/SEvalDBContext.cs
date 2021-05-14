@@ -25,8 +25,6 @@ namespace SEval4.Data
 
         public DbSet<Scenario> Scenarios { get;  set; }
 
-        //public DbSet<ScenarioResponse> ScenarioResponses { get; set; }
-
         public DbSet<Response> Responses { get;  set; }
 
         #endregion
@@ -37,14 +35,8 @@ namespace SEval4.Data
             : base(options)
         {
             // Apply any pending migrations
-
             Database.Migrate();
-//#if DEBUG
-//            Database.EnsureDeleted();
-//            Database.EnsureCreated();
-//#else
-//            Database.Migrate();
-//#endif
+
             Debug.WriteLine($"Context created: {ContextId}.");
         }
 
