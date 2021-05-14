@@ -4,9 +4,6 @@
 <div id="scenarioSurvey">
     <h1>BaselineSurvey</h1>
     <div id="form">
-        <p>
-
-        </p>
 
         <EditForm Model="@Answers" OnSubmit="@( async () => await Submit() )">
 
@@ -16,19 +13,23 @@
                 var responses = Responses.Where(r => r.ScenarioId == answer.ScenarioId)
                     .ToList();
 
-                <p>
-                    <label for="@($"scenario{scenario.ScenarioId.ToString()}")">
-                        <b>@scenario.Context</b>
-                    </label>
-                </p>
-                <InputSelect class="form-control" @bind-Value="answer.Value">
-                    <option value=""></option>
-
-                    @foreach (Response resp in responses)
-                        {
-                        <option value="@resp.Value">@resp.Text</option>
-                        }
-                </InputSelect>
+                <div style="margin-bottom:20px; border:double; border-width:2px; padding:10px;">
+                    <div>
+                        <p>
+                            <label for="@($"scenario{scenario.ScenarioId.ToString()}")">
+                                <b>@scenario.Context</b>
+                            </label>
+                        </p>
+                    </div>
+                    <div>
+                        <InputRadioGroup @bind-Value="answer.Value">
+                            @foreach (Response resp in responses)
+                            {
+                                <InputRadio Value="resp.Value" /> @resp.Text <br />
+                            }
+                        </InputRadioGroup>
+                    </div>
+                </div>
             }
 
             <div>
@@ -60,7 +61,7 @@
         }
         else
         {
-            NavigationManager.NavigateTo("Introduction");
+            //NavigationManager.NavigateTo("Introduction");
         }
 
         await base.OnAfterRenderAsync(firstRender);
@@ -135,45 +136,3 @@
 
     #endregion
 }
-
-@*
-
-
-    //private List<ScenarioResponse> Responses { get; set; } = new();
-
-    private List<ScenarioTest> Scenarios { get; set; } = new();
-
-    private ParticipantBaseline ParticipantBaseline { get; set; } = new();
-
-    protected override async Task OnParametersSetAsync()
-    {
-        //using var context = DbFactory.CreateDbContext();
-
-        //// Fetch Scenarios and shuffle their order
-        //// Must be Enumarable for LINQ to correctly translate the OrderBy query
-        //var scenarios = context.Scenarios
-        //    .AsEnumerable()
-        //    .OrderBy(s => Guid.NewGuid());
-
-        //foreach (Scenario scenario in scenarios)
-        //{
-        //    ScenarioTest newScenario = new(scenario);
-        //    newScenario.Responses = context.ScenarioResponses
-        //        .AsEnumerable()
-        //        .Where(sr => sr.ScenarioId == newScenario.ScenarioId)
-        //        .OrderBy(s => Guid.NewGuid())
-        //        .ToList();
-        //    Scenarios.Add(newScenario);
-        //}
-
-        // TODO
-
-        await base.OnParametersSetAsync();
-    }
-
-    private Task OnValueChanged(ScenarioTest scenario, string value)
-    {
-
-        return Task.CompletedTask;
-    }
-*@
