@@ -8,12 +8,12 @@
 
         </p>
 
-        <EditForm Model="@Answers">
+        <EditForm Model="@Answers" OnSubmit="@( async () => await Submit() )">
 
             @foreach (var answer in Answers)
             {
-                var scenario  = Scenarios.Single(s => s.ScenarioId == answer.ScenarioId);
-                var responses = Responses.Where(r  => r.ScenarioId == answer.ScenarioId)
+                var scenario = Scenarios.Single(s => s.ScenarioId == answer.ScenarioId);
+                var responses = Responses.Where(r => r.ScenarioId == answer.ScenarioId)
                     .ToList();
 
                 <p>
@@ -25,15 +25,19 @@
                     <option value=""></option>
 
                     @foreach (Response resp in responses)
-                    {
+                        {
                         <option value="@resp.Value">@resp.Text</option>
-                    }
+                        }
                 </InputSelect>
             }
 
             <div>
                 <button class="btn btn-primary" type="submit">Continue</button>
-                <label class="alert text-danger"></label>
+                <label class="alert text-danger">@ErrorMsg</label>
+            </div>
+            <div class="alert">
+                <DataAnnotationsValidator />
+                @*<ValidationSummary />*@
             </div>
         </EditForm>
     </div>
@@ -47,6 +51,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        // Get user Guid freom SessionStorage
         Guid? guid = await Storage.GetUserGuidOrNullAsync();
 
         if (guid != null)
@@ -63,20 +68,24 @@
 
     #endregion
 
+    #region Setup Scenarios, Responses, and Answer models
+
     private List<Scenario> Scenarios = new();
     private List<Response> Responses = new();
     private List<BaselineFormAnswer> Answers = new();
 
     protected override async Task OnInitializedAsync()
     {
+        // Get data for questions
         Scenarios = await SurveyService.GetBaselineScenariosAsync(isRandomOrder: true);
         Responses = await SurveyService.GetBaselineResponsesAsync(isRandomOrder: true);
 
-        // Create models for answers
+        // Preapre containers for answers
         for (int i = 0; i < Scenarios.Count; i++)
         {
             Answers.Add(new BaselineFormAnswer
             {
+                UserGuid = UserGuid,
                 ScenarioId = Scenarios[i].ScenarioId,
             });
         }
@@ -84,7 +93,47 @@
         await base.OnInitializedAsync();
     }
 
+    #endregion
 
+    #region Validate and submit
+
+    private string ErrorMsg = string.Empty;
+
+    private async Task Submit()
+    {
+        if (IsFormValid())
+        {
+            // TODO: Submit and navigate.
+            ErrorMsg = "Good job!";
+        }
+
+        await Task.CompletedTask;
+    }
+
+    private bool IsFormValid()
+    {
+        if (Answers?.Count != Scenarios.Count)
+        {
+            ErrorMsg = $"Internal error. Number of answers does not match with questions.";
+            return false;
+        }
+
+        foreach (BaselineFormAnswer answer in Answers)
+        {
+            var response = Responses.SingleOrDefault(r =>
+                r.ScenarioId == answer.ScenarioId &&
+                r.Value.ToString() == answer.Value);
+
+            if (response is null)
+            {
+                ErrorMsg = $"All fields are required.";
+                return false;
+            }
+        }
+        return true;
+    }
+
+    #endregion
 }
 
 @*
