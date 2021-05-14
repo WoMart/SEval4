@@ -16,6 +16,10 @@ namespace SEval4.Data
             _context = context;
         }
 
+        #region Participant survey
+
+        #region Dropdown options
+
         public async Task<List<AgeGroup>> GetAgeGroupsAsync()
         {
             return await _context.AgeGroup
@@ -44,11 +48,9 @@ namespace SEval4.Data
                 .ToListAsync();
         }
 
-        public async Task<List<ParticipantSurvey>> GetParticipantSurveysAsync()
-        {
-            return await _context.ParticipantSurveys
-                .ToListAsync();
-        }
+        #endregion
+
+        #region Submit
 
         public async Task<int> InsertNewParticipantAsync(ParticipantSurvey survey)
         {
@@ -56,5 +58,50 @@ namespace SEval4.Data
             return await _context.SaveChangesAsync();
         }
 
+        #endregion
+
+        #endregion
+
+        #region Baseline Survey
+
+        public async Task<List<Scenario>> GetBaselineScenariosAsync(bool randomOrder = false)
+        {
+            // Select in random order or by ScenarioId (pre-defined order)
+            var orderedScenarios = randomOrder
+                ? _context.Scenarios
+                    .OrderBy(s => Guid.NewGuid())
+                : _context.Scenarios
+                    .OrderBy(s => s.ScenarioId);
+
+            return await orderedScenarios
+                .ToListAsync();
+        }
+
+        public async Task<List<Response>> GetBaselineResponsesAsync(bool randomOrder = false)
+        {
+            // Select in random order or by ScenarioId (pre-defined order)
+            var orderedResponses = randomOrder
+                ? _context.Responses
+                    .OrderBy(s => Guid.NewGuid())
+                : _context.Responses
+                    .OrderBy(s => s.ResponseOrder);
+
+            return await orderedResponses
+                .ToListAsync();
+
+        }
+
+        #endregion
+
+
+        #region For development
+
+        public async Task<List<ParticipantSurvey>> GetParticipantSurveysAsync()
+        {
+            return await _context.ParticipantSurveys
+                .ToListAsync();
+        }
+
+        #endregion
     }
 }
