@@ -7,23 +7,29 @@
         <p>
 
         </p>
-        <EditForm Model="@ParticipantBaseline" >
 
-            @foreach (var scenario in Scenarios)
-                {
-                    <p>
-                        <label for="@($"scenario{scenario.ScenarioId.ToString()}")">
-                            <b>@scenario.Context</b>
-                        </label>
-                    </p>
-                    <InputSelect class="form-control" @bind-Value="scenario.Correct" >
-                        <option value="">--</option>
-                        @*@foreach (var resp in scenario.Responses)
-                        {
-                            <option value="@resp.Value">@resp.Text</option>
-                        }*@
-                    </InputSelect>
-                }
+        <EditForm Model="@Answers">
+
+            @foreach (var answer in Answers)
+            {
+                var scenario  = Scenarios.Single(s => s.ScenarioId == answer.ScenarioId);
+                var responses = Responses.Where(r  => r.ScenarioId == answer.ScenarioId)
+                    .ToList();
+
+                <p>
+                    <label for="@($"scenario{scenario.ScenarioId.ToString()}")">
+                        <b>@scenario.Context</b>
+                    </label>
+                </p>
+                <InputSelect class="form-control" @bind-Value="answer.Value">
+                    <option value=""></option>
+
+                    @foreach (Response resp in responses)
+                    {
+                        <option value="@resp.Value">@resp.Text</option>
+                    }
+                </InputSelect>
+            }
 
             <div>
                 <button class="btn btn-primary" type="submit">Continue</button>
@@ -34,6 +40,8 @@
 </div>
 
 @code {
+
+    #region User Guid
 
     private Guid UserGuid { get; set; }
 
@@ -52,6 +60,35 @@
 
         await base.OnAfterRenderAsync(firstRender);
     }
+
+    #endregion
+
+    private List<Scenario> Scenarios = new();
+    private List<Response> Responses = new();
+    private List<BaselineFormAnswer> Answers = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Scenarios = await SurveyService.GetBaselineScenariosAsync(isRandomOrder: true);
+        Responses = await SurveyService.GetBaselineResponsesAsync(isRandomOrder: true);
+
+        // Create models for answers
+        for (int i = 0; i < Scenarios.Count; i++)
+        {
+            Answers.Add(new BaselineFormAnswer
+            {
+                ScenarioId = Scenarios[i].ScenarioId,
+            });
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+
+}
+
+@*
+
 
     //private List<ScenarioResponse> Responses { get; set; } = new();
 
@@ -90,5 +127,4 @@
 
         return Task.CompletedTask;
     }
-
-}
+*@
