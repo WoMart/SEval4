@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SEval4", "SEval4\SEval4.csproj", "{84887A32-D9D5-43CB-8B0C-2FC87FC4F697}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingGrounds", "TestingGrounds\TestingGrounds.csproj", "{116A9A06-22BD-4616-99A1-3874C27917B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestingGrounds", "TestingGrounds\TestingGrounds.csproj", "{116A9A06-22BD-4616-99A1-3874C27917B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

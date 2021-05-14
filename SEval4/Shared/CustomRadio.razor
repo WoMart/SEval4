@@ -1,0 +1,44 @@
+﻿@*
+    Credits: https://stackoverflow.com/a/64365273/9286176
+*@
+@using System.Globalization
+@typeparam TValue
+@inherits InputBase<TValue>
+
+<input type="radio"
+       value="@SelectedValue"
+       checked="@(SelectedValue.Equals(Value))"
+       @attributes="AdditionalAttributes"
+       @onchange="OnChange" />
+
+@code {
+
+    [Parameter]
+    public TValue SelectedValue { get; set; }
+
+    private void OnChange(ChangeEventArgs e)
+    {
+        CurrentValueAsString = e.Value.ToString();
+    }
+
+    protected override bool TryParseValueFromString(string value,
+        out TValue result, out string validationErrorMessage)
+    {
+        var success = BindConverter.TryConvertTo<TValue>(
+            value, CultureInfo.CurrentCulture, out var parsedValue);
+
+        if (success)
+        {
+            result = parsedValue;
+            validationErrorMessage = null;
+        }
+        else
+        {
+            result = default;
+            validationErrorMessage =
+                $"{FieldIdentifier.FieldName} field isn't valid.";
+        }
+
+        return success;
+    }
+}
