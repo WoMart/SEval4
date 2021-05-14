@@ -9,10 +9,10 @@
 @using Microsoft.JSInterop
 @using SEval4
 @using SEval4.Data;
+@using SEval4.Data.Services; 
 @using SEval4.Shared
-@using Cloudcrate.AspNetCore.Blazor.Browser.Storage;
 
+@* SERVICES *@
 @inject NavigationManager NavigationManager
-@*@inject LocalStorage Storage*@
-@inject CustomStorage Storage
-@inject SurveyService SurveyService
+@inject ClientStorage     Storage
+@inject SurveyService     SurveyService

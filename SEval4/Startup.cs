@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SEval4.Data;
+using SEval4.Data.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -60,7 +61,7 @@ namespace SEval4
 
             // Add a custom service to operate on SessionStorage
             services.AddTransient(
-                sp => new CustomStorage(
+                sp => new ClientStorage(
                     sp.GetService<Microsoft.JSInterop.IJSRuntime>()));
 
             #endregion

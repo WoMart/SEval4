@@ -5,15 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SEval4.Data
+namespace SEval4.Data.Services
 {
-    public class CustomStorage
+    public class ClientStorage
     {
         private static LocalStorage _storage;
 
         public static readonly string UserGuidKey = "seval_guid";
 
-        public CustomStorage(IJSRuntime runtime)
+        public ClientStorage(IJSRuntime runtime)
         {
             _storage = new LocalStorage(runtime);
         }
@@ -26,7 +26,7 @@ namespace SEval4.Data
 
         public async ValueTask<string> GetItem(string key) =>
             await _storage.GetItemAsync(key);
-        
+
         public async ValueTask<Guid?> GetUserGuidOrNullAsync()
         {
             string storedGuid = await _storage.GetItemAsync(UserGuidKey);
