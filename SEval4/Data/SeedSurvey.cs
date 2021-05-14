@@ -168,6 +168,7 @@ namespace SEval4.Data
             new Response
             {
                 ScenarioId = 1,
+                ResponseOrder = 1,
                 Description = "Refuse immidately",
                 Text = "Refuse to help her entirely and hang up the phone.",
                 Value = 1,
@@ -175,6 +176,7 @@ namespace SEval4.Data
             new Response
             {
                 ScenarioId = 1,
+                ResponseOrder = 2,
                 Description = "Refer to colleague",
                 Text = "Ask her to contact one of your colleagues since you are on holiday.",
                 Value = 2,
@@ -182,6 +184,7 @@ namespace SEval4.Data
             new Response
             {
                 ScenarioId = 1,
+                ResponseOrder = 3,
                 Description = "Accept immediately",
                 Text = "Instantly provide her with your login details and wish her a merry Christmas.",
                 Value = 3,
@@ -189,6 +192,7 @@ namespace SEval4.Data
             new Response
             {
                 ScenarioId = 1,
+                ResponseOrder = 4,
                 Description = "Ask more questions and decide later",
                 Text = "Ask her a few complementary questions and based on her answers either provide her with your login details or don’t provide her with any information.",
                 Value = 4,
@@ -198,6 +202,7 @@ namespace SEval4.Data
             new Response
             {
                 ScenarioId = 2,
+                ResponseOrder = 1,
                 Description = "Click on the links and decide later",
                 Text = "Click on the links provided, and have a look at the company’s online profile as well as reviews left by others. If all seems good, get in contact with the recruiter.",
                 Value = 1,
@@ -205,6 +210,7 @@ namespace SEval4.Data
             new Response
             {
                 ScenarioId = 2,
+                ResponseOrder = 2,
                 Description = "Accept immediately and provide too much data",
                 Text = "You have been job hunting for ages and see this as a blessing in disguise. You reply to the email saying that you would appreciate his help and attach a copy of your CV, a copy of your ID and a link to your GitHub account. (Since you know he will most likely request all this information anyway.",
                 Value = 2,
@@ -212,6 +218,7 @@ namespace SEval4.Data
             new Response
             {
                 ScenarioId = 2,
+                ResponseOrder = 3,
                 Description = "Ignore and block",
                 Text = "Ignore the email and remove the recruiter from your LinkedIn.",
                 Value = 3,
@@ -219,6 +226,7 @@ namespace SEval4.Data
             new Response
             {
                 ScenarioId = 2,
+                ResponseOrder = 4,
                 Description = "Use the number to arrange a meeting",
                 Text = "Give the recruiter a call on one of the two numbers provided and arrange to meet up with him to discuss how he can help you.",
                 Value = 4,

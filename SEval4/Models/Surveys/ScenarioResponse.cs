@@ -9,6 +9,7 @@ namespace SEval4.Models
     {
         public int ScenarioId { get; set; }
         public string Description { get; set; }
+        public int ResponseOrder { get; set; }
 
     }
 
