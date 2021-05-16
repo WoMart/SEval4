@@ -13,6 +13,8 @@ namespace SEval4.Data
 
         #region Database sets
 
+        #region Dropdown options
+
         public DbSet<AgeGroup> AgeGroup { get; set; }
 
         public DbSet<YearGroup> YearGroups { get; set; }
@@ -21,13 +23,23 @@ namespace SEval4.Data
 
         public DbSet<ConfidenceGroup> ConfidenceGroups { get; set; }
 
-        public DbSet<ParticipantSurvey> ParticipantSurveys { get; set; }
+        #endregion
+
+        #region Survey scenarios
 
         public DbSet<Scenario> Scenarios { get; set; }
 
         public DbSet<Response> Responses { get; set; }
 
+        #endregion
+
+        #region Submited forms
+
+        public DbSet<ParticipantSurvey> ParticipantSurveys { get; set; }
+
         public DbSet<AnswerBaseline> AnswersBaseline { get; set; }
+
+        #endregion
 
         #endregion
 
