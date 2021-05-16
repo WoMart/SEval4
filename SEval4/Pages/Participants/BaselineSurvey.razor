@@ -109,11 +109,11 @@
     {
         if (IsFormValid())
         {
-            // TODO: Submit and navigate.
-            // PS: Navigate to PostInto for now
-            ErrorMsg = "Good job!";
-
-
+            await SurveyService.SubmitBaselineFormAsync(Answers);
+            
+            // TODO: Logic for rediraction to one of the 'games'
+            // TODO: Change PostIntro to Feedback or SEADM intro
+            NavigationManager.NavigateTo("PostIntro");
         }
 
         await Task.CompletedTask;
