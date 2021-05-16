@@ -206,7 +206,7 @@
         try
         {
             await SurveyService.InsertNewParticipantAsync(ParticipantSurvey);
-            NavigationManager.NavigateTo("Baseline");
+            NavigationManager.NavigateTo("BaselineIntro");
 
         }
         catch (DbUpdateException)
