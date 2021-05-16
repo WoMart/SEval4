@@ -88,6 +88,17 @@ namespace SEval4.Data.Services
             return await orderedResponses.ToListAsync();
         }
 
+        public async Task<int> SubmitBaselineFormAsync(List<AnswerBaseline> answers)
+        {
+            // Add 
+            for (int i = 0; i < answers.Count; i++)
+            {
+                _context.AnswersBaseline.Add(answers[i]);
+            }
+
+            return await _context.SaveChangesAsync();
+        }
+
         #endregion
 
 
