@@ -90,12 +90,8 @@ namespace SEval4.Data.Services
 
         public async Task<int> SubmitBaselineFormAsync(List<AnswerBaseline> answers)
         {
-            // Add 
-            for (int i = 0; i < answers.Count; i++)
-            {
-                _context.AnswersBaseline.Add(answers[i]);
-            }
-
+            // Do some validaiton? Number of elements, Guid is the same and non-empty, etc.
+            _context.AnswersBaseline.AddRange(answers);
             return await _context.SaveChangesAsync();
         }
 
