@@ -17,15 +17,17 @@ namespace SEval4.Data
 
         public DbSet<YearGroup> YearGroups { get; set; }
 
-        public DbSet<EducationGroup> EducationGroups { get;  set; }
+        public DbSet<EducationGroup> EducationGroups { get; set; }
 
-        public DbSet<ConfidenceGroup> ConfidenceGroups { get;  set; }
+        public DbSet<ConfidenceGroup> ConfidenceGroups { get; set; }
 
         public DbSet<ParticipantSurvey> ParticipantSurveys { get; set; }
 
-        public DbSet<Scenario> Scenarios { get;  set; }
+        public DbSet<Scenario> Scenarios { get; set; }
 
-        public DbSet<Response> Responses { get;  set; }
+        public DbSet<Response> Responses { get; set; }
+
+        public DbSet<AnswerBaseline> AnswersBaseline { get; set; }
 
         #endregion
 
