@@ -107,23 +107,27 @@
 
     private async Task Submit()
     {
-        if (IsFormValid())
+        if (IsFormValid(out string errorMsg))
         {
             await SurveyService.SubmitBaselineFormAsync(Answers);
-            
+
             // TODO: Logic for rediraction to one of the 'games'
             // TODO: Change PostIntro to Feedback or SEADM intro
             NavigationManager.NavigateTo("PostIntro");
+        }
+        else
+        {
+            ErrorMsg = errorMsg;
         }
 
         await Task.CompletedTask;
     }
 
-    private bool IsFormValid()
+    private bool IsFormValid(out string errorMsg)
     {
         if (Answers?.Count != Scenarios.Count)
         {
-            ErrorMsg = $"Internal error. Number of answers does not match with questions.";
+            errorMsg = $"Internal error. Number of answers does not match with questions.";
             return false;
         }
 
@@ -135,10 +139,12 @@
 
             if (response is null)
             {
-                ErrorMsg = $"All fields are required.";
+                errorMsg = $"All fields are required.";
                 return false;
             }
         }
+
+        errorMsg = null;
         return true;
     }
 
