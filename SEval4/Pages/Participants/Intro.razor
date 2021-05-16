@@ -13,7 +13,7 @@
     </p>
 
     <div>
-        <button class="btn btn-primary" @onclick="GoToConsent">
+        <button class="btn btn-primary" @onclick="Continue">
             Continue
         </button>
     </div>
@@ -21,7 +21,7 @@
 </div>
 
 @code {
-    private void GoToConsent()
+    private void Continue()
     {
         NavigationManager.NavigateTo("Consent");
     }
