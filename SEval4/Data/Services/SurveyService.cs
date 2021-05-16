@@ -82,14 +82,10 @@ namespace SEval4.Data.Services
         {
             // Select in random order or by ScenarioId (pre-defined order)
             var orderedResponses = isRandomOrder
-                ? _context.Responses
-                    .OrderBy(s => Guid.NewGuid())
-                : _context.Responses
-                    .OrderBy(s => s.ResponseOrder);
+                ? _context.Responses.OrderBy(s => Guid.NewGuid())
+                : _context.Responses.OrderBy(s => s.ResponseOrder);
 
-            return await orderedResponses
-                .ToListAsync();
-
+            return await orderedResponses.ToListAsync();
         }
 
         #endregion
