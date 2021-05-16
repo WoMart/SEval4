@@ -78,7 +78,7 @@
 
     private List<Scenario> Scenarios = new();
     private List<Response> Responses = new();
-    private List<BaselineFormAnswer> Answers = new();
+    private List<AnswerBaseline> Answers = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -89,7 +89,7 @@
         // Preapre containers for answers
         for (int i = 0; i < Scenarios.Count; i++)
         {
-            Answers.Add(new BaselineFormAnswer
+            Answers.Add(new AnswerBaseline
             {
                 UserGuid = UserGuid,
                 ScenarioId = Scenarios[i].ScenarioId,
@@ -110,7 +110,10 @@
         if (IsFormValid())
         {
             // TODO: Submit and navigate.
+            // PS: Navigate to PostInto for now
             ErrorMsg = "Good job!";
+
+
         }
 
         await Task.CompletedTask;
@@ -124,7 +127,7 @@
             return false;
         }
 
-        foreach (BaselineFormAnswer answer in Answers)
+        foreach (AnswerBaseline answer in Answers)
         {
             var response = Responses.SingleOrDefault(r =>
                 r.ScenarioId == answer.ScenarioId &&
