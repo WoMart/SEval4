@@ -19,6 +19,34 @@ namespace SEval4.Data.Services
 
         #region Participant survey
 
+        #region 
+
+        public async Task<Guid> CreateNewParticipantWithGuidAsync()
+        {
+            // Create a new participant entry
+            Participant participant = new()
+            {
+                Id = Guid.NewGuid(),
+                IsFinished = false,
+                CreationTime = DateTime.Now,
+            };
+
+            // Insert
+            _context.Participants.Add(participant);
+            await _context.SaveChangesAsync();
+
+            // Return participant's Guid ID
+            return participant.Id;
+        }
+
+        public async Task<Participant> GetParticipantAsync(Guid guid)
+        {
+            return await _context.Participants
+                .FirstOrDefaultAsync(p => p.Id == guid);
+        }
+
+        #endregion
+
         #region Dropdown options
 
         public async Task<List<AgeGroup>> GetAgeGroupsAsync()
