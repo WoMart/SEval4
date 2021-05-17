@@ -19,6 +19,12 @@ namespace SEval4.Data
 
         #endregion
 
+        #region Study groups
+
+        public DbSet<StudyGroup> StudyGroups { get; set; }
+
+        #endregion
+
         #region Dropdown options
 
         public DbSet<AgeGroup> AgeGroup { get; set; }
@@ -72,6 +78,9 @@ namespace SEval4.Data
             SetupTextValueEntity(modelBuilder, SeedSurvey.YearGroupsSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.EducationGroupsSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.ConfidenceGroupsSeed);
+
+            modelBuilder.Entity<StudyGroup>()
+                .HasData(SeedSurvey.StudyGroupsSeed);
 
             SetupScenarios(modelBuilder);
             SetupTextValueEntity(modelBuilder, SeedSurvey.ResponsesSeed);
