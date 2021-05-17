@@ -49,6 +49,30 @@ namespace SEval4.Data.Services
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<int> AllocateParticipantAsync(Guid guid)
+        {
+            // Count number of allocations that already concluded the experiment
+            Dictionary<int, int> groupCounts =
+                _context.Participants
+                .Where(p => p.IsFinished)
+                .GroupBy(p => p.StudyGroup)
+                .ToDictionary(pg => pg.Key.Id, pg => pg.Count());
+
+            // Get ID of the group with lowest count value
+            int groupId = groupCounts
+                .OrderBy(gc => gc.Value)
+                .First()
+                .Key;
+
+            // Update participant with the allocated group and timestamp
+            Participant participant = await GetParticipantAsync(guid);
+            participant.StudyGroupId = groupId;
+            participant.AllocationTime = DateTime.Now;
+            await UpdateParticipantAsync(participant);
+
+            return groupId;
+        }
+
         #endregion
 
         #region Participant survey
