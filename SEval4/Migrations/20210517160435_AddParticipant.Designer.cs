@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SEval4.Data;
 
 namespace SEval4.Migrations
 {
     [DbContext(typeof(SEvalDBContext))]
-    partial class SEvalDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210517160435_AddParticipant")]
+    partial class AddParticipant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
