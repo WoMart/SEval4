@@ -1,23 +1,28 @@
 ﻿<h3>EvaluationIntro</h3>
 
+
+
 @code {
 
-    #region User Guid
+    #region User Guid and Study group
 
     private Guid UserGuid { get; set; }
+    private int StudyGroup { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        // Get user Guid freom SessionStorage
-        Guid? guid = await Storage.GetUserGuidOrNullAsync();
+        if (firstRender || UserGuid.Equals(Guid.Empty))
+        {
+            Guid? guid = await Storage.GetUserGuidOrNullAsync();
 
-        if (guid != null)
-        {
-            UserGuid = guid.Value;
-        }
-        else
-        {
-            NavigationManager.NavigateTo("Introduction");
+            if (guid is null)
+            {
+                NavigationManager.NavigateTo("Introduction");
+            }
+            else
+            {
+                UserGuid = guid.Value;
+            }
         }
 
         await base.OnAfterRenderAsync(firstRender);

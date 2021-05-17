@@ -162,15 +162,18 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Guid? guid = await Storage.GetUserGuidOrNullAsync();
+        if (firstRender || UserGuid.Equals(Guid.Empty))
+        {
+            Guid? guid = await Storage.GetUserGuidOrNullAsync();
 
-        if (guid is null)
-        {
-            NavigationManager.NavigateTo("Introduction");
-        }
-        else
-        {
-            UserGuid = guid.Value;
+            if (guid is null)
+            {
+                NavigationManager.NavigateTo("Introduction");
+            }
+            else
+            {
+                UserGuid = guid.Value;
+            }
         }
 
         await base.OnAfterRenderAsync(firstRender);
