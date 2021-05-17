@@ -29,7 +29,13 @@
     {
         if (Consented)
         {
-            await Storage.SetUserGuidAsync(Guid.NewGuid());
+            // Record participant with a new Guid ID
+            Guid userGuid = await SurveyService
+                .CreateNewParticipantWithGuidAsync();
+
+            // Store participant's ID locally
+            await Storage.SetUserGuidAsync(userGuid);
+
             NavigationManager.NavigateTo("Survey");
         }
     }
