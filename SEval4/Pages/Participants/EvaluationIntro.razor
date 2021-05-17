@@ -1,13 +1,38 @@
-﻿<h3>EvaluationIntro</h3>
+﻿@page "/EvaluationIntro"
+@page "/EvaluationIntro/{StudyGroup:int}"
+<h3>EvaluationIntro</h3>
 
+@switch (StudyGroup)
+{
+    // SEADM
+    case 1:
+        {
+            <SEval4.Pages.Participants.Evaluation.ScenariosSeadmIntro />
+        }
+        break;
 
+    // Feedback
+    case 2:
+        {
+            <SEval4.Pages.Participants.Evaluation.ScenariosFeedbackIntro />
+        }
+        break;
+
+    default:
+        {
+            <h3>We're either loading or something went terribly wrong.</h3>
+        }
+        break;
+}
 
 @code {
 
     #region User Guid and Study group
 
     private Guid UserGuid { get; set; }
-    private int StudyGroup { get; set; }
+
+    [Parameter]
+    public int StudyGroup { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -17,12 +42,16 @@
 
             if (guid is null)
             {
-                NavigationManager.NavigateTo("Introduction");
+                //NavigationManager.NavigateTo("Introduction");
             }
             else
             {
                 UserGuid = guid.Value;
             }
+
+            // Allocate StudyGroup
+            //StudyGroup = await SurveyService
+            //    .AllocateParticipantAsync(UserGuid);
         }
 
         await base.OnAfterRenderAsync(firstRender);
