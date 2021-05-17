@@ -13,6 +13,12 @@ namespace SEval4.Data
 
         #region Database sets
 
+        #region Participant data
+
+        public DbSet<Participant> Participants { get; set; }
+
+        #endregion
+
         #region Dropdown options
 
         public DbSet<AgeGroup> AgeGroup { get; set; }
