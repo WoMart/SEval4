@@ -17,9 +17,7 @@ namespace SEval4.Data.Services
             _context = context;
         }
 
-        #region Participant survey
-
-        #region 
+        #region Participant
 
         public async Task<Guid> CreateNewParticipantWithGuidAsync()
         {
@@ -45,7 +43,15 @@ namespace SEval4.Data.Services
                 .FirstOrDefaultAsync(p => p.Id == guid);
         }
 
+        public async Task<int> UpdateParticipantAsync(Participant participant)
+        {
+            _context.Participants.Update(participant);
+            return await _context.SaveChangesAsync();
+        }
+
         #endregion
+
+        #region Participant survey
 
         #region Dropdown options
 
