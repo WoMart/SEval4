@@ -11,5 +11,7 @@ namespace SEval4.Models
         [Required]
         public int ResponseOrder { get; set; }
 
+        public bool? IsCorrect { get; set; }
+
     }
 }
