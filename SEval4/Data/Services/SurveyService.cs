@@ -195,10 +195,8 @@ namespace SEval4.Data.Services
         {
             // Select in random order or by ScenarioId (pre-defined order)
             var orderedScenarios = isRandomOrder
-                ? _context.Scenarios
-                    .OrderBy(s => Guid.NewGuid())
-                : _context.Scenarios
-                    .OrderBy(s => s.ScenarioId);
+                ? _context.Scenarios.OrderBy(s => Guid.NewGuid())
+                : _context.Scenarios.OrderBy(s => s.ScenarioId);
 
             return await orderedScenarios
                 .ToListAsync();
@@ -219,6 +217,35 @@ namespace SEval4.Data.Services
             // Do some validaiton? Number of elements, Guid is the same and non-empty, etc.
             _context.AnswersBaseline.AddRange(answers);
             return await _context.SaveChangesAsync();
+        }
+
+        #endregion
+
+        #region Evaluation
+
+        public async Task<List<EvaluationRound>> GetEvaluationRoundsAsync(bool isRandomOrder = false)
+        {
+            // TODO: Do it better
+
+            // For now we're fetching scenarios with feedback as the evaluation ones,
+            // but it would be better to have it defined explicitely
+            IQueryable<Scenario> scenarios = _context.Scenarios
+                .Where(s => !string.IsNullOrEmpty(s.Feedback));
+
+            // Randomise or order by ID
+            scenarios = isRandomOrder
+                ? scenarios.OrderBy(s => Guid.NewGuid())
+                : scenarios.OrderBy(s => s.ScenarioId);
+
+            // Build a list of EvaluationRounds and return
+            return await scenarios
+                .Select(s => new EvaluationRound
+                {
+                    ScenarioId = s.ScenarioId,
+                    AttemptCount = 0,
+                    IsAnsweredCorrectly = false,
+                })
+                .ToListAsync();
         }
 
         #endregion
