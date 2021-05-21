@@ -136,7 +136,7 @@ namespace SEval4.Data.Services
         {
             Participant participant = await _context.Participants
                 .FirstOrDefaultAsync(p => p.Id == userId);
-            return participant.StudyGroupId;
+            return participant?.StudyGroupId;
         }
 
         #endregion
