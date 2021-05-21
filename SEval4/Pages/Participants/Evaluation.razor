@@ -1,0 +1,85 @@
+﻿@page "/Evaluation"
+@page "/Evaluation/{StudyGroup:int}"
+@using SEval4.Models;
+
+<h3>Evaluation</h3>
+
+<div id="evaluation">
+
+    <div id="context">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam iaculis mauris a tempor luctus. Proin pellentesque id nunc et ultrices. Maecenas varius sodales sem, sit amet mattis libero lobortis sit amet. Donec varius, lacus et posuere gravida, metus elit feugiat velit, id porttitor dolor arcu ac dui. Morbi luctus vehicula risus ut efficitur. Fusce mollis venenatis ipsum, vel porttitor quam ullamcorper sit amet. Fusce quis erat mattis, hendrerit velit vel, tristique urna. Nunc ac pretium lorem. Aenean sit amet sapien gravida, tempor magna ac, tempus ipsum.
+
+            Quisque neque orci, accumsan in dolor sed, elementum interdum dolor. Maecenas vitae orci euismod libero efficitur vehicula. Duis eu purus ante. Suspendisse potenti. Phasellus consequat nisl vel fermentum consectetur. Nullam eu lacus nulla. Sed porta metus in arcu sagittis euismod. Praesent eu arcu eget dui iaculis porttitor. Pellentesque facilisis massa non mauris efficitur iaculis sed eu augue. Phasellus nunc mi, venenatis eget tortor in, sodales scelerisque nisl.
+
+            Suspendisse pellentesque massa nec neque suscipit semper. Vestibulum varius nulla a ipsum lacinia, nec efficitur ante tristique. Quisque ac aliquam leo. Morbi pretium interdum arcu, eu congue ligula eleifend ac. Quisque magna felis, laoreet id lectus at, dignissim interdum nisl. Integer fermentum accumsan dignissim. Nulla at purus id odio faucibus interdum non vitae enim. Vivamus sed semper odio.
+        </p>
+    </div>
+
+    <div id="responses">
+
+    </div>
+
+    @if (StudyGroup == 1)
+    {
+        <div id="seadm">
+
+        </div>
+    }
+
+</div>
+
+@code {
+
+    #region User Guid and Study group
+
+    private Guid UserGuid { get; set; }
+
+    [Parameter]
+    public int? StudyGroup { get; set; }
+
+    private List<EvaluationRound> Rounds = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender || UserGuid.Equals(Guid.Empty))
+        {
+            // Get User's Guid ID
+            Guid? guid = await Storage.GetUserGuidOrNullAsync();
+
+            if (guid is null)
+            {
+                //NavigationManager.NavigateTo("Introduction");
+            }
+            else
+            {
+                UserGuid = guid.Value;
+            }
+
+            // Get StudyGroup
+            int? studyGroup = await SurveyService
+                .GetUserAllocationGroupAsync(UserGuid);
+
+            if (studyGroup is null)
+            {
+                // TODO: Do something
+                throw new Exception("OMG you are not allocated wtf");
+            }
+            else
+            {
+                // Allocate StudyGroup
+                StudyGroup = studyGroup;
+
+            }
+
+            Rounds = await SurveyService
+                .GetEvaluationRoundsAsync(isRandomOrder: true);
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    #endregion
+
+
+}
