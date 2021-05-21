@@ -93,6 +93,8 @@ namespace SEval4.Data.Services
 
         #endregion
 
+        #region Study group allocation
+
         /// <summary>
         /// Allocate user to the study group with lowest number of finished surveys
         /// </summary>
@@ -100,6 +102,13 @@ namespace SEval4.Data.Services
         /// <returns>ID of the allocated group</returns>
         public async Task<int> AllocateParticipantAsync(Guid userId)
         {
+            int? checkStudyGroupId = await GetUserAllocationGroupAsync(userId);
+            if (checkStudyGroupId != null)
+            {
+                // TODO: Something else
+                throw new Exception("Oh no you were allocated already!");
+            }
+
             // Count number of allocations that already concluded the experiment
             Dictionary<int, int> groupCounts =
                 _context.Participants
@@ -123,12 +132,14 @@ namespace SEval4.Data.Services
             return groupId;
         }
 
-        public async Task<int> GetUserAllocationGroupAsync(Guid userId)
+        public async Task<int?> GetUserAllocationGroupAsync(Guid userId)
         {
             Participant participant = await _context.Participants
                 .FirstOrDefaultAsync(p => p.Id == userId);
-            return participant?.StudyGroupId ?? -1;
+            return participant.StudyGroupId;
         }
+
+        #endregion
 
         #endregion
 
