@@ -19,6 +19,12 @@ namespace SEval4.Data.Services
 
         #region Participant
 
+        #region CRUD
+
+        /// <summary>
+        /// Insert
+        /// </summary>
+        /// <returns>Guid ID of inserted row</returns>
         public async Task<Guid> CreateNewParticipantWithGuidAsync()
         {
             // Create a new participant entry
@@ -36,18 +42,46 @@ namespace SEval4.Data.Services
             // Return participant's Guid ID
             return participant.Id;
         }
-
+        /// <summary>
+        /// Select
+        /// </summary>
+        /// <param name="userId">Guid ID of the row</param>
+        /// <returns>Participant with given ID or null</returns>
         public async Task<Participant> GetParticipantAsync(Guid userId)
         {
             return await _context.Participants
                 .FirstOrDefaultAsync(p => p.Id == userId);
         }
-
+        /// <summary>
+        /// Update
+        /// </summary>
+        /// <param name="participant">Participant object with updated data</param>
+        /// <returns></returns>
         public async Task<int> UpdateParticipantAsync(Participant participant)
         {
             _context.Participants.Update(participant);
             return await _context.SaveChangesAsync();
         }
+        /// <summary>
+        /// Delete
+        /// </summary>
+        /// <param name="participant">Participant to delete</param>
+        /// <returns>False if given participant does not exist. True otheriwse.</returns>
+        public async Task<bool> DeleteParticipantAsync(Participant participant)
+        {
+            // Check if the participant exists in the database
+            bool isDeleteSuccess = _context.Participants
+                .Contains(participant);
+
+            // Remove, nothing will happen if participant does not exist
+            _context.Remove(participant);
+            await _context.SaveChangesAsync();
+
+            // Notify that nothing has been deleted
+            return isDeleteSuccess;
+        }
+
+        #endregion
 
         /// <summary>
         /// Allocate user to the study group with lowest number of finished surveys
