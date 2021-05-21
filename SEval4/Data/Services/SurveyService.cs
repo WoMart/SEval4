@@ -37,10 +37,10 @@ namespace SEval4.Data.Services
             return participant.Id;
         }
 
-        public async Task<Participant> GetParticipantAsync(Guid guid)
+        public async Task<Participant> GetParticipantAsync(Guid userId)
         {
             return await _context.Participants
-                .FirstOrDefaultAsync(p => p.Id == guid);
+                .FirstOrDefaultAsync(p => p.Id == userId);
         }
 
         public async Task<int> UpdateParticipantAsync(Participant participant)
@@ -52,9 +52,9 @@ namespace SEval4.Data.Services
         /// <summary>
         /// Allocate user to the study group with lowest number of finished surveys
         /// </summary>
-        /// <param name="guid">Unique user identifier</param>
+        /// <param name="userId">Unique user identifier</param>
         /// <returns>ID of the allocated group</returns>
-        public async Task<int> AllocateParticipantAsync(Guid guid)
+        public async Task<int> AllocateParticipantAsync(Guid userId)
         {
             // Count number of allocations that already concluded the experiment
             Dictionary<int, int> groupCounts =
@@ -70,13 +70,20 @@ namespace SEval4.Data.Services
                 .Key;
 
             // Update participant with the allocated group and timestamp
-            Participant participant = await GetParticipantAsync(guid);
+            Participant participant = await GetParticipantAsync(userId);
             participant.StudyGroupId = groupId;
             participant.AllocationTime = DateTime.Now;
 
             await UpdateParticipantAsync(participant);
 
             return groupId;
+        }
+
+        public async Task<int> GetUserAllocationGroupAsync(Guid userId)
+        {
+            Participant participant = await _context.Participants
+                .FirstOrDefaultAsync(p => p.Id == userId);
+            return participant?.StudyGroupId ?? -1;
         }
 
         #endregion
