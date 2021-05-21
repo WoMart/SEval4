@@ -11,5 +11,7 @@ namespace SEval4.Models
         public int ScenarioId { get; set; }
         [Required]
         public string Context { get; set; }
+
+        public string Feedback { get; set; }
     }
 }
