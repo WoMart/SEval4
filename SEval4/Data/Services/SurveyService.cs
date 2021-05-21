@@ -49,6 +49,11 @@ namespace SEval4.Data.Services
             return await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Allocate user to the study group with lowest number of finished surveys
+        /// </summary>
+        /// <param name="guid">Unique user identifier</param>
+        /// <returns>ID of the allocated group</returns>
         public async Task<int> AllocateParticipantAsync(Guid guid)
         {
             // Count number of allocations that already concluded the experiment
@@ -68,6 +73,7 @@ namespace SEval4.Data.Services
             Participant participant = await GetParticipantAsync(guid);
             participant.StudyGroupId = groupId;
             participant.AllocationTime = DateTime.Now;
+
             await UpdateParticipantAsync(participant);
 
             return groupId;
