@@ -7,20 +7,20 @@
     // SEADM
     case 1:
         {
-            <SEval4.Pages.Participants.Evaluation.ScenariosSeadmIntro />
+            <SEval4.Pages.Participants.EvaluationHelpers.ScenariosSeadmIntro />
         }
         break;
 
     // Feedback
     case 2:
         {
-            <SEval4.Pages.Participants.Evaluation.ScenariosFeedbackIntro />
+            <SEval4.Pages.Participants.EvaluationHelpers.ScenariosFeedbackIntro />
         }
         break;
 
     default:
         {
-            <h3>We're either loading or something went terribly wrong.</h3>
+            <h3>Critical error</h3>
         }
         break;
 }
@@ -50,13 +50,12 @@
             }
 
             // Allocate StudyGroup
-            //StudyGroup = await SurveyService
-            //    .AllocateParticipantAsync(UserGuid);
+            StudyGroup = await SurveyService
+                .AllocateParticipantAsync(UserGuid);
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
     #endregion
-
 }
