@@ -56,11 +56,19 @@ namespace SEval4.Data.Services
         /// Update
         /// </summary>
         /// <param name="participant">Participant object with updated data</param>
-        /// <returns></returns>
-        public async Task<int> UpdateParticipantAsync(Participant participant)
+        /// <returns>False if given participant does not exist. True otherwise</returns>
+        public async Task<bool> UpdateParticipantAsync(Participant participant)
         {
-            _context.Participants.Update(participant);
-            return await _context.SaveChangesAsync();
+            bool participantExists = _context.Participants
+                .Contains(participant);
+            
+            if (participantExists)
+            {
+                _context.Participants.Update(participant);
+                await _context.SaveChangesAsync();
+            }
+
+            return participantExists;
         }
         /// <summary>
         /// Delete
@@ -70,15 +78,17 @@ namespace SEval4.Data.Services
         public async Task<bool> DeleteParticipantAsync(Participant participant)
         {
             // Check if the participant exists in the database
-            bool isDeleteSuccess = _context.Participants
+            bool participantExists = _context.Participants
                 .Contains(participant);
 
-            // Remove, nothing will happen if participant does not exist
-            _context.Remove(participant);
-            await _context.SaveChangesAsync();
+            if (participantExists)
+            {
+                _context.Remove(participant);
+                await _context.SaveChangesAsync();
+            }
 
             // Notify that nothing has been deleted
-            return isDeleteSuccess;
+            return participantExists;
         }
 
         #endregion
