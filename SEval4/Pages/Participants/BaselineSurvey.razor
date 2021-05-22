@@ -113,11 +113,10 @@
         {
             await SurveyService.SubmitBaselineFormAsync(Answers);
 
+            // Get the study group ID allocated in personal survey
             int? studyGroup = await SurveyService
                 .GetUserAllocationGroupAsync(UserGuid);
 
-            // TODO: Logic for rediraction to one of the 'games'
-            // TODO: Change PostIntro to Feedback or SEADM intro
             NavigationManager.NavigateTo($"EvaluationIntro/{studyGroup}");
         }
         else
