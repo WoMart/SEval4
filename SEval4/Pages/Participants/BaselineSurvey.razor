@@ -113,9 +113,12 @@
         {
             await SurveyService.SubmitBaselineFormAsync(Answers);
 
+            int? studyGroup = await SurveyService
+                .GetUserAllocationGroupAsync(UserGuid);
+
             // TODO: Logic for rediraction to one of the 'games'
             // TODO: Change PostIntro to Feedback or SEADM intro
-            NavigationManager.NavigateTo("EvaluationIntro");
+            NavigationManager.NavigateTo($"EvaluationIntro/{studyGroup}");
         }
         else
         {

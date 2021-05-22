@@ -1,5 +1,4 @@
-﻿@page "/EvaluationIntro"
-@page "/EvaluationIntro/{StudyGroup:int}"
+﻿@page "/EvaluationIntro/{StudyGroup:int?}"
 <h3>EvaluationIntro</h3>
 
 @switch (StudyGroup)
@@ -24,15 +23,28 @@
         }
         break;
 }
-
+<b>@ErrorMsg</b>
 @code {
 
-    #region User Guid and Study group
+    public string ErrorMsg = string.Empty;
 
-    private Guid UserGuid { get; set; }
+    #region Study group
 
     [Parameter]
-    public int StudyGroup { get; set; }
+    public int? StudyGroup { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // TODO: Check that StudyGroup matches an ID of a study group
+
+        await base.OnParametersSetAsync();
+    }
+
+    #endregion
+
+    #region User Guid
+
+    private Guid UserGuid { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -40,13 +52,15 @@
         {
             Guid? guid = await Storage.GetUserGuidOrNullAsync();
 
-            if (guid is null)
+            if (guid.HasValue)
             {
-                //NavigationManager.NavigateTo("Introduction");
+                UserGuid = guid.Value;
             }
             else
             {
-                UserGuid = guid.Value;
+                // TODO
+                ErrorMsg = "No guid";
+                //NavigationManager.NavigateTo("Introduction");
             }
         }
 
@@ -54,4 +68,24 @@
     }
 
     #endregion
+
+    //#region Get StudyGroupID
+
+    //private async Task<int?> TryGetStudyGroupIdAsync()
+    //{
+    //    // Try to get from the SessionStorage
+    //    //int? studyGroup = await Storage.GetStudyGroupAsync();
+
+    //    //// If not found int he SessionStorage, try to fetch from database
+    //    //if (studyGroup is null)
+    //    //{
+    //    int? studyGroup = await SurveyService
+    //        .GetUserAllocationGroupAsync(UserGuid);
+    //    //}
+
+    //    return studyGroup;
+    //}
+
+    //#endregion
+
 }
