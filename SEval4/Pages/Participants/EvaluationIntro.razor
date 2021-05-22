@@ -94,6 +94,15 @@
                 ErrorMsg = "No guid";
                 //NavigationManager.NavigateTo("Introduction");
             }
+
+            bool isValidStudyGroup = await SurveyService
+                .IsTheUserAllocatedGroupAsync(UserGuid, StudyGroup);
+
+            if (!isValidStudyGroup)
+            {
+                // TODO: Navigate to an error page explaining what's wrong
+                //NavigationManager.NavigateTo("InvalidStudy");
+            }
         }
 
         await base.OnAfterRenderAsync(firstRender);
