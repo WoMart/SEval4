@@ -147,6 +147,22 @@ namespace SEval4.Data.Services
             return participant?.StudyGroupId;
         }
 
+        public async Task<bool> IsTheUserAllocatedGroupAsync(Guid userId, int? studyGroupId)
+        {
+            if (studyGroupId.HasValue)
+            {
+                return await _context.Participants
+                   .Where(p => 
+                   p.Id == userId && 
+                   p.StudyGroupId == studyGroupId.Value)
+                   .AnyAsync();
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         #endregion
 
         #endregion
