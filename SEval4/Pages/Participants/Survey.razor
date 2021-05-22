@@ -208,7 +208,12 @@
 
         try
         {
+            // Submit the Personal Survey
             await SurveyService.InsertNewParticipantSurveyAsync(ParticipantSurvey);
+            
+            // Randomise participant to a study group
+            await SurveyService.AllocateParticipantAsync(UserGuid);
+
             NavigationManager.NavigateTo("BaselineIntro");
 
         }

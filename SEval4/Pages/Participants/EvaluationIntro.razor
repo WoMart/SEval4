@@ -48,10 +48,6 @@
             {
                 UserGuid = guid.Value;
             }
-
-            // Allocate StudyGroup
-            StudyGroup = await SurveyService
-                .AllocateParticipantAsync(UserGuid);
         }
 
         await base.OnAfterRenderAsync(firstRender);
