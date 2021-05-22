@@ -1,29 +1,61 @@
 ﻿@page "/EvaluationIntro/{StudyGroup:int?}"
-<h3>EvaluationIntro</h3>
 
-@switch (StudyGroup)
-{
-    // SEADM
-    case 1:
-        {
-            <SEval4.Pages.Participants.EvaluationHelpers.ScenariosSeadmIntro />
-        }
-        break;
+<div id="evaluationIntro">
 
-    // Feedback
-    case 2:
-        {
-            <SEval4.Pages.Participants.EvaluationHelpers.ScenariosFeedbackIntro />
-        }
-        break;
+    @switch (StudyGroup)
+    {
+        // SEADM
+        case 1:
+            {
+                <div id="seadmIntro">
 
-    default:
-        {
-            <h3>Critical error</h3>
-        }
-        break;
-}
-<b>@ErrorMsg</b>
+                    <h1>The game with Seadm</h1>
+
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam iaculis mauris a tempor luctus. Proin pellentesque id nunc et ultrices. Maecenas varius sodales sem, sit amet mattis libero lobortis sit amet. Donec varius, lacus et posuere gravida, metus elit feugiat velit, id porttitor dolor arcu ac dui. Morbi luctus vehicula risus ut efficitur. Fusce mollis venenatis ipsum, vel porttitor quam ullamcorper sit amet. Fusce quis erat mattis, hendrerit velit vel, tristique urna. Nunc ac pretium lorem. Aenean sit amet sapien gravida, tempor magna ac, tempus ipsum.
+
+                        Quisque neque orci, accumsan in dolor sed, elementum interdum dolor. Maecenas vitae orci euismod libero efficitur vehicula. Duis eu purus ante. Suspendisse potenti. Phasellus consequat nisl vel fermentum consectetur. Nullam eu lacus nulla. Sed porta metus in arcu sagittis euismod. Praesent eu arcu eget dui iaculis porttitor. Pellentesque facilisis massa non mauris efficitur iaculis sed eu augue. Phasellus nunc mi, venenatis eget tortor in, sodales scelerisque nisl.
+
+                        Suspendisse pellentesque massa nec neque suscipit semper. Vestibulum varius nulla a ipsum lacinia, nec efficitur ante tristique. Quisque ac aliquam leo. Morbi pretium interdum arcu, eu congue ligula eleifend ac. Quisque magna felis, laoreet id lectus at, dignissim interdum nisl. Integer fermentum accumsan dignissim. Nulla at purus id odio faucibus interdum non vitae enim. Vivamus sed semper odio.
+                    </p>
+
+                </div>
+            }
+            break;
+
+        // Feedback
+        case 2:
+            {
+                <div id="feedbackIntro">
+
+                    <h1>The game with feedback</h1>
+
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam iaculis mauris a tempor luctus. Proin pellentesque id nunc et ultrices. Maecenas varius sodales sem, sit amet mattis libero lobortis sit amet. Donec varius, lacus et posuere gravida, metus elit feugiat velit, id porttitor dolor arcu ac dui. Morbi luctus vehicula risus ut efficitur. Fusce mollis venenatis ipsum, vel porttitor quam ullamcorper sit amet. Fusce quis erat mattis, hendrerit velit vel, tristique urna. Nunc ac pretium lorem. Aenean sit amet sapien gravida, tempor magna ac, tempus ipsum.
+
+                        Quisque neque orci, accumsan in dolor sed, elementum interdum dolor. Maecenas vitae orci euismod libero efficitur vehicula. Duis eu purus ante. Suspendisse potenti. Phasellus consequat nisl vel fermentum consectetur. Nullam eu lacus nulla. Sed porta metus in arcu sagittis euismod. Praesent eu arcu eget dui iaculis porttitor. Pellentesque facilisis massa non mauris efficitur iaculis sed eu augue. Phasellus nunc mi, venenatis eget tortor in, sodales scelerisque nisl.
+
+                        Suspendisse pellentesque massa nec neque suscipit semper. Vestibulum varius nulla a ipsum lacinia, nec efficitur ante tristique. Quisque ac aliquam leo. Morbi pretium interdum arcu, eu congue ligula eleifend ac. Quisque magna felis, laoreet id lectus at, dignissim interdum nisl. Integer fermentum accumsan dignissim. Nulla at purus id odio faucibus interdum non vitae enim. Vivamus sed semper odio.
+                    </p>
+                </div>
+            }
+            break;
+
+        default:
+            {
+                <h3>Critical error</h3>
+            }
+            break;
+    }
+
+    <div>
+        <button class="btn btn-primary" @onclick="Continue">
+            Continue
+        </button>
+    </div>
+
+    <b>@ErrorMsg</b>
+</div>
 @code {
 
     public string ErrorMsg = string.Empty;
@@ -69,23 +101,13 @@
 
     #endregion
 
-    //#region Get StudyGroupID
+    #region Continue
 
-    //private async Task<int?> TryGetStudyGroupIdAsync()
-    //{
-    //    // Try to get from the SessionStorage
-    //    //int? studyGroup = await Storage.GetStudyGroupAsync();
+    private void Continue()
+    {
+        NavigationManager.NavigateTo($"Evaluation/{StudyGroup}");
+    }
 
-    //    //// If not found int he SessionStorage, try to fetch from database
-    //    //if (studyGroup is null)
-    //    //{
-    //    int? studyGroup = await SurveyService
-    //        .GetUserAllocationGroupAsync(UserGuid);
-    //    //}
-
-    //    return studyGroup;
-    //}
-
-    //#endregion
+    #endregion
 
 }
