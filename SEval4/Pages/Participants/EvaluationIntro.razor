@@ -43,16 +43,23 @@
 
         default:
             {
-                <h3>Critical error</h3>
+                <h3>System did not recognise the allocated study group.</h3>
             }
             break;
     }
 
-    <div>
-        <button class="btn btn-primary" @onclick="Continue">
-            Continue
-        </button>
-    </div>
+    @if (StudyGroup.HasValue)
+    {
+        <div>
+            <button class="btn btn-primary" @onclick="Continue">
+                Continue
+            </button>
+        </div>
+    }
+    else
+    {
+        <a href="introduction">Go to start...</a>
+    }
 
     <b>@ErrorMsg</b>
 </div>
@@ -64,13 +71,6 @@
 
     [Parameter]
     public int? StudyGroup { get; set; }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        // TODO: Check that StudyGroup matches an ID of a study group
-
-        await base.OnParametersSetAsync();
-    }
 
     #endregion
 
