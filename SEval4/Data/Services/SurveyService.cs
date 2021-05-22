@@ -109,15 +109,23 @@ namespace SEval4.Data.Services
                 throw new Exception("Oh no you were allocated already!");
             }
 
+            Dictionary<int, int> allocationCounts = _context.StudyGroups
+                .ToDictionary(key => key.Id, value => 0);
+
             // Count number of allocations that already concluded the experiment
-            Dictionary<int, int> groupCounts =
+            var studyGroupsGroupedById =
                 _context.Participants
-                .Where(p => p.IsFinished)
-                .GroupBy(p => p.StudyGroup)
-                .ToDictionary(pg => pg.Key.Id, pg => pg.Count());
+                .Where(p => p.IsFinished && p.StudyGroupId.HasValue)
+                .ToList()
+                .GroupBy(p => p.StudyGroupId);
+
+            foreach (var studyGroup in studyGroupsGroupedById)
+            {
+                allocationCounts[studyGroup.Key.Value] = studyGroup.Count();
+            }
 
             // Get ID of the group with lowest count value
-            int groupId = groupCounts
+            int groupId = allocationCounts
                 .OrderBy(gc => gc.Value)
                 .First()
                 .Key;
