@@ -1,10 +1,9 @@
-﻿@page "/Evaluation"
-@page "/Evaluation/{StudyGroup:int}"
+﻿@page "/Evaluation/{StudyGroup:int?}"
 @using SEval4.Models;
 
-<h3>Evaluation</h3>
-
 <div id="evaluation">
+
+    <h3>Evaluation</h3>
 
     <div id="context">
         <p>
@@ -20,23 +19,46 @@
 
     </div>
 
-    @if (StudyGroup == 1)
+    @switch (StudyGroup)
     {
-        <div id="seadm">
+        case 1:
+            {
+                <div id="seadmForm">
 
-        </div>
+                </div>
+
+            }
+            break;
+        case 2:
+            {
+                <div id="feedbackWindow">
+
+                </div>
+            }
+            break;
+
+        default:
+            break;
     }
 
+
+    <b>@ErrorMsg</b>
 </div>
 
 @code {
 
-    #region User Guid and Study group
+    private string ErrorMsg = string.Empty;
 
-    private Guid UserGuid { get; set; }
+    #region Study group
 
     [Parameter]
     public int? StudyGroup { get; set; }
+
+    #endregion
+
+    #region User guid and setup
+
+    private Guid UserGuid { get; set; }
 
     private List<EvaluationRound> Rounds = new();
 
@@ -44,32 +66,25 @@
     {
         if (firstRender || UserGuid.Equals(Guid.Empty))
         {
-            // Get User's Guid ID
             Guid? guid = await Storage.GetUserGuidOrNullAsync();
 
-            if (guid is null)
-            {
-                //NavigationManager.NavigateTo("Introduction");
-            }
-            else
+            if (guid.HasValue)
             {
                 UserGuid = guid.Value;
             }
-
-            // Get StudyGroup
-            int? studyGroup = await SurveyService
-                .GetUserAllocationGroupAsync(UserGuid);
-
-            if (studyGroup is null)
-            {
-                // TODO: Do something
-                throw new Exception("OMG you are not allocated wtf");
-            }
             else
             {
-                // Allocate StudyGroup
-                StudyGroup = studyGroup;
+                // TODO
+                //NavigationManager.NavigateTo("Introduction");
+            }
 
+            bool isValidStudyGroup = await SurveyService
+                .IsTheUserAllocatedGroupAsync(UserGuid, StudyGroup);
+
+            if (!isValidStudyGroup)
+            {
+                // TODO: Navigate to an error page explaining what's wrong
+                //NavigationManager.NavigateTo("InvalidStudy");
             }
 
             Rounds = await SurveyService
@@ -80,6 +95,4 @@
     }
 
     #endregion
-
-
 }
