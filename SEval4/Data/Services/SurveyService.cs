@@ -187,7 +187,7 @@ namespace SEval4.Data.Services
 
         #region Submit
 
-        public async Task<int> InsertNewParticipantAsync(ParticipantSurvey survey)
+        public async Task<int> InsertNewParticipantSurveyAsync(ParticipantSurvey survey)
         {
             await _context.ParticipantSurveys.AddAsync(survey);
             return await _context.SaveChangesAsync();
