@@ -9,14 +9,14 @@ namespace SEval4.Data.Services
 {
     public class ClientStorage
     {
-        private static LocalStorage _storage;
+        private static SessionStorage _storage;
 
         public static readonly string UserGuidKey = "seval_guid";
         public static readonly string StudyGroupKey = "seval_group";
 
         public ClientStorage(IJSRuntime runtime)
         {
-            _storage = new LocalStorage(runtime);
+            _storage = new SessionStorage(runtime);
         }
 
         public async ValueTask SetItemAsync(string key, object value) =>
