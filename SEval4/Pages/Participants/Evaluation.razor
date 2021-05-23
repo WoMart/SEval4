@@ -19,6 +19,7 @@
 
     </div>
 
+    @* Study group specific elements *@
     @switch (StudyGroup)
     {
         case 1:
@@ -60,8 +61,6 @@
 
     private Guid UserGuid { get; set; }
 
-    private List<EvaluationRound> Rounds = new();
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender || UserGuid.Equals(Guid.Empty))
@@ -76,6 +75,7 @@
             {
                 // TODO
                 //NavigationManager.NavigateTo("Introduction");
+                await JsRuntime.InvokeVoidAsync("alert", "DEBUG: No guid in the SessionStorage.");
             }
 
             bool isValidStudyGroup = await SurveyService
@@ -84,14 +84,28 @@
             if (!isValidStudyGroup)
             {
                 // TODO: Navigate to an error page explaining what's wrong
-                //NavigationManager.NavigateTo("InvalidStudy");
+                //NavigationManager.NavigateTo("InvalidStudy");#
+                await JsRuntime.InvokeVoidAsync("alert", "DEBUG: Invalid study number.");
             }
-
-            Rounds = await SurveyService
-                .GetEvaluationRoundsAsync(isRandomOrder: true);
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    #endregion
+
+    #region Evaluation
+
+    private List<EvaluationRound> Rounds = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        Rounds = await SurveyService
+            .GetEvaluationRoundsAsync(isRandomOrder: true);
+
+
+        await base.OnInitializedAsync();
     }
 
     #endregion

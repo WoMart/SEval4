@@ -93,6 +93,7 @@
             {
                 // TODO
                 //NavigationManager.NavigateTo("Introduction");
+                await JsRuntime.InvokeVoidAsync("alert", "DEBUG: No guid in the SessionStorage.");
             }
 
             bool isValidStudyGroup = await SurveyService
@@ -102,6 +103,7 @@
             {
                 // TODO: Navigate to an error page explaining what's wrong
                 //NavigationManager.NavigateTo("InvalidStudy");
+                await JsRuntime.InvokeVoidAsync("alert", "DEBUG: Invalid study number.");
             }
         }
 
