@@ -217,7 +217,7 @@ namespace SEval4.Data.Services
 
         public async Task<List<Scenario>> GetBaselineScenariosAsync(bool isRandomOrder = false)
         {
-            // Select in random order or by ScenarioId (pre-defined order)
+            // Select in random order or by ScenarioId
             var orderedScenarios = isRandomOrder
                 ? _context.Scenarios.OrderBy(s => Guid.NewGuid())
                 : _context.Scenarios.OrderBy(s => s.ScenarioId);
@@ -228,7 +228,7 @@ namespace SEval4.Data.Services
 
         public async Task<List<Response>> GetBaselineResponsesAsync(bool isRandomOrder = false)
         {
-            // Select in random order or by ScenarioId (pre-defined order)
+            // Select in random order or by pre-defined order
             var orderedResponses = isRandomOrder
                 ? _context.Responses.OrderBy(s => Guid.NewGuid())
                 : _context.Responses.OrderBy(s => s.ResponseOrder);
@@ -247,28 +247,15 @@ namespace SEval4.Data.Services
 
         #region Evaluation
 
-        public async Task<List<EvaluationRound>> GetEvaluationRoundsAsync(bool isRandomOrder = false)
+        public async Task<List<EvalScenario>> GetEvaluationRoundsAsync(bool isRandomOrder = false)
         {
-            // TODO: Do it better
-
-            // For now we're fetching scenarios with feedback as the evaluation ones,
-            // but it would be better to have it defined explicitely
-            IQueryable<Scenario> scenarios = _context.Scenarios
-                .Where(s => !string.IsNullOrEmpty(s.Feedback));
-
-            // Randomise or order by ID
-            scenarios = isRandomOrder
-                ? scenarios.OrderBy(s => Guid.NewGuid())
-                : scenarios.OrderBy(s => s.ScenarioId);
+            // Select in random order or by Id
+            IQueryable<EvalScenario> scenarios = isRandomOrder
+                ? _context.EvaluationScenarios.OrderBy(es => Guid.NewGuid())
+                : _context.EvaluationScenarios.OrderBy(es => es.Id);
 
             // Build a list of EvaluationRounds and return
             return await scenarios
-                .Select(s => new EvaluationRound
-                {
-                    ScenarioId = s.ScenarioId,
-                    AttemptCount = 0,
-                    IsAnsweredCorrectly = false,
-                })
                 .ToListAsync();
         }
 
