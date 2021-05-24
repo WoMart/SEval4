@@ -103,7 +103,7 @@ namespace SEval4.Data
 
         private void SetupScenarios<T>(
             ModelBuilder modelBuilder, T[] seedData)
-            where T : Scenario
+            where T : BaseScenario
         {
             var entity = modelBuilder.Entity<T>();
 

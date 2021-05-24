@@ -1,14 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SEval4.Models
+﻿namespace SEval4.Models
 {
-    public class Response : BaseTextValuePair<int>
+    public class Response : BaseResponse
     {
-        [Required]
-        public int ScenarioId { get; set; }
-        [Required]
-        public string Description { get; set; }
-        [Required]
-        public int ResponseOrder { get; set; }
     }
 }

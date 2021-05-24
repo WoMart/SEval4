@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SEval4.Models
 {
-    public class EvalScenario : Scenario
+    public class EvalScenario : BaseScenario
     {
         public string Feedback { get; set; }
         [NotMapped]
