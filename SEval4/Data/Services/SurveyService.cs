@@ -218,7 +218,7 @@ namespace SEval4.Data.Services
         public async Task<List<Scenario>> GetBaselineScenariosAsync(bool isRandomOrder = false)
         {
             // Select in random order or by ScenarioId
-            var orderedScenarios = isRandomOrder
+            IOrderedQueryable<Scenario> orderedScenarios = isRandomOrder
                 ? _context.Scenarios.OrderBy(s => Guid.NewGuid())
                 : _context.Scenarios.OrderBy(s => s.ScenarioId);
 
@@ -229,7 +229,7 @@ namespace SEval4.Data.Services
         public async Task<List<Response>> GetBaselineResponsesAsync(bool isRandomOrder = false)
         {
             // Select in random order or by pre-defined order
-            var orderedResponses = isRandomOrder
+            IOrderedQueryable<Response> orderedResponses = isRandomOrder
                 ? _context.Responses.OrderBy(s => Guid.NewGuid())
                 : _context.Responses.OrderBy(s => s.ResponseOrder);
 
@@ -250,13 +250,23 @@ namespace SEval4.Data.Services
         public async Task<List<EvalScenario>> GetEvaluationRoundsAsync(bool isRandomOrder = false)
         {
             // Select in random order or by Id
-            IQueryable<EvalScenario> scenarios = isRandomOrder
+            IOrderedQueryable<EvalScenario> scenarios = isRandomOrder
                 ? _context.EvaluationScenarios.OrderBy(es => Guid.NewGuid())
                 : _context.EvaluationScenarios.OrderBy(es => es.Id);
 
             // Build a list of EvaluationRounds and return
             return await scenarios
                 .ToListAsync();
+        }
+
+        public async Task<List<EvalResponse>> GetEvaluationResponsesAsync(bool isRandomOrder = false)
+        {
+            // Select in random order or by pre-defined order
+            IOrderedQueryable<EvalResponse> orderedResponses = isRandomOrder
+                ? _context.EvaluationResponses.OrderBy(s => Guid.NewGuid())
+                : _context.EvaluationResponses.OrderBy(s => s.ResponseOrder);
+
+            return await orderedResponses.ToListAsync();
         }
 
         #endregion
