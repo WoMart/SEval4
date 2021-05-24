@@ -73,6 +73,13 @@
     [Parameter]
     public int? StudyGroup { get; set; }
 
+    public List<int> StudyGroups { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        StudyGroups = await SurveyService.GetStudyGroupsAsync();
+    }
+
     #endregion
 
     #region User Guid
@@ -96,10 +103,7 @@
                 await JsRuntime.InvokeVoidAsync("alert", "DEBUG: No guid in the SessionStorage.");
             }
 
-            bool isValidStudyGroup = await SurveyService
-                .IsTheUserAllocatedGroupAsync(UserGuid, StudyGroup);
-
-            if (!isValidStudyGroup)
+            if (!StudyGroup.HasValue || !StudyGroups.Contains(StudyGroup.Value))
             {
                 // TODO: Navigate to an error page explaining what's wrong
                 //NavigationManager.NavigateTo("InvalidStudy");

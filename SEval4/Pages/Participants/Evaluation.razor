@@ -5,10 +5,14 @@
 
     <h3>Evaluation</h3>
 
-    <div id="context">
-        <p>
-            @CurrentScenario.Context
-        </p>
+    <div style="margin-bottom:20px; border:double; border-width:2px; padding:10px;">
+        <div>
+            <p>
+                <label for="@($"scenario{CurrentScenario.ScenarioId.ToString()}")">
+                    <b>@CurrentScenario.Context</b>
+                </label>
+            </p>
+        </div>
     </div>
 
     <div id="responses">
@@ -78,10 +82,7 @@
                 await JsRuntime.InvokeVoidAsync("alert", "DEBUG: No guid in the SessionStorage.");
             }
 
-            bool isValidStudyGroup = await SurveyService
-                .IsTheUserAllocatedGroupAsync(UserGuid, StudyGroup);
-
-            if (!isValidStudyGroup)
+            if (!StudyGroup.HasValue || !StudyGroups.Contains(StudyGroup.Value))
             {
                 // TODO: Navigate to an error page explaining what's wrong
                 //NavigationManager.NavigateTo("InvalidStudy");#
@@ -96,12 +97,15 @@
 
     #region Evaluation
 
+    private List<int> StudyGroups = new();
+
     private List<EvalScenario> Scenarios = new();
     private List<EvalResponse> Responses = new();
     private EvalScenario CurrentScenario = new();
 
     protected override async Task OnInitializedAsync()
     {
+        StudyGroups = await SurveyService.GetStudyGroupsAsync();
         Scenarios = await SurveyService.GetEvaluationRoundsAsync(isRandomOrder: true);
         Responses = await SurveyService.GetEvaluationResponsesAsync(isRandomOrder: true);
 
@@ -114,8 +118,8 @@
 
     private EvalScenario GetNextScenario()
     {
-        return Scenarios.FirstOrDefault(s => 
-            !s.IsAnsweredCorrectly && 
+        return Scenarios.FirstOrDefault(s =>
+            !s.IsAnsweredCorrectly &&
             !s.Equals(CurrentScenario));
     }
 }
