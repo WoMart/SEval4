@@ -54,10 +54,36 @@
 
     private string ErrorMsg = string.Empty;
 
-    #region Study group
+    #region Database fetch
+
+    #region Study groups
 
     [Parameter]
     public int? StudyGroup { get; set; }
+
+    private List<int> StudyGroups = new();
+
+    #endregion
+
+    #region Evaluation
+
+    private List<EvalScenario> Scenarios = new();
+    private List<EvalResponse> Responses = new();
+    private EvalScenario CurrentScenario = new();
+
+    #endregion
+
+    protected override async Task OnInitializedAsync()
+    {
+        StudyGroups = await SurveyService.GetStudyGroupsAsync();
+        Scenarios   = await SurveyService.GetEvaluationRoundsAsync(isRandomOrder: true);
+        Responses   = await SurveyService.GetEvaluationResponsesAsync(isRandomOrder: true);
+
+        // Initialise current scenario
+        CurrentScenario = GetNextScenario();
+
+        await base.OnInitializedAsync();
+    }
 
     #endregion
 
@@ -91,27 +117,6 @@
         }
 
         await base.OnAfterRenderAsync(firstRender);
-    }
-
-    #endregion
-
-    #region Evaluation
-
-    private List<int> StudyGroups = new();
-
-    private List<EvalScenario> Scenarios = new();
-    private List<EvalResponse> Responses = new();
-    private EvalScenario CurrentScenario = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        StudyGroups = await SurveyService.GetStudyGroupsAsync();
-        Scenarios = await SurveyService.GetEvaluationRoundsAsync(isRandomOrder: true);
-        Responses = await SurveyService.GetEvaluationResponsesAsync(isRandomOrder: true);
-
-        CurrentScenario = GetNextScenario();
-
-        await base.OnInitializedAsync();
     }
 
     #endregion
