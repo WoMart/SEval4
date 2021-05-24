@@ -45,7 +45,7 @@ namespace SEval4.Data
 
         public DbSet<EvalScenario> EvaluationScenarios { get; set; }
 
-        public DbSet<EvalResponse> EvaluationResponse { get; set; }
+        public DbSet<EvalResponse> EvaluationResponses { get; set; }
 
         #endregion
 
