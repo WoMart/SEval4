@@ -97,13 +97,12 @@
     #region Evaluation
 
     private List<EvalScenario> Rounds = new();
+    private List<EvalResponse> Responses = new();
 
     protected override async Task OnInitializedAsync()
     {
-
-        Rounds = await SurveyService
-            .GetEvaluationRoundsAsync(isRandomOrder: true);
-
+        Rounds = await SurveyService.GetEvaluationRoundsAsync(isRandomOrder: true);
+        Responses = await SurveyService.GetEvaluationResponsesAsync(isRandomOrder: true);
 
         await base.OnInitializedAsync();
     }
