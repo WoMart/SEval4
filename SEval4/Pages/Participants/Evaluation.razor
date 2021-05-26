@@ -5,23 +5,44 @@
 
     <h3>Evaluation</h3>
 
-    <div style="margin-bottom:20px; border:double; border-width:2px; padding:10px;">
-        <div>
-            <p>
-                <label for="@($"scenario{CurrentScenario.ScenarioId.ToString()}")">
-                    <b>@CurrentScenario.Context</b>
-                </label>
-            </p>
+    <EditForm Model="Answer" 
+              OnInvalidSubmit="@( async () => await SubmitSingleAnswer(false) )"
+              OnValidSubmit="@(   async () => await SubmitSingleAnswer(true) )">
+        <div style="margin-bottom:20px; border:double; border-width:2px; padding:10px;">
+            <div>
+                <p>
+                    <label for="@($"scenario{CurrentScenario.ScenarioId.ToString()}")">
+                        <b>@CurrentScenario.Context</b>
+                    </label>
+                </p>
+            </div>
         </div>
-    </div>
 
-    <div id="responses">
-        @foreach (EvalResponse response in Responses.Where(
-            r => r.ScenarioId == CurrentScenario.ScenarioId))
-        {
-            <p>@response.Text</p>
-        }
-    </div>
+        <div id="responses">
+            <InputRadioGroup @bind-Value="@Answer.ResponseValue" Name="response">
+                @foreach (EvalResponse response in Responses.Where(
+r => r.ScenarioId == CurrentScenario.ScenarioId))
+                {
+                    @* InputRadio doesn't work well at all, use Custom solution *@
+                    <CustomRadio name="@($"response")"
+                                 SelectedValue="response.Value"
+                                 @bind-Value="Answer.ResponseValue" />
+                    @response.Text <br />
+                }
+
+            </InputRadioGroup>
+        </div>
+
+        <div>
+            <button class="btn btn-primary" type="submit">Continue</button>
+            <label class="alert text-danger">@ErrorMsg</label>
+        </div>
+        <div class="alert">
+            <DataAnnotationsValidator />
+            @*<ValidationSummary />*@
+        </div>
+    </EditForm>
+
 
     @* Study group specific elements *@
     @switch (StudyGroups.FirstOrDefault(sg => sg.Id == StudyGroupId.Value)?.Name)
@@ -46,8 +67,6 @@
             break;
     }
 
-
-    <b>@ErrorMsg</b>
 </div>
 
 @code {
@@ -93,8 +112,8 @@
     protected override async Task OnInitializedAsync()
     {
         StudyGroups = await SurveyService.GetStudyGroupsAsync();
-        Scenarios   = await SurveyService.GetEvaluationRoundsAsync(isRandomOrder: true);
-        Responses   = await SurveyService.GetEvaluationResponsesAsync(isRandomOrder: true);
+        Scenarios = await SurveyService.GetEvaluationRoundsAsync(isRandomOrder: true);
+        Responses = await SurveyService.GetEvaluationResponsesAsync(isRandomOrder: true);
 
         StudyGroup = StudyGroups.First(sg => sg.Id == StudyGroupId);
 
@@ -146,4 +165,64 @@
             !s.IsAnsweredCorrectly &&
             !s.Equals(CurrentScenario));
     }
+
+    private AnswerEvaluation Answer { get; set; } = new();
+
+    private async Task SubmitSingleAnswer(bool isValid)
+    {
+        CurrentScenario.IsAnsweredCorrectly = isValid;
+
+        if (!isValid)
+        {
+            // Notify if invalid
+            ErrorMsg = "Did you choose a response?";
+        }
+        else if (!await InsertAnswerAsync())
+        {
+            // Try insert and notify if failed
+            ErrorMsg = $"Server failed to upload your answer. Try again?";
+        }
+        else if (Scenarios.All(s => s.IsAnsweredCorrectly))
+        {
+            // If all scenarios are completed, continue
+            await JsRuntime.InvokeVoidAsync("alert", "Here we navigate to results");
+        }
+        else
+        {
+            // Reset answer model and get next scenario
+            Answer = new();
+            CurrentScenario = GetNextScenario();
+        }
+
+        await Task.CompletedTask;
+    }
+
+    private async Task<bool> InsertAnswerAsync()
+    {
+        Answer.UserId = UserGuid;
+        Answer.InsertTime = DateTime.Now;
+        Answer.ScenarioId = CurrentScenario.ScenarioId;
+        Answer.IsCorrect = Responses
+            .First(r => r.ScenarioId == CurrentScenario.ScenarioId)
+            .IsCorrect;
+
+        try
+        {
+            int rowsAffected = await SurveyService
+                .InsertEvaluationAnswerAsync(Answer);
+
+            if (rowsAffected == 0)
+            {
+                throw new Exception();
+            }
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+
 }
