@@ -100,16 +100,16 @@ namespace SEval4.Data.Services
         /// </summary>
         /// <param name="userId">Unique user identifier</param>
         /// <returns>ID of the allocated group</returns>
-        public async Task<int> AllocateParticipantAsync(Guid userId)
+        public async Task<Guid> AllocateParticipantAsync(Guid userId)
         {
-            int? checkStudyGroupId = await GetUserAllocationGroupAsync(userId);
+            Guid? checkStudyGroupId = await GetUserAllocationGroupAsync(userId);
             if (checkStudyGroupId != null)
             {
                 // TODO: Something else
                 throw new Exception("Oh no you were allocated already!");
             }
 
-            Dictionary<int, int> allocationCounts = _context.StudyGroups
+            Dictionary<Guid, int> allocationCounts = _context.StudyGroups
                 .ToDictionary(key => key.Id, value => 0);
 
             // Count number of allocations that already concluded the experiment
@@ -125,7 +125,7 @@ namespace SEval4.Data.Services
             }
 
             // Get ID of the group with lowest count value
-            int groupId = allocationCounts
+            Guid groupId = allocationCounts
                 .OrderBy(gc => gc.Value)
                 .First()
                 .Key;
@@ -140,21 +140,20 @@ namespace SEval4.Data.Services
             return groupId;
         }
 
-        public async Task<int?> GetUserAllocationGroupAsync(Guid userId)
+        public async Task<Guid?> GetUserAllocationGroupAsync(Guid userId)
         {
             Participant participant = await _context.Participants
                 .FirstOrDefaultAsync(p => p.Id == userId);
             return participant?.StudyGroupId;
         }
 
-        public async Task<List<int>> GetStudyGroupsAsync()
+        public async Task<List<StudyGroup>> GetStudyGroupsAsync()
         {
             return await _context.StudyGroups
-                .Select(sg => sg.Id)
                 .ToListAsync();
         }
 
-        public async Task<bool> IsTheUserAllocatedGroupAsync(Guid userId, int? studyGroupId)
+        public async Task<bool> IsTheUserAllocatedGroupAsync(Guid userId, Guid? studyGroupId)
         {
             if (studyGroupId.HasValue)
             {

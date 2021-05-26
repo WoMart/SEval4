@@ -9,12 +9,10 @@ namespace SEval4.Data
         {
             new StudyGroup
             {
-                Id = 1,
                 Name = "SEADM",
             },
             new StudyGroup
             {
-                Id = 2,
                 Name = "Feedback",
             }
         };

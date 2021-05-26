@@ -1,11 +1,12 @@
-﻿@page "/EvaluationIntro/{StudyGroup:int?}"
+﻿@page "/EvaluationIntro/{StudyGroupId:guid?}"
+@using SEval4.Models
 
 <div id="evaluationIntro">
 
-    @switch (StudyGroup)
+    @switch (StudyGroups.FirstOrDefault(sg => sg.Id == StudyGroupId)?.Name)
     {
         // SEADM
-        case 1:
+        case "SEADM":
             {
                 <div id="seadmIntro">
 
@@ -24,7 +25,7 @@
             break;
 
         // Feedback
-        case 2:
+        case "Feedback":
             {
                 <div id="feedbackIntro">
 
@@ -48,7 +49,7 @@
             break;
     }
 
-    @if (StudyGroup.HasValue)
+    @if (StudyGroupId.HasValue)
     {
         <div>
             <button class="btn btn-primary" @onclick="Continue">
@@ -71,13 +72,31 @@
     #region Study group
 
     [Parameter]
-    public int? StudyGroup { get; set; }
+    public Guid? StudyGroupId { get; set; }
 
-    public List<int> StudyGroups { get; set; }
+    public StudyGroup StudyGroup { get; set; }
+
+    private List<StudyGroup> StudyGroups = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            //StudyGroup = new Guid(studyGroup);
+        }
+        catch
+        {
+            // TODO
+            await JsRuntime.InvokeVoidAsync("alert", "Given parameter is not a guid.");
+        }
+
+        await base.OnParametersSetAsync();
+    }
 
     protected override async Task OnInitializedAsync()
     {
         StudyGroups = await SurveyService.GetStudyGroupsAsync();
+        StudyGroup  = StudyGroups.First(sg => sg.Id == StudyGroupId);
     }
 
     #endregion
@@ -103,7 +122,7 @@
                 await JsRuntime.InvokeVoidAsync("alert", "DEBUG: No guid in the SessionStorage.");
             }
 
-            if (!StudyGroup.HasValue || !StudyGroups.Contains(StudyGroup.Value))
+            if (!StudyGroupId.HasValue || !StudyGroups.Any(sg => sg.Id == StudyGroupId.Value))
             {
                 // TODO: Navigate to an error page explaining what's wrong
                 //NavigationManager.NavigateTo("InvalidStudy");
@@ -120,7 +139,7 @@
 
     private void Continue()
     {
-        NavigationManager.NavigateTo($"Evaluation/{StudyGroup}");
+        NavigationManager.NavigateTo($"Evaluation/{StudyGroupId}");
     }
 
     #endregion

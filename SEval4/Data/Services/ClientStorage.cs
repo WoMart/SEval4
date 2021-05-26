@@ -25,7 +25,7 @@ namespace SEval4.Data.Services
         public async ValueTask SetUserGuidAsync(Guid userGuid) =>
             await SetItemAsync(UserGuidKey, userGuid);
 
-        public async ValueTask SetStudyGroupAsync(int studyGroupId) =>
+        public async ValueTask SetStudyGroupAsync(Guid studyGroupId) =>
             await SetItemAsync(StudyGroupKey, studyGroupId);
 
         public async ValueTask<string> GetItem(string key) =>
@@ -40,13 +40,13 @@ namespace SEval4.Data.Services
                 : new Guid(storedGuid);
         }
 
-        public async ValueTask<int?> GetStudyGroupAsync()
+        public async ValueTask<Guid?> GetStudyGroupAsync()
         {
             string studyGroupId = await _storage.GetItemAsync(StudyGroupKey);
 
             return string.IsNullOrEmpty(studyGroupId)
                 ? null
-                : Convert.ToInt32(studyGroupId);
+                : new Guid(studyGroupId);
         }
 
         public async ValueTask<bool> HasValue(string key) =>

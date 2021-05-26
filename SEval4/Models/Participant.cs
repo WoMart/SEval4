@@ -17,7 +17,7 @@ namespace SEval4.Models
         public DateTime CreationTime { get; set; }
         public DateTime? AllocationTime { get; set; }
         [ForeignKey(nameof(StudyGroup))]
-        public int? StudyGroupId { get; set; }
+        public Guid? StudyGroupId { get; set; }
         public virtual StudyGroup StudyGroup { get; set; }
     }
 }

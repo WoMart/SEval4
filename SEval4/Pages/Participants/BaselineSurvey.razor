@@ -114,10 +114,10 @@
             await SurveyService.SubmitBaselineFormAsync(Answers);
 
             // Get the study group ID allocated in personal survey
-            int? studyGroup = await SurveyService
+            Guid? studyGroup = await SurveyService
                 .GetUserAllocationGroupAsync(UserGuid);
 
-            NavigationManager.NavigateTo($"EvaluationIntro/{studyGroup}");
+            NavigationManager.NavigateTo($"EvaluationIntro/{studyGroup.ToString()}");
         }
         else
         {

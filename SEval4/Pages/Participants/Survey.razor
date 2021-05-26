@@ -212,7 +212,7 @@
             await SurveyService.InsertNewParticipantSurveyAsync(ParticipantSurvey);
             
             // Randomise participant to a study group
-            int studyGroupId = await SurveyService
+            Guid studyGroupId = await SurveyService
                 .AllocateParticipantAsync(UserGuid);
 
             // Store study group ID in SessionStorage

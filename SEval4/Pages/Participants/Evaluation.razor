@@ -1,4 +1,4 @@
-﻿@page "/Evaluation/{StudyGroup:int?}"
+﻿@page "/Evaluation/{StudyGroupId:guid?}"
 @using SEval4.Models;
 
 <div id="evaluation">
@@ -24,9 +24,9 @@
     </div>
 
     @* Study group specific elements *@
-    @switch (StudyGroup)
+    @switch (StudyGroups.FirstOrDefault(sg => sg.Id == StudyGroupId.Value)?.Name)
     {
-        case 1:
+        case "SEADM":
             {
                 <div id="seadmForm">
 
@@ -34,7 +34,7 @@
 
             }
             break;
-        case 2:
+        case "Feedback":
             {
                 <div id="feedbackWindow">
 
@@ -59,9 +59,11 @@
     #region Study groups
 
     [Parameter]
-    public int? StudyGroup { get; set; }
+    public Guid? StudyGroupId { get; set; }
 
-    private List<int> StudyGroups = new();
+    private StudyGroup StudyGroup { get; set; } = new();
+
+    private List<StudyGroup> StudyGroups = new();
 
     #endregion
 
@@ -73,11 +75,28 @@
 
     #endregion
 
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            //StudyGroup = new Guid(studyGroup);
+        }
+        catch
+        {
+            // TODO
+            await JsRuntime.InvokeVoidAsync("alert", "Given parameter is not a guid.");
+        }
+
+        await base.OnParametersSetAsync();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         StudyGroups = await SurveyService.GetStudyGroupsAsync();
         Scenarios   = await SurveyService.GetEvaluationRoundsAsync(isRandomOrder: true);
         Responses   = await SurveyService.GetEvaluationResponsesAsync(isRandomOrder: true);
+
+        StudyGroup = StudyGroups.First(sg => sg.Id == StudyGroupId);
 
         // Initialise current scenario
         CurrentScenario = GetNextScenario();
@@ -108,7 +127,7 @@
                 await JsRuntime.InvokeVoidAsync("alert", "DEBUG: No guid in the SessionStorage.");
             }
 
-            if (!StudyGroup.HasValue || !StudyGroups.Contains(StudyGroup.Value))
+            if (!StudyGroupId.HasValue || !StudyGroups.Any(sg => sg.Id == StudyGroupId))
             {
                 // TODO: Navigate to an error page explaining what's wrong
                 //NavigationManager.NavigateTo("InvalidStudy");#
