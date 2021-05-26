@@ -53,7 +53,9 @@ namespace SEval4.Data
 
         public DbSet<ParticipantSurvey> ParticipantSurveys { get; set; }
 
-        public DbSet<AnswerBaseline> AnswersBaseline { get; set; }
+        public DbSet<AnswerBaseline> BaselineAnswers { get; set; }
+
+        public DbSet<AnswerEvaluation> EvaluationAnswers { get; set; }
 
         #endregion
 
@@ -83,6 +85,7 @@ namespace SEval4.Data
             SetupTextValueEntity(modelBuilder, SeedSurvey.EducationGroupsSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.ConfidenceGroupsSeed);
 
+            // Seed Study groups
             modelBuilder.Entity<StudyGroup>()
                 .HasData(SeedSurvey.StudyGroupsSeed);
 
