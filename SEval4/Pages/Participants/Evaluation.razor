@@ -191,12 +191,18 @@
                 // Do it after the insert to keep the "synchronised"
                 CurrentScenario.IsAnsweredCorrectly = isCorrect;
 
+                // Display small feedback
+                string message = isCorrect ? "Correct!" : "Incorrect!";
+                await JsRuntime.InvokeVoidAsync("alert", message);
+
                 // If last scenario, continue; next scenario otherwise
                 if (Scenarios.All(s => s.IsAnsweredCorrectly))
                 {
                     if (await SumAttemptsPerScenario())
                     {
-                        await JsRuntime.InvokeVoidAsync("alert", "Here we navigate to results");
+                        //await JsRuntime.InvokeVoidAsync("alert", "Here we navigate to results");
+                        NavigationManager.NavigateTo("PostgameIntro");
+
                     }
                     else
                     {
