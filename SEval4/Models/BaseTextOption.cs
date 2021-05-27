@@ -2,7 +2,7 @@
 
 namespace SEval4.Models
 {
-    public abstract class BaseTextValuePair
+    public abstract class BaseTextOption
     {
         [Key]
         public int Id { get; set; }

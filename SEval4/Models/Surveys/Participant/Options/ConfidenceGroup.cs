@@ -1,6 +1,6 @@
 ﻿namespace SEval4.Models
 {
-    public class ConfidenceGroup : BaseTextValuePair
+    public class ConfidenceGroup : BaseTextOption
     {
     }
 }

@@ -2,7 +2,7 @@
 
 namespace SEval4.Models
 {
-    public class BaseResponse : BaseTextValuePair
+    public class BaseResponse : BaseTextOption
     {
         [Required]
         public int ScenarioId { get; set; }

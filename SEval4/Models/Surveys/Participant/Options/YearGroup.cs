@@ -1,6 +1,6 @@
 ﻿namespace SEval4.Models
 {
-    public class YearGroup : BaseTextValuePair
+    public class YearGroup : BaseTextOption
     {
     }
 }
