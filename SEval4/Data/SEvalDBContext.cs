@@ -118,7 +118,7 @@ namespace SEval4.Data
 
         private void SetupTextValueEntity<T>(
             ModelBuilder modelBuilder, T[] seedData)
-            where T : BaseTextValuePair<int>
+            where T : BaseTextValuePair
         {
             var entity = modelBuilder.Entity<T>();
 

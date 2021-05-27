@@ -1,6 +1,6 @@
 ﻿namespace SEval4.Models
 {
-    public class EducationGroup : BaseTextValuePair<int>
+    public class EducationGroup : BaseTextValuePair
     {
     }
 }
