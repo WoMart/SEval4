@@ -57,6 +57,8 @@ namespace SEval4.Data
 
         public DbSet<AnswerEvaluation> EvaluationAnswers { get; set; }
 
+        public DbSet<AttemptCount> AttemptCounts { get; set; }
+
         #endregion
 
         #endregion
