@@ -158,10 +158,16 @@
 
     private EvalScenario GetNextScenario()
     {
+        // Clear the answer model
         Answer = new();
-        return Scenarios.FirstOrDefault(s =>
+
+        // Get the next different scenario or null
+        var sc = Scenarios.FirstOrDefault(s =>
             !s.IsAnsweredCorrectly &&
             !s.Equals(CurrentScenario));
+
+        // If null, there's only one scenario left
+        return sc ?? CurrentScenario;
     }
 
     private bool IsAnswerCorrect()
@@ -181,7 +187,6 @@
             // Try insert
             if (await InsertAnswerAsync(isCorrect))
             {
-
                 // Record if answer is correct locally
                 // Do it after the insert to keep the "synchronised"
                 CurrentScenario.IsAnsweredCorrectly = isCorrect;
@@ -189,8 +194,14 @@
                 // If last scenario, continue; next scenario otherwise
                 if (Scenarios.All(s => s.IsAnsweredCorrectly))
                 {
-                    // TODO
-                    await JsRuntime.InvokeVoidAsync("alert", "Here we navigate to results");
+                    if (await SumAttemptsPerScenario())
+                    {
+                        await JsRuntime.InvokeVoidAsync("alert", "Here we navigate to results");
+                    }
+                    else
+                    {
+                        ErrorMsg = "Failed to sum and record number of attempts.";
+                    }
                 }
                 else
                 {
@@ -238,5 +249,25 @@
         }
     }
 
+    private async Task<bool> SumAttemptsPerScenario()
+    {
+        try
+        {
+            int rowsAffected = await SurveyService
+                .SumAndRecordAttemptsPerScenarioAsync(UserGuid);
+
+            if (rowsAffected != Scenarios.Count)
+            {
+                throw new Exception();
+            }
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+
+    }
 
 }
