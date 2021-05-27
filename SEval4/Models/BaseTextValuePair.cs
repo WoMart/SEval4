@@ -1,15 +1,12 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SEval4.Models
 {
     public abstract class BaseTextValuePair
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
         [Required]
         public string Text { get; set; }
-        [Required]
-        public int Value { get; set; }
     }
 }

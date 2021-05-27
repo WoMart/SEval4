@@ -180,28 +180,28 @@ namespace SEval4.Data.Services
         public async Task<List<AgeGroup>> GetAgeGroupsAsync()
         {
             return await _context.AgeGroup
-                .OrderBy(g => g.Value)
+                .OrderBy(g => g.Id)
                 .ToListAsync();
         }
 
         public async Task<List<YearGroup>> GetYearGroupsAsync()
         {
             return await _context.YearGroups
-                .OrderBy(g => g.Value)
+                .OrderBy(g => g.Id)
                 .ToListAsync();
         }
 
         public async Task<List<EducationGroup>> GetEducationGroupsAsync()
         {
             return await _context.EducationGroups
-                .OrderBy(g => g.Value)
+                .OrderBy(g => g.Id)
                 .ToListAsync();
         }
 
         public async Task<List<ConfidenceGroup>> GetConfidenceGroupsAsync()
         {
             return await _context.ConfidenceGroups
-                .OrderBy(g => g.Value)
+                .OrderBy(g => g.Id)
                 .ToListAsync();
         }
 
@@ -237,7 +237,7 @@ namespace SEval4.Data.Services
             // Select in random order or by pre-defined order
             IOrderedQueryable<Response> orderedResponses = isRandomOrder
                 ? _context.Responses.OrderBy(s => Guid.NewGuid())
-                : _context.Responses.OrderBy(s => s.ResponseOrder);
+                : _context.Responses.OrderBy(s => s.Value);
 
             return await orderedResponses.ToListAsync();
         }
@@ -270,7 +270,7 @@ namespace SEval4.Data.Services
             // Select in random order or by pre-defined order
             IOrderedQueryable<EvalResponse> orderedResponses = isRandomOrder
                 ? _context.EvaluationResponses.OrderBy(s => Guid.NewGuid())
-                : _context.EvaluationResponses.OrderBy(s => s.ResponseOrder);
+                : _context.EvaluationResponses.OrderBy(s => s.Value);
 
             return await orderedResponses.ToListAsync();
         }

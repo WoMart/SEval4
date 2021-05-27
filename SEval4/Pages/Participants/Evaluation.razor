@@ -25,7 +25,7 @@
                 {
                     @* InputRadio doesn't work well at all, use Custom solution *@
                     <CustomRadio name="@($"response")"
-                                 SelectedValue="response.Value"
+                                 SelectedValue="response.Id"
                                  @bind-Value="Answer.ResponseValue" />
                     @response.Text <br />
                 }
@@ -173,7 +173,7 @@
     private bool IsAnswerCorrect()
     {
         var response = Responses
-            .First(r => r.Value == Answer.ResponseValue &&
+            .First(r => r.Id== Answer.ResponseValue &&
             r.ScenarioId == CurrentScenario.ScenarioId);
         return response.IsCorrect;
     }

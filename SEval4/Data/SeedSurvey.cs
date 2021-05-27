@@ -5,6 +5,8 @@ namespace SEval4.Data
 {
     public static class SeedSurvey
     {
+        #region Study groups
+
         public static readonly StudyGroup[] StudyGroupsSeed =
         {
             new StudyGroup
@@ -17,43 +19,47 @@ namespace SEval4.Data
             }
         };
 
+        #endregion
+
+        #region DropDown options
+
         public static readonly AgeGroup[] AgeGroupsSeed = 
         {
             new AgeGroup
             {
                 // Id = 1,
                 Text = "18 - 24 years old",
-                Value = 1,
+                Id = 1,
             },
             new AgeGroup
             {
                 // Id = 2,
                 Text = "25 - 34 years old",
-                Value = 2,
+                Id = 2,
             },
             new AgeGroup
             {
                 // Id = 3,
                 Text = "35 - 44 years old",
-                Value = 3,
+                Id = 3,
             },
             new AgeGroup
             {
                 // Id = 4,
                 Text = "45 - 54 years old",
-                Value = 4,
+                Id = 4,
             },
             new AgeGroup
             {
                 // Id = 5,
                 Text = "55 - 64 years old",
-                Value = 5,
+                Id = 5,
             },
             new AgeGroup
             {
                 // Id = 6,
                 Text = "65+ years old",
-                Value = 6,
+                Id = 6,
             },
         };
 
@@ -63,25 +69,25 @@ namespace SEval4.Data
             {
                 // Id = 1,
                 Text = "1 year or less",
-                Value = 1,
+                Id = 1,
             },
             new YearGroup
             {
                 // Id = 2,
                 Text = "2 - 3 years",
-                Value = 2,
+                Id = 2,
             },
             new YearGroup
             {
                 // Id = 3,
                 Text = "4 - 5 years",
-                Value = 3,
+                Id = 3,
             },
             new YearGroup
             {
                 // Id = 4,
                 Text = "6 years or more",
-                Value = 4,
+                Id = 4,
             },
         };
 
@@ -91,37 +97,37 @@ namespace SEval4.Data
             {
                 // Id = 1,
                 Text = "Primary Education",
-                Value = 1,
+                Id = 1,
             },
             new EducationGroup
             {
                 // Id = 2,
                 Text = "Secondary Education",
-                Value = 2,
+                Id = 2,
             },
             new EducationGroup
             {
                 // Id = 3,
                 Text = "Vocational training",
-                Value = 3,
+                Id = 3,
             },
             new EducationGroup
             {
                 // Id = 4,
                 Text = "Bachelor degree or equivalent",
-                Value = 4,
+                Id = 4,
             },
             new EducationGroup
             {
                 // Id = 5,
                 Text = "Postgraduate Master",
-                Value = 5,
+                Id = 5,
             },
             new EducationGroup
             {
                 // Id = 6,
                 Text = "PhD",
-                Value = 6,
+                Id = 6,
             },
         };
 
@@ -131,34 +137,36 @@ namespace SEval4.Data
             {
                 // Id = 1,
                 Text = "No confidence",
-                Value = 1,
+                Id = 1,
             },
             new ConfidenceGroup
             {
                 // Id = 2,
                 Text = "Low confidence",
-                Value = 2,
+                Id = 2,
             },
             new ConfidenceGroup
             {
                 // Id = 3,
                 Text = "Moderate confidence",
-                Value = 3,
+                Id = 3,
             },
             new ConfidenceGroup
             {
                 // Id = 4,
                 Text = "High confidence",
-                Value = 4,
+                Id = 4,
             },
             new ConfidenceGroup
             {
                 // Id = 5,
                 Text = "Full confidence",
-                Value = 5,
+                Id = 5,
             },
 
         };
+
+        #endregion
 
         #region Baseline and Postgame
 
@@ -182,68 +190,68 @@ namespace SEval4.Data
             new Response
             {
                 ScenarioId = 1,
-                ResponseOrder = 1,
+                Value = 1,
                 Description = "Refuse immidately",
                 Text = "Refuse to help her entirely and hang up the phone.",
-                Value = 1,
+                Id = 1,
             },
             new Response
             {
                 ScenarioId = 1,
-                ResponseOrder = 2,
+                Value = 2,
                 Description = "Refer to colleague",
                 Text = "Ask her to contact one of your colleagues since you are on holiday.",
-                Value = 2,
+                Id = 2,
             },
             new Response
             {
                 ScenarioId = 1,
-                ResponseOrder = 3,
+                Value = 3,
                 Description = "Accept immediately",
                 Text = "Instantly provide her with your login details and wish her a merry Christmas.",
-                Value = 3,
+                Id = 3,
             },
             new Response
             {
                 ScenarioId = 1,
-                ResponseOrder = 4,
+                Value = 4,
                 Description = "Ask more questions and decide later",
                 Text = "Ask her a few complementary questions and based on her answers either provide her with your login details or don’t provide her with any information.",
-                Value = 4,
+                Id = 4,
             },
 
             // Scenario 2
             new Response
             {
                 ScenarioId = 2,
-                ResponseOrder = 1,
+                Value = 1,
                 Description = "Click on the links and decide later",
                 Text = "Click on the links provided, and have a look at the company’s online profile as well as reviews left by others. If all seems good, get in contact with the recruiter.",
-                Value = 1,
+                Id = 1,
             },
             new Response
             {
                 ScenarioId = 2,
-                ResponseOrder = 2,
+                Value = 2,
                 Description = "Accept immediately and provide too much data",
                 Text = "You have been job hunting for ages and see this as a blessing in disguise. You reply to the email saying that you would appreciate his help and attach a copy of your CV, a copy of your ID and a link to your GitHub account. (Since you know he will most likely request all this information anyway.",
-                Value = 2,
+                Id = 2,
             },
             new Response
             {
                 ScenarioId = 2,
-                ResponseOrder = 3,
+                Value = 3,
                 Description = "Ignore and block",
                 Text = "Ignore the email and remove the recruiter from your LinkedIn.",
-                Value = 3,
+                Id = 3,
             },
             new Response
             {
                 ScenarioId = 2,
-                ResponseOrder = 4,
+                Value = 4,
                 Description = "Use the number to arrange a meeting",
                 Text = "Give the recruiter a call on one of the two numbers provided and arrange to meet up with him to discuss how he can help you.",
-                Value = 4,
+                Id = 4,
             },
         };
 
@@ -273,69 +281,69 @@ namespace SEval4.Data
             new EvalResponse
             {
                 ScenarioId = 3,
-                ResponseOrder = 1,
+                Value = 1,
                 Description = "Refuse immidately",
                 Text = "Refuse to help her entirely and hang up the phone.",
-                Value = 1,
+                Id = 1,
                 IsCorrect = true,
             },
             new EvalResponse
             {
                 ScenarioId = 3,
-                ResponseOrder = 2,
+                Value = 2,
                 Description = "Refer to colleague",
                 Text = "Ask her to contact one of your colleagues since you are on holiday.",
-                Value = 2,
+                Id = 2,
             },
             new EvalResponse
             {
                 ScenarioId = 3,
-                ResponseOrder = 3,
+                Value = 3,
                 Description = "Accept immediately",
                 Text = "Instantly provide her with your login details and wish her a merry Christmas.",
-                Value = 3,
+                Id = 3,
             },
             new EvalResponse
             {
                 ScenarioId = 3,
-                ResponseOrder = 4,
+                Value = 4,
                 Description = "Ask more questions and decide later",
                 Text = "Ask her a few complementary questions and based on her answers either provide her with your login details or don’t provide her with any information.",
-                Value = 4,
+                Id = 4,
             },
 
             // Scenario 2
             new EvalResponse
             {
                 ScenarioId = 4,
-                ResponseOrder = 1,
+                Value = 1,
                 Description = "Click on the links and decide later",
                 Text = "Click on the links provided, and have a look at the company’s online profile as well as reviews left by others. If all seems good, get in contact with the recruiter.",
-                Value = 1,
+                Id = 1,
             },
             new EvalResponse
             {
                 ScenarioId = 4,
-                ResponseOrder = 2,
+                Value = 2,
                 Description = "Accept immediately and provide too much data",
                 Text = "You have been job hunting for ages and see this as a blessing in disguise. You reply to the email saying that you would appreciate his help and attach a copy of your CV, a copy of your ID and a link to your GitHub account. (Since you know he will most likely request all this information anyway.",
-                Value = 2,
+                Id = 2,
             },
             new EvalResponse
             {
                 ScenarioId = 4,
-                ResponseOrder = 3,
+                Value = 3,
                 Description = "Ignore and block",
                 Text = "Ignore the email and remove the recruiter from your LinkedIn.",
-                Value = 3,
+                Id = 3,
             },
             new EvalResponse
             {
                 ScenarioId = 4,
-                ResponseOrder = 4,
+                Value = 4,
                 Description = "Use the number to arrange a meeting",
                 Text = "Give the recruiter a call on one of the two numbers provided and arrange to meet up with him to discuss how he can help you.",
-                Value = 4,
+                Id = 4,
                 IsCorrect = true,
             },
         };

@@ -9,6 +9,6 @@ namespace SEval4.Models
         [Required]
         public string Description { get; set; }
         [Required]
-        public int ResponseOrder { get; set; }
+        public int Value { get; set; }
     }
 }
