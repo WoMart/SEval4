@@ -21,7 +21,7 @@
         <div id="responses">
             <InputRadioGroup @bind-Value="@Answer.ResponseValue" Name="response">
                 @foreach (EvalResponse response in Responses.Where(
-r => r.ScenarioId == CurrentScenario.ScenarioId))
+                    r => r.ScenarioId == CurrentScenario.ScenarioId))
                 {
                     @* InputRadio doesn't work well at all, use Custom solution *@
                     <CustomRadio name="@($"response")"
@@ -96,13 +96,8 @@ r => r.ScenarioId == CurrentScenario.ScenarioId))
 
     protected override async Task OnParametersSetAsync()
     {
-        try
+        if (!StudyGroupId.HasValue)
         {
-            //StudyGroup = new Guid(studyGroup);
-        }
-        catch
-        {
-            // TODO
             await JsRuntime.InvokeVoidAsync("alert", "Given parameter is not a guid.");
         }
 
@@ -159,52 +154,71 @@ r => r.ScenarioId == CurrentScenario.ScenarioId))
 
     #endregion
 
+    private AnswerEvaluation Answer { get; set; } = new();
+
     private EvalScenario GetNextScenario()
     {
+        Answer = new();
         return Scenarios.FirstOrDefault(s =>
             !s.IsAnsweredCorrectly &&
             !s.Equals(CurrentScenario));
     }
 
-    private AnswerEvaluation Answer { get; set; } = new();
+    private bool IsAnswerCorrect()
+    {
+        var response = Responses
+            .First(r => r.Value == Answer.ResponseValue &&
+            r.ScenarioId == CurrentScenario.ScenarioId);
+        return response.IsCorrect;
+    }
 
     private async Task SubmitSingleAnswer(bool isValid)
     {
-        CurrentScenario.IsAnsweredCorrectly = isValid;
+        if (isValid)
+        {
+            bool isCorrect = IsAnswerCorrect();
 
-        if (!isValid)
-        {
-            // Notify if invalid
-            ErrorMsg = "Did you choose a response?";
-        }
-        else if (!await InsertAnswerAsync())
-        {
-            // Try insert and notify if failed
-            ErrorMsg = $"Server failed to upload your answer. Try again?";
-        }
-        else if (Scenarios.All(s => s.IsAnsweredCorrectly))
-        {
-            // If all scenarios are completed, continue
-            await JsRuntime.InvokeVoidAsync("alert", "Here we navigate to results");
+            // Try insert
+            if (await InsertAnswerAsync(isCorrect))
+            {
+
+                // Record if answer is correct locally
+                // Do it after the insert to keep the "synchronised"
+                CurrentScenario.IsAnsweredCorrectly = isCorrect;
+
+                // If last scenario, continue; next scenario otherwise
+                if (Scenarios.All(s => s.IsAnsweredCorrectly))
+                {
+                    // TODO
+                    await JsRuntime.InvokeVoidAsync("alert", "Here we navigate to results");
+                }
+                else
+                {
+                    // Reset answer model and get next scenario
+                    CurrentScenario = GetNextScenario();
+                }
+            }
+            else
+            {
+                // Notify if insert failed
+                ErrorMsg = "Server failed to upload your answer. Try again?";
+            }
         }
         else
         {
-            // Reset answer model and get next scenario
-            Answer = new();
-            CurrentScenario = GetNextScenario();
+            // Notify if invalid
+            ErrorMsg = "Choose a response.";
         }
 
         await Task.CompletedTask;
     }
 
-    private async Task<bool> InsertAnswerAsync()
+    private async Task<bool> InsertAnswerAsync(bool? isCorrect = null)
     {
         Answer.UserId = UserGuid;
         Answer.InsertTime = DateTime.Now;
         Answer.ScenarioId = CurrentScenario.ScenarioId;
-        Answer.IsCorrect = Responses
-            .First(r => r.ScenarioId == CurrentScenario.ScenarioId)
-            .IsCorrect;
+        Answer.IsCorrect = isCorrect ?? IsAnswerCorrect();
 
         try
         {
