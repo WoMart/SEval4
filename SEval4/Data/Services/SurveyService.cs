@@ -281,6 +281,23 @@ namespace SEval4.Data.Services
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<int> SumAndRecordAttemptsPerScenarioAsync(Guid userId)
+        {
+            List<AttemptCount> attemptCounts = _context.EvaluationAnswers
+                .Where(a => a.UserId == userId)
+                .GroupBy(a => a.ScenarioId)
+                .Select(group => new AttemptCount
+                {
+                    UserId = userId,
+                    ScenarioId = group.Key,
+                    Attempts = group.Count(),
+                })
+                .ToList();
+
+            _context.AttemptCounts.AddRange(attemptCounts);
+            return await _context.SaveChangesAsync();
+        }
+
         #endregion
 
 
