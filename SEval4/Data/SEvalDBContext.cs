@@ -53,9 +53,9 @@ namespace SEval4.Data
 
         public DbSet<ParticipantSurvey> ParticipantSurveys { get; set; }
 
-        public DbSet<AnswerBaseline> BaselineAnswers { get; set; }
+        public DbSet<SurveyAnswer> SurveyAnswers { get; set; }
 
-        public DbSet<AnswerEvaluation> EvaluationAnswers { get; set; }
+        public DbSet<EvalAnswer> EvaluationAnswers { get; set; }
 
         public DbSet<AttemptCount> AttemptCounts { get; set; }
 

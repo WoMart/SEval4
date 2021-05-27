@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SEval4.Models
 {
-    public class AnswerBaseline
+    public class SurveyAnswer
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();

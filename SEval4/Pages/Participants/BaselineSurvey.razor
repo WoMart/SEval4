@@ -80,7 +80,7 @@
 
     private List<Scenario> Scenarios = new();
     private List<Response> Responses = new();
-    private List<AnswerBaseline> Answers = new();
+    private List<SurveyAnswer> Answers = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -91,7 +91,7 @@
         // Preapre containers for answers
         for (int i = 0; i < Scenarios.Count; i++)
         {
-            Answers.Add(new AnswerBaseline
+            Answers.Add(new SurveyAnswer
             {
                 UserGuid = UserGuid,
                 ScenarioId = Scenarios[i].ScenarioId,
@@ -111,7 +111,7 @@
     {
         if (IsFormValid(out string errorMsg))
         {
-            await SurveyService.SubmitBaselineFormAsync(Answers);
+            await SurveyService.SubmitSurveyAnswersAsync(Answers);
 
             // Get the study group ID allocated in personal survey
             Guid? studyGroup = await SurveyService
@@ -135,7 +135,7 @@
             return false;
         }
 
-        foreach (AnswerBaseline answer in Answers)
+        foreach (SurveyAnswer answer in Answers)
         {
             var response = Responses.SingleOrDefault(r =>
                 r.ScenarioId == answer.ScenarioId &&

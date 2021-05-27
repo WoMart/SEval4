@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SEval4.Models
 {
-    public class AnswerEvaluation
+    public class EvalAnswer
     {
         [Key]
         public int Id { get; set; }

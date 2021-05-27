@@ -242,10 +242,10 @@ namespace SEval4.Data.Services
             return await orderedResponses.ToListAsync();
         }
 
-        public async Task<int> SubmitBaselineFormAsync(List<AnswerBaseline> answers)
+        public async Task<int> SubmitSurveyAnswersAsync(List<SurveyAnswer> answers)
         {
             // Do some validaiton? Number of elements, Guid is the same and non-empty, etc.
-            _context.BaselineAnswers.AddRange(answers);
+            _context.SurveyAnswers.AddRange(answers);
             return await _context.SaveChangesAsync();
         }
 
@@ -275,7 +275,7 @@ namespace SEval4.Data.Services
             return await orderedResponses.ToListAsync();
         }
 
-        public async Task<int> InsertEvaluationAnswerAsync(AnswerEvaluation answer)
+        public async Task<int> InsertEvaluationAnswerAsync(EvalAnswer answer)
         {
             _context.EvaluationAnswers.Add(answer);
             return await _context.SaveChangesAsync();
