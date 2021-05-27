@@ -298,6 +298,15 @@ namespace SEval4.Data.Services
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<List<AttemptCount>> GetAttemptCountAsync(Guid userId)
+        {
+            return await _context.AttemptCounts
+                .Where(ac => ac.UserId == userId)
+                .OrderBy(ac => ac.ScenarioId)
+                .ToListAsync();
+        }
+
+
         #endregion
 
 
