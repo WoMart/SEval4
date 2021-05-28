@@ -11,7 +11,7 @@
         <div style="margin-bottom:20px; border:double; border-width:2px; padding:10px;">
             <div>
                 <p>
-                    <label for="@($"scenario{CurrentScenario.ScenarioId.ToString()}")">
+                    <label for="@($"scenario{CurrentScenario.Id.ToString()}")">
                         <b>@CurrentScenario.Context</b>
                     </label>
                 </p>
@@ -21,7 +21,7 @@
         <div id="responses">
             <InputRadioGroup @bind-Value="@Answer.ResponseValue" Name="response">
                 @foreach (EvalResponse response in Responses.Where(
-                    r => r.ScenarioId == CurrentScenario.ScenarioId))
+                   r => r.ScenarioId == CurrentScenario.Id))
                 {
                     @* InputRadio doesn't work well at all, use Custom solution *@
                     <CustomRadio name="@($"response")"
@@ -174,7 +174,7 @@
     {
         var response = Responses
             .First(r => r.Id== Answer.ResponseValue &&
-            r.ScenarioId == CurrentScenario.ScenarioId);
+            r.ScenarioId == CurrentScenario.Id);
         return response.IsCorrect;
     }
 
@@ -234,7 +234,7 @@
     {
         Answer.UserId = UserGuid;
         Answer.InsertTime = DateTime.Now;
-        Answer.ScenarioId = CurrentScenario.ScenarioId;
+        Answer.ScenarioId = CurrentScenario.Id;
         Answer.IsCorrect = isCorrect ?? IsAnswerCorrect();
 
         try

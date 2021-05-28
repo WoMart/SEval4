@@ -10,7 +10,7 @@
             @foreach (var answer in Answers)
             {
                 int scenarioId = answer.ScenarioId;
-                var scenario   = Scenarios.Single(s => s.ScenarioId == scenarioId);
+                var scenario   = Scenarios.Single(s => s.Id == scenarioId);
                 var responses  = Responses.Where(r => r.ScenarioId == scenarioId)
                     .ToList();
 
@@ -94,7 +94,7 @@
             Answers.Add(new SurveyAnswer
             {
                 UserGuid = UserGuid,
-                ScenarioId = Scenarios[i].ScenarioId,
+                ScenarioId = Scenarios[i].Id,
             });
         }
 

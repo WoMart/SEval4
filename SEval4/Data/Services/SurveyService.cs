@@ -226,7 +226,7 @@ namespace SEval4.Data.Services
             // Select in random order or by ScenarioId
             IOrderedQueryable<Scenario> orderedScenarios = isRandomOrder
                 ? _context.Scenarios.OrderBy(s => Guid.NewGuid())
-                : _context.Scenarios.OrderBy(s => s.ScenarioId);
+                : _context.Scenarios.OrderBy(s => s.Id);
 
             return await orderedScenarios
                 .ToListAsync();

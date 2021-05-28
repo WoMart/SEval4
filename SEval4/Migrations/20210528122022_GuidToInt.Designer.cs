@@ -10,8 +10,8 @@ using SEval4.Data;
 namespace SEval4.Migrations
 {
     [DbContext(typeof(SEvalDBContext))]
-    [Migration("20210526175304_LessGooo")]
-    partial class LessGooo
+    [Migration("20210528122022_GuidToInt")]
+    partial class GuidToInt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,16 +23,14 @@ namespace SEval4.Migrations
 
             modelBuilder.Entity("SEval4.Models.AgeGroup", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -41,63 +39,151 @@ namespace SEval4.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8a79f8fe-1e3a-42a9-81dd-1cbdbf865ba5"),
-                            Text = "18 - 24 years old",
-                            Value = 1
+                            Id = 1,
+                            Text = "18 - 24 years old"
                         },
                         new
                         {
-                            Id = new Guid("1b9d96af-c625-4e34-b25c-227832660b76"),
-                            Text = "25 - 34 years old",
-                            Value = 2
+                            Id = 2,
+                            Text = "25 - 34 years old"
                         },
                         new
                         {
-                            Id = new Guid("d4293612-6665-4def-9c0f-da7324aef565"),
-                            Text = "35 - 44 years old",
-                            Value = 3
+                            Id = 3,
+                            Text = "35 - 44 years old"
                         },
                         new
                         {
-                            Id = new Guid("9c9ed31c-7a85-4f8e-bd49-fbb8df0c74e4"),
-                            Text = "45 - 54 years old",
-                            Value = 4
+                            Id = 4,
+                            Text = "45 - 54 years old"
                         },
                         new
                         {
-                            Id = new Guid("599ef3cc-921f-4e58-aae3-a603c29ca2b5"),
-                            Text = "55 - 64 years old",
-                            Value = 5
+                            Id = 5,
+                            Text = "55 - 64 years old"
                         },
                         new
                         {
-                            Id = new Guid("30618554-dd19-4021-8a63-a9d5706a4920"),
-                            Text = "65+ years old",
-                            Value = 6
+                            Id = 6,
+                            Text = "65+ years old"
                         });
                 });
 
-            modelBuilder.Entity("SEval4.Models.AnswerBaseline", b =>
+            modelBuilder.Entity("SEval4.Models.AttemptCount", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("int");
 
                     b.Property<int>("ScenarioId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UserGuid")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("BaselineAnswers");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AttemptCounts");
                 });
 
-            modelBuilder.Entity("SEval4.Models.AnswerEvaluation", b =>
+            modelBuilder.Entity("SEval4.Models.ConfidenceGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConfidenceGroups");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Text = "No confidence"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Text = "Low confidence"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Text = "Moderate confidence"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Text = "High confidence"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Text = "Full confidence"
+                        });
+                });
+
+            modelBuilder.Entity("SEval4.Models.EducationGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EducationGroups");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Text = "Primary Education"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Text = "Secondary Education"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Text = "Vocational training"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Text = "Bachelor degree or equivalent"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Text = "Postgraduate Master"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Text = "PhD"
+                        });
+                });
+
+            modelBuilder.Entity("SEval4.Models.EvalAnswer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,117 +212,12 @@ namespace SEval4.Migrations
                     b.ToTable("EvaluationAnswers");
                 });
 
-            modelBuilder.Entity("SEval4.Models.ConfidenceGroup", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ConfidenceGroups");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("8856d38c-ea15-4360-aa68-1671964a884f"),
-                            Text = "No confidence",
-                            Value = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("0a121ac3-9ac9-4185-a0dc-29db3c56e746"),
-                            Text = "Low confidence",
-                            Value = 2
-                        },
-                        new
-                        {
-                            Id = new Guid("fd913be2-3fa3-4e6d-8504-0344bbe01c4e"),
-                            Text = "Moderate confidence",
-                            Value = 3
-                        },
-                        new
-                        {
-                            Id = new Guid("cbe4ca49-bc3d-4cc1-8d0f-cf4233d8ce31"),
-                            Text = "High confidence",
-                            Value = 4
-                        },
-                        new
-                        {
-                            Id = new Guid("5701e717-f805-4b32-bd1e-a7ae0c1cc7be"),
-                            Text = "Full confidence",
-                            Value = 5
-                        });
-                });
-
-            modelBuilder.Entity("SEval4.Models.EducationGroup", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EducationGroups");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("2ad3d51d-4c6b-423a-b7df-11da2795377f"),
-                            Text = "Primary Education",
-                            Value = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("8b3a46c9-c0b9-493a-8e6e-ac6a0f3e3efe"),
-                            Text = "Secondary Education",
-                            Value = 2
-                        },
-                        new
-                        {
-                            Id = new Guid("133f364d-66ea-44e3-b46a-56c4f5ab484f"),
-                            Text = "Vocational training",
-                            Value = 3
-                        },
-                        new
-                        {
-                            Id = new Guid("0896126e-4e3d-4567-b174-54402554635f"),
-                            Text = "Bachelor degree or equivalent",
-                            Value = 4
-                        },
-                        new
-                        {
-                            Id = new Guid("23dce351-9446-4e2c-ac38-ac0ea2cafee9"),
-                            Text = "Postgraduate Master",
-                            Value = 5
-                        },
-                        new
-                        {
-                            Id = new Guid("efd1a898-ac12-40dd-b394-abb73adbba44"),
-                            Text = "PhD",
-                            Value = 6
-                        });
-                });
-
             modelBuilder.Entity("SEval4.Models.EvalResponse", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -245,9 +226,6 @@ namespace SEval4.Migrations
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ResponseOrder")
-                        .HasColumnType("int");
-
                     b.Property<int>("ScenarioId")
                         .HasColumnType("int");
 
@@ -260,85 +238,79 @@ namespace SEval4.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ScenarioId");
+
                     b.ToTable("EvaluationResponses");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("dea0532c-d1c3-46d8-96b3-43fc3411ba69"),
+                            Id = 1,
                             Description = "Refuse immidately",
                             IsCorrect = true,
-                            ResponseOrder = 1,
                             ScenarioId = 3,
                             Text = "Refuse to help her entirely and hang up the phone.",
                             Value = 1
                         },
                         new
                         {
-                            Id = new Guid("1f81af6e-9db2-4865-a846-d7339222635f"),
+                            Id = 2,
                             Description = "Refer to colleague",
                             IsCorrect = false,
-                            ResponseOrder = 2,
                             ScenarioId = 3,
                             Text = "Ask her to contact one of your colleagues since you are on holiday.",
                             Value = 2
                         },
                         new
                         {
-                            Id = new Guid("7e4f5519-e465-49f4-91b7-c8f010cf3bb6"),
+                            Id = 3,
                             Description = "Accept immediately",
                             IsCorrect = false,
-                            ResponseOrder = 3,
                             ScenarioId = 3,
                             Text = "Instantly provide her with your login details and wish her a merry Christmas.",
                             Value = 3
                         },
                         new
                         {
-                            Id = new Guid("6ade07e5-55fa-4e53-acbd-1b47fea7ff2e"),
+                            Id = 4,
                             Description = "Ask more questions and decide later",
                             IsCorrect = false,
-                            ResponseOrder = 4,
                             ScenarioId = 3,
                             Text = "Ask her a few complementary questions and based on her answers either provide her with your login details or don’t provide her with any information.",
                             Value = 4
                         },
                         new
                         {
-                            Id = new Guid("36fa4f22-243c-4636-8297-3e9cdc4025df"),
+                            Id = 5,
                             Description = "Click on the links and decide later",
                             IsCorrect = false,
-                            ResponseOrder = 1,
                             ScenarioId = 4,
                             Text = "Click on the links provided, and have a look at the company’s online profile as well as reviews left by others. If all seems good, get in contact with the recruiter.",
                             Value = 1
                         },
                         new
                         {
-                            Id = new Guid("e38c90a4-364a-4ab8-9848-f434e1b33d0f"),
+                            Id = 6,
                             Description = "Accept immediately and provide too much data",
                             IsCorrect = false,
-                            ResponseOrder = 2,
                             ScenarioId = 4,
                             Text = "You have been job hunting for ages and see this as a blessing in disguise. You reply to the email saying that you would appreciate his help and attach a copy of your CV, a copy of your ID and a link to your GitHub account. (Since you know he will most likely request all this information anyway.",
                             Value = 2
                         },
                         new
                         {
-                            Id = new Guid("c66376b7-5002-490e-a932-280793819a37"),
+                            Id = 7,
                             Description = "Ignore and block",
                             IsCorrect = false,
-                            ResponseOrder = 3,
                             ScenarioId = 4,
                             Text = "Ignore the email and remove the recruiter from your LinkedIn.",
                             Value = 3
                         },
                         new
                         {
-                            Id = new Guid("3eaa6c30-0dec-4432-9587-87597d74e555"),
+                            Id = 8,
                             Description = "Use the number to arrange a meeting",
                             IsCorrect = true,
-                            ResponseOrder = 4,
                             ScenarioId = 4,
                             Text = "Give the recruiter a call on one of the two numbers provided and arrange to meet up with him to discuss how he can help you.",
                             Value = 4
@@ -347,9 +319,10 @@ namespace SEval4.Migrations
 
             modelBuilder.Entity("SEval4.Models.EvalScenario", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Context")
                         .IsRequired()
@@ -358,9 +331,6 @@ namespace SEval4.Migrations
                     b.Property<string>("Feedback")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ScenarioId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("EvaluationScenarios");
@@ -368,17 +338,15 @@ namespace SEval4.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("04e8ae34-0882-4025-9a17-ce304a9e7eac"),
+                            Id = 3,
                             Context = "It is snowy outside, and you are enjoying your Christmas vacation that is longer than you have had in some time. This is going to be a much needed vacation. You have been extra careful ensuring that your tasks at work have been divided among colleagues, so that everyone knows who is responsible for what while you are on vacation. You have also informed your most important customer, and he has, with the usual protests, accepted your vacation. You have just poured a glass of mulled wine when the phone rings. You curse your forgetfulness about leaving the phone on before answering. A very apologetic woman presents herself as a newly employed technician of your customer. She tells you that she is very sorry for calling you, but because she is going to upgrade the customer's backup system she needs to know where the files you have worked on can be found. She also wants to know which computer they are located in and what folder, as well as what user-name you have, in order to guarantee that they will be backed up in the new system. You give her this information, and she thanks you and wishes you a Merry Christmas. An hour later she calls again, almost ready to cry. Something has gone wrong with your backup, she suspects, as it has been locked in the system, and she is the only one left over Christmas. It also seems that only your files are causing trouble. She asks if you would consider coming into the customer's office, checking this, something you refuse. She then wonders if you can give her your login information to enable her to quickly check that the files have not been destroyed so that you can both celebrate Christmas in peace. Which action do you take?",
-                            Feedback = "Placeholder feedback 1",
-                            ScenarioId = 3
+                            Feedback = "Placeholder feedback 1"
                         },
                         new
                         {
-                            Id = new Guid("aaa12ca6-6ca0-4bf4-a0a4-852326b460a9"),
+                            Id = 4,
                             Context = "You are a Computer Science Honours student at UCT, currently searching for a job. You receive an invite from someone, who you have never met before, on LinkedIn. You have heard that it is a good idea to have a big network on LinkedIn, so you decide to accept the person’s invite. The following day you receive an email from the person you accepted on LinkedIn. The email contains the following message: “Hey, Thanks for connecting with me on LinkedIn. I specialise in placing Software Engineers in Cape Town. I see on your LinkedIn profile that you are currently doing your Computer Science Honours at UCT. When will you be finishing off there? Have you managed to secure a position as of yet post studies? I’d be keen to have a chat with you to find out what It is that really interests you so I know what to keep my eyes peeled for. Would you be keen? Look forward to hearing from you.” The signature of the email contains the recruiter’s full name, his mobile and landline numbers as well as links to his recruitment company’s website and social media accounts. What action do you take?",
-                            Feedback = "Placeholder feedback 2",
-                            ScenarioId = 4
+                            Feedback = "Placeholder feedback 2"
                         });
                 });
 
@@ -441,16 +409,14 @@ namespace SEval4.Migrations
 
             modelBuilder.Entity("SEval4.Models.Response", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ResponseOrder")
-                        .HasColumnType("int");
 
                     b.Property<int>("ScenarioId")
                         .HasColumnType("int");
@@ -464,77 +430,71 @@ namespace SEval4.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ScenarioId");
+
                     b.ToTable("Responses");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("21a080c9-371d-4aa6-a6e4-b378d2a83342"),
+                            Id = 1,
                             Description = "Refuse immidately",
-                            ResponseOrder = 1,
                             ScenarioId = 1,
                             Text = "Refuse to help her entirely and hang up the phone.",
                             Value = 1
                         },
                         new
                         {
-                            Id = new Guid("7ce2aa19-f5f3-4fde-8e67-01923fa33eff"),
+                            Id = 2,
                             Description = "Refer to colleague",
-                            ResponseOrder = 2,
                             ScenarioId = 1,
                             Text = "Ask her to contact one of your colleagues since you are on holiday.",
                             Value = 2
                         },
                         new
                         {
-                            Id = new Guid("96d211d8-8842-4fa6-953c-bb3c7d5517d4"),
+                            Id = 3,
                             Description = "Accept immediately",
-                            ResponseOrder = 3,
                             ScenarioId = 1,
                             Text = "Instantly provide her with your login details and wish her a merry Christmas.",
                             Value = 3
                         },
                         new
                         {
-                            Id = new Guid("1dc4369f-ae1b-49d7-be13-16381df3eed8"),
+                            Id = 4,
                             Description = "Ask more questions and decide later",
-                            ResponseOrder = 4,
                             ScenarioId = 1,
                             Text = "Ask her a few complementary questions and based on her answers either provide her with your login details or don’t provide her with any information.",
                             Value = 4
                         },
                         new
                         {
-                            Id = new Guid("b6b94b0a-69a5-407c-8d82-9445ab891554"),
+                            Id = 5,
                             Description = "Click on the links and decide later",
-                            ResponseOrder = 1,
                             ScenarioId = 2,
                             Text = "Click on the links provided, and have a look at the company’s online profile as well as reviews left by others. If all seems good, get in contact with the recruiter.",
                             Value = 1
                         },
                         new
                         {
-                            Id = new Guid("42508801-c27b-491f-9560-397f961b9a20"),
+                            Id = 6,
                             Description = "Accept immediately and provide too much data",
-                            ResponseOrder = 2,
                             ScenarioId = 2,
                             Text = "You have been job hunting for ages and see this as a blessing in disguise. You reply to the email saying that you would appreciate his help and attach a copy of your CV, a copy of your ID and a link to your GitHub account. (Since you know he will most likely request all this information anyway.",
                             Value = 2
                         },
                         new
                         {
-                            Id = new Guid("0c026a4e-716e-42ab-919c-cef660478456"),
+                            Id = 7,
                             Description = "Ignore and block",
-                            ResponseOrder = 3,
                             ScenarioId = 2,
                             Text = "Ignore the email and remove the recruiter from your LinkedIn.",
                             Value = 3
                         },
                         new
                         {
-                            Id = new Guid("230c66c1-4422-45b0-bd5b-ee55d419a5df"),
+                            Id = 8,
                             Description = "Use the number to arrange a meeting",
-                            ResponseOrder = 4,
                             ScenarioId = 2,
                             Text = "Give the recruiter a call on one of the two numbers provided and arrange to meet up with him to discuss how he can help you.",
                             Value = 4
@@ -543,16 +503,14 @@ namespace SEval4.Migrations
 
             modelBuilder.Entity("SEval4.Models.Scenario", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Context")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ScenarioId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -561,15 +519,13 @@ namespace SEval4.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("90df4edf-38ef-4e9a-8ccb-289a0d64de85"),
-                            Context = "It is snowy outside, and you are enjoying your Christmas vacation that is longer than you have had in some time. This is going to be a much needed vacation. You have been extra careful ensuring that your tasks at work have been divided among colleagues, so that everyone knows who is responsible for what while you are on vacation. You have also informed your most important customer, and he has, with the usual protests, accepted your vacation. You have just poured a glass of mulled wine when the phone rings. You curse your forgetfulness about leaving the phone on before answering. A very apologetic woman presents herself as a newly employed technician of your customer. She tells you that she is very sorry for calling you, but because she is going to upgrade the customer's backup system she needs to know where the files you have worked on can be found. She also wants to know which computer they are located in and what folder, as well as what user-name you have, in order to guarantee that they will be backed up in the new system. You give her this information, and she thanks you and wishes you a Merry Christmas. An hour later she calls again, almost ready to cry. Something has gone wrong with your backup, she suspects, as it has been locked in the system, and she is the only one left over Christmas. It also seems that only your files are causing trouble. She asks if you would consider coming into the customer's office, checking this, something you refuse. She then wonders if you can give her your login information to enable her to quickly check that the files have not been destroyed so that you can both celebrate Christmas in peace. Which action do you take?",
-                            ScenarioId = 1
+                            Id = 1,
+                            Context = "It is snowy outside, and you are enjoying your Christmas vacation that is longer than you have had in some time. This is going to be a much needed vacation. You have been extra careful ensuring that your tasks at work have been divided among colleagues, so that everyone knows who is responsible for what while you are on vacation. You have also informed your most important customer, and he has, with the usual protests, accepted your vacation. You have just poured a glass of mulled wine when the phone rings. You curse your forgetfulness about leaving the phone on before answering. A very apologetic woman presents herself as a newly employed technician of your customer. She tells you that she is very sorry for calling you, but because she is going to upgrade the customer's backup system she needs to know where the files you have worked on can be found. She also wants to know which computer they are located in and what folder, as well as what user-name you have, in order to guarantee that they will be backed up in the new system. You give her this information, and she thanks you and wishes you a Merry Christmas. An hour later she calls again, almost ready to cry. Something has gone wrong with your backup, she suspects, as it has been locked in the system, and she is the only one left over Christmas. It also seems that only your files are causing trouble. She asks if you would consider coming into the customer's office, checking this, something you refuse. She then wonders if you can give her your login information to enable her to quickly check that the files have not been destroyed so that you can both celebrate Christmas in peace. Which action do you take?"
                         },
                         new
                         {
-                            Id = new Guid("27b6dd72-7307-4d88-a81d-84404e95693f"),
-                            Context = "You are a Computer Science Honours student at UCT, currently searching for a job. You receive an invite from someone, who you have never met before, on LinkedIn. You have heard that it is a good idea to have a big network on LinkedIn, so you decide to accept the person’s invite. The following day you receive an email from the person you accepted on LinkedIn. The email contains the following message: “Hey, Thanks for connecting with me on LinkedIn. I specialise in placing Software Engineers in Cape Town. I see on your LinkedIn profile that you are currently doing your Computer Science Honours at UCT. When will you be finishing off there? Have you managed to secure a position as of yet post studies? I’d be keen to have a chat with you to find out what It is that really interests you so I know what to keep my eyes peeled for. Would you be keen? Look forward to hearing from you.” The signature of the email contains the recruiter’s full name, his mobile and landline numbers as well as links to his recruitment company’s website and social media accounts. What action do you take?",
-                            ScenarioId = 2
+                            Id = 2,
+                            Context = "You are a Computer Science Honours student at UCT, currently searching for a job. You receive an invite from someone, who you have never met before, on LinkedIn. You have heard that it is a good idea to have a big network on LinkedIn, so you decide to accept the person’s invite. The following day you receive an email from the person you accepted on LinkedIn. The email contains the following message: “Hey, Thanks for connecting with me on LinkedIn. I specialise in placing Software Engineers in Cape Town. I see on your LinkedIn profile that you are currently doing your Computer Science Honours at UCT. When will you be finishing off there? Have you managed to secure a position as of yet post studies? I’d be keen to have a chat with you to find out what It is that really interests you so I know what to keep my eyes peeled for. Would you be keen? Look forward to hearing from you.” The signature of the email contains the recruiter’s full name, his mobile and landline numbers as well as links to his recruitment company’s website and social media accounts. What action do you take?"
                         });
                 });
 
@@ -589,28 +545,47 @@ namespace SEval4.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("81d9ee3f-d390-4fee-96e8-abf051c742f3"),
+                            Id = new Guid("87cea1fb-8670-4866-bd89-cb4f6cbf0251"),
                             Name = "SEADM"
                         },
                         new
                         {
-                            Id = new Guid("d35fb420-bee2-481e-a312-03cfc3b6ac17"),
+                            Id = new Guid("9a2227d6-2b4e-4234-b32b-acfc85c301cd"),
                             Name = "Feedback"
                         });
                 });
 
+            modelBuilder.Entity("SEval4.Models.SurveyAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ScenarioId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserGuid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SurveyAnswers");
+                });
+
             modelBuilder.Entity("SEval4.Models.YearGroup", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -619,31 +594,27 @@ namespace SEval4.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("95832783-be1d-4c27-9af7-049c0d9a647e"),
-                            Text = "1 year or less",
-                            Value = 1
+                            Id = 1,
+                            Text = "1 year or less"
                         },
                         new
                         {
-                            Id = new Guid("d60cf323-f509-41ff-ad36-490b35384ed5"),
-                            Text = "2 - 3 years",
-                            Value = 2
+                            Id = 2,
+                            Text = "2 - 3 years"
                         },
                         new
                         {
-                            Id = new Guid("6bc6afff-79a8-4bce-abe5-db14c4af377c"),
-                            Text = "4 - 5 years",
-                            Value = 3
+                            Id = 3,
+                            Text = "4 - 5 years"
                         },
                         new
                         {
-                            Id = new Guid("a1be7e30-df77-41d4-8566-89678266529f"),
-                            Text = "6 years or more",
-                            Value = 4
+                            Id = 4,
+                            Text = "6 years or more"
                         });
                 });
 
-            modelBuilder.Entity("SEval4.Models.AnswerEvaluation", b =>
+            modelBuilder.Entity("SEval4.Models.AttemptCount", b =>
                 {
                     b.HasOne("SEval4.Models.Participant", "Participant")
                         .WithMany()
@@ -654,6 +625,28 @@ namespace SEval4.Migrations
                     b.Navigation("Participant");
                 });
 
+            modelBuilder.Entity("SEval4.Models.EvalAnswer", b =>
+                {
+                    b.HasOne("SEval4.Models.Participant", "Participant")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Participant");
+                });
+
+            modelBuilder.Entity("SEval4.Models.EvalResponse", b =>
+                {
+                    b.HasOne("SEval4.Models.Scenario", "Scenario")
+                        .WithMany()
+                        .HasForeignKey("ScenarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Scenario");
+                });
+
             modelBuilder.Entity("SEval4.Models.Participant", b =>
                 {
                     b.HasOne("SEval4.Models.StudyGroup", "StudyGroup")
@@ -661,6 +654,17 @@ namespace SEval4.Migrations
                         .HasForeignKey("StudyGroupId");
 
                     b.Navigation("StudyGroup");
+                });
+
+            modelBuilder.Entity("SEval4.Models.Response", b =>
+                {
+                    b.HasOne("SEval4.Models.Scenario", "Scenario")
+                        .WithMany()
+                        .HasForeignKey("ScenarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Scenario");
                 });
 #pragma warning restore 612, 618
         }

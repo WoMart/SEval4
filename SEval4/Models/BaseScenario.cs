@@ -9,9 +9,7 @@ namespace SEval4.Models
     public abstract class BaseScenario
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
-        [Required]
-        public int ScenarioId { get; set; }
+        public int Id { get; set; }
         [Required]
         public string Context { get; set; }
     }
