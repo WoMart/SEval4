@@ -3,10 +3,49 @@
 
 <div id="feedbackSurvey">
 
+    <h3>Feedback</h3>
+    <div id="form">
+        <EditForm Model="@Feedback"
+                  OnValidSubmit="@(async () => await Submit(true))"
+                  OnInvalidSubmit="@(async () => await Submit(false))">
+
+
+
+            <div>
+                <button class="btn btn-primary" type="submit">Continue</button>
+                <label class="alert text-danger">@ErrorMsg</label>
+            </div>
+            <div class="alert">
+                <DataAnnotationsValidator />
+                @*<ValidationSummary />*@
+            </div>
+        </EditForm>
+
+    </div>
 
 </div>
 
 @code {
+
+    #region Fetch options
+
+    private List<AgeGroup> AgeGroups = new();
+    private List<YearGroup> YearGroups = new();
+    private List<EducationGroup> EducationGroups = new();
+    private List<ConfidenceGroup> ConfidenceGroups = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        AgeGroups = await SurveyService.GetAgeGroupsAsync();
+        YearGroups = await SurveyService.GetYearGroupsAsync();
+        EducationGroups = await SurveyService.GetEducationGroupsAsync();
+        ConfidenceGroups = await SurveyService.GetConfidenceGroupsAsync();
+
+        await base.OnInitializedAsync();
+    }
+
+    #endregion
 
     #region User Guid
 
@@ -33,4 +72,59 @@
 
     #endregion
 
+    #region Submit and continue
+
+    private Feedback Feedback = new();
+    private string ErrorMsg = string.Empty;
+    private bool IsBusy = false;
+
+    private async Task Submit(bool isValid)
+    {
+        ErrorMsg = string.Empty;
+
+        // One message for any missing field
+        if (!isValid)
+        {
+            ErrorMsg = "All fields are required.";
+            return;
+        }
+
+        if (IsBusy)
+        {
+            ErrorMsg = "Did you just double click me?";
+            return;
+        }
+
+        IsBusy = true;
+
+        try
+        {
+            Feedback.UserId = UserGuid;
+
+            // Submit the Personal Survey
+            //await SurveyService.InsertNewParticipantSurveyAsync(Feedback);
+
+            NavigationManager.NavigateTo("BaselineIntro");
+
+        }
+        catch (DbUpdateException)
+        {
+            ErrorMsg = "The database believes you have already completed this form before. Cannot continue...";
+            throw;
+        }
+        catch (Exception ex)
+        {
+            // Do some magic
+            ErrorMsg = ex.InnerException.Message;
+            throw;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+
+        await Task.CompletedTask;
+    }
+
+    #endregion
 }
