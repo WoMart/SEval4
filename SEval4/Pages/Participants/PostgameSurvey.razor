@@ -112,12 +112,7 @@
         if (IsFormValid(out string errorMsg))
         {
             await SurveyService.SubmitSurveyAnswersAsync(Answers);
-
-            // Get the study group ID allocated in personal survey
-            Guid? studyGroup = await SurveyService
-                .GetUserAllocationGroupAsync(UserGuid);
-
-            NavigationManager.NavigateTo($"EvaluationIntro/{studyGroup.ToString()}");
+            NavigationManager.NavigateTo("Feedback");
         }
         else
         {

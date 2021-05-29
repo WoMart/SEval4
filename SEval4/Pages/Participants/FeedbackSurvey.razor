@@ -1,0 +1,36 @@
+﻿@page "/Feedback"
+@using SEval4.Models
+
+<div id="feedbackSurvey">
+
+
+</div>
+
+@code {
+
+    #region User Guid
+
+    private Guid UserGuid { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender || UserGuid.Equals(Guid.Empty))
+        {
+            Guid? guid = await Storage.GetUserGuidOrNullAsync();
+
+            if (guid is null)
+            {
+                NavigationManager.NavigateTo("Introduction");
+            }
+            else
+            {
+                UserGuid = guid.Value;
+            }
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    #endregion
+
+}
