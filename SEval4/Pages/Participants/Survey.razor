@@ -140,12 +140,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Populate options
-        //AgeGroups = await SurveyService.GetAgeGroupsAsync();
-        //YearGroups = await SurveyService.GetYearGroupsAsync();
-        //EducationGroups = await SurveyService.GetEducationGroupsAsync();
-        //ConfidenceGroups = await SurveyService.GetConfidenceGroupsAsync();
-
         AgeGroups = await SurveyService.GetAgeGroupsAsync();
         YearGroups = await SurveyService.GetYearGroupsAsync();
         EducationGroups = await SurveyService.GetEducationGroupsAsync();
