@@ -1,0 +1,156 @@
+﻿@page "/Postgame"
+@using SEval4.Models
+
+<div id="scenarioSurvey">
+    <h1>Postgame survey</h1>
+    <div id="form">
+
+        <EditForm Model="@Answers" OnSubmit="@( async () => await Submit() )">
+
+            @foreach (var answer in Answers)
+            {
+                int scenarioId = answer.ScenarioId;
+                var scenario = Scenarios.Single(s => s.Id == scenarioId);
+                var responses = Responses.Where(r => r.ScenarioId == scenarioId)
+                    .ToList();
+
+                <div style="margin-bottom:20px; border:double; border-width:2px; padding:10px;">
+                    <div>
+                        <p>
+                            <label for="@($"scenario{scenarioId.ToString()}")">
+                                <b>@scenario.Context</b>
+                            </label>
+                        </p>
+                    </div>
+                    <div>
+                        <InputRadioGroup @bind-Value="answer.ResponseValue" Name="@($"scenario{scenarioId.ToString()}")">
+                            @foreach (Response resp in responses)
+                                {
+                                @* InputRadio doesn't work well at all, use Custom solution *@
+                                <CustomRadio name="@($"scenario{scenarioId.ToString()}")"
+                                             SelectedValue="resp.Id"
+                                             @bind-Value="answer.ResponseValue" />
+                                @resp.Text <br />
+                                }
+                        </InputRadioGroup>
+                    </div>
+                </div>
+            }
+
+            <div>
+                <button class="btn btn-primary" type="submit">Continue</button>
+                <label class="alert text-danger">@ErrorMsg</label>
+            </div>
+            <div class="alert">
+                <DataAnnotationsValidator />
+                @*<ValidationSummary />*@
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    #region User Guid
+
+    private Guid UserGuid { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender || UserGuid.Equals(Guid.Empty))
+        {
+            Guid? guid = await Storage.GetUserGuidOrNullAsync();
+
+            if (guid is null)
+            {
+                NavigationManager.NavigateTo("Introduction");
+            }
+            else
+            {
+                UserGuid = guid.Value;
+            }
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    #endregion
+
+    #region Setup Scenarios, Responses, and Answer models
+
+    private List<Scenario> Scenarios = new();
+    private List<Response> Responses = new();
+    private List<SurveyAnswer> Answers = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get data for questions
+        Scenarios = await SurveyService.GetBaselineScenariosAsync(isRandomOrder: true);
+        Responses = await SurveyService.GetBaselineResponsesAsync(isRandomOrder: true);
+
+        // Preapre containers for answers
+        for (int i = 0; i < Scenarios.Count; i++)
+        {
+            Answers.Add(new SurveyAnswer
+            {
+                UserId = UserGuid,
+                ScenarioId = Scenarios[i].Id,
+            });
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    #endregion
+
+    #region Validate and submit
+
+    private string ErrorMsg = string.Empty;
+
+    private async Task Submit()
+    {
+        if (IsFormValid(out string errorMsg))
+        {
+            await SurveyService.SubmitSurveyAnswersAsync(Answers);
+
+            // Get the study group ID allocated in personal survey
+            Guid? studyGroup = await SurveyService
+                .GetUserAllocationGroupAsync(UserGuid);
+
+            NavigationManager.NavigateTo($"EvaluationIntro/{studyGroup.ToString()}");
+        }
+        else
+        {
+            ErrorMsg = errorMsg;
+        }
+
+        await Task.CompletedTask;
+    }
+
+    private bool IsFormValid(out string errorMsg)
+    {
+        if (Answers?.Count != Scenarios.Count)
+        {
+            errorMsg = $"Internal error. Number of answers does not match with questions.";
+            return false;
+        }
+
+        foreach (SurveyAnswer answer in Answers)
+        {
+            var response = Responses.SingleOrDefault(r =>
+                r.ScenarioId == answer.ScenarioId &&
+                r.Id == answer.ResponseValue);
+
+            if (response is null)
+            {
+                errorMsg = $"All fields are required.";
+                return false;
+            }
+        }
+
+        errorMsg = null;
+        return true;
+    }
+
+    #endregion
+}
