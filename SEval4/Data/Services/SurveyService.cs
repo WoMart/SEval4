@@ -171,6 +171,20 @@ namespace SEval4.Data.Services
 
         #endregion
 
+        #region IsFinished
+
+        public async Task RecordParticipantFinishedStudy(Guid userId, bool isFinished = true)
+        {
+            Participant participant = _context.Participants
+                .First(p => p.Id == userId);
+
+            participant.IsFinished = isFinished;
+
+            await UpdateParticipantAsync(participant);
+        }
+
+        #endregion
+
         #endregion
 
         #region Participant survey
