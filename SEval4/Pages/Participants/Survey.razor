@@ -208,6 +208,8 @@
 
         try
         {
+            ParticipantSurvey.UserId = UserGuid;
+
             // Submit the Personal Survey
             await SurveyService.InsertNewParticipantSurveyAsync(ParticipantSurvey);
             

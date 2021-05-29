@@ -9,6 +9,9 @@ namespace SEval4.Models
         [Key]
         public int Id { get; set; }
 
+        [Required]
+        public Guid UserId { get; set; }
+
         [Required, Range(1, 6)]
         public int AgeGroup { get; set; }
 
