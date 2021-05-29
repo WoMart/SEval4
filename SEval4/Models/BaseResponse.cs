@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SEval4.Models
 {
-    public class BaseResponse : BaseTextOption
+    public class BaseResponse<T> : BaseTextOption
     {
         [Required]
         public int ScenarioId { get; set; }
@@ -11,8 +11,8 @@ namespace SEval4.Models
         public string Description { get; set; }
         [Required]
         public int Value { get; set; }
-        
+
         [ForeignKey(nameof(ScenarioId))]
-        public virtual Scenario Scenario { get; set; }
+        public virtual T Scenario { get; set; }
     }
 }

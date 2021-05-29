@@ -1,7 +1,10 @@
-﻿namespace SEval4.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SEval4.Models
 {
-    public class EvalResponse : BaseResponse
+    public class EvalResponse : BaseResponse<EvalResponse>
     {
+        [Required]
         public bool IsCorrect { get; set; }
     }
 }

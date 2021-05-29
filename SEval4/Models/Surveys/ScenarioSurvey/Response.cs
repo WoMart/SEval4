@@ -1,6 +1,6 @@
 ﻿namespace SEval4.Models
 {
-    public class Response : BaseResponse
+    public class Response : BaseResponse<Scenario>
     {
     }
 }

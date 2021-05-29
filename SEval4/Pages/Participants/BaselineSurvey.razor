@@ -23,13 +23,13 @@
                         </p>
                     </div>
                     <div>
-                        <InputRadioGroup @bind-Value="answer.Value" Name="@($"scenario{scenarioId.ToString()}")">
+                        <InputRadioGroup @bind-Value="answer.ResponseValue" Name="@($"scenario{scenarioId.ToString()}")">
                             @foreach (Response resp in responses)
                             {
                                 @* InputRadio doesn't work well at all, use Custom solution *@
                                 <CustomRadio name="@($"scenario{scenarioId.ToString()}")" 
                                              SelectedValue="resp.Id" 
-                                             @bind-Value="answer.Value" /> 
+                                             @bind-Value="answer.ResponseValue" /> 
                                 @resp.Text <br />
                             }
                         </InputRadioGroup>
@@ -93,7 +93,7 @@
         {
             Answers.Add(new SurveyAnswer
             {
-                UserGuid = UserGuid,
+                UserId = UserGuid,
                 ScenarioId = Scenarios[i].Id,
             });
         }
@@ -139,7 +139,7 @@
         {
             var response = Responses.SingleOrDefault(r =>
                 r.ScenarioId == answer.ScenarioId &&
-                r.Id == answer.Value);
+                r.Id == answer.ResponseValue);
 
             if (response is null)
             {
