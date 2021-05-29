@@ -7,7 +7,7 @@ namespace SEval4.Models
     public class ParticipantSurvey
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
 
         [Required, Range(1, 6)]
         public int AgeGroup { get; set; }
@@ -30,4 +30,5 @@ namespace SEval4.Models
         [Required, Range(1, 5)]
         public int HumanConfidence { get; set; }
     }
+
 }
