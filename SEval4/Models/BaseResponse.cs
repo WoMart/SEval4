@@ -12,7 +12,7 @@ namespace SEval4.Models
         [Required]
         public int Value { get; set; }
 
-        [ForeignKey(nameof(ScenarioId))]
-        public virtual T Scenario { get; set; }
+        //[ForeignKey(nameof(ScenarioId))]
+        //public virtual T Scenario { get; set; }
     }
 }
