@@ -104,7 +104,9 @@
             // Submit the Personal Survey
             //await SurveyService.InsertNewParticipantSurveyAsync(Feedback);
 
-            NavigationManager.NavigateTo("BaselineIntro");
+            await SurveyService.RecordParticipantFinishedStudy(UserGuid);
+
+            NavigationManager.NavigateTo("Thanks");
 
         }
         catch (DbUpdateException)
