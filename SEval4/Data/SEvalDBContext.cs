@@ -81,15 +81,15 @@ namespace SEval4.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Personal survey options
+            // Study groups
+            modelBuilder.Entity<StudyGroup>()
+                .HasData(SeedSurvey.StudyGroupsSeed);
+
+            // Personal survey dropdown options
             SetupTextValueEntity(modelBuilder, SeedSurvey.AgeGroupsSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.YearGroupsSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.EducationGroupsSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.ConfidenceGroupsSeed);
-
-            // Seed Study groups
-            modelBuilder.Entity<StudyGroup>()
-                .HasData(SeedSurvey.StudyGroupsSeed);
 
             // Baseline and postgame scenarios
             SetupScenarios(modelBuilder,       SeedSurvey.ScenariosSeed);
