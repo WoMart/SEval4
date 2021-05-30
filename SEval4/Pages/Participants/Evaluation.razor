@@ -44,33 +44,50 @@
     </EditForm>
 
 
-    @* Study group specific elements *@
-    @switch (StudyGroups.FirstOrDefault(sg => sg.Id == StudyGroupId.Value)?.Name)
+    @* SEADM *@
+    @if (StudyGroups.FirstOrDefault(sg => sg.Id == StudyGroupId.Value)?.Name == "SEADM")
     {
-        case "SEADM":
-            {
-                <div id="seadmForm">
+        <div id="seadmForm">
+            <table>
+                <tbody>
+                    <tr>
+                        <td colspan="2">
+                            <b>@SeadmService.CurrentState.GetCurrentQuestion()</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="btn btn-primary" @onclick="@(async () => await SeadmAction('y'))">
+                                Yes
+                            </button>
+                        </td>                                
+                        <td>                                 
+                            <button class="btn btn-primary" @onclick="@(async () => await SeadmAction('n'))">
+                                No
+                            </button>
+                        </td>                                
+                    </tr>                                    
+                    <tr>                                     
+                        <td>                                 
+                            <button class="btn btn-primary" @onclick="@(async () => await SeadmAction('b'))">
+                                Back
+                            </button>
+                        </td>                                
+                        <td>                                 
+                            <button class="btn btn-primary" @onclick="@(async () => await SeadmAction('r'))">
+                                Reset
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
 
-                </div>
-
-            }
-            break;
-        case "Feedback":
-            {
-                <div id="feedbackWindow">
-
-                </div>
-            }
-            break;
-
-        default:
-            break;
+            </table>
+        </div>
     }
 
 </div>
 
 @code {
-
     private string ErrorMsg = string.Empty;
 
     #region Database fetch
@@ -153,6 +170,8 @@
     }
 
     #endregion
+
+    #region Answers
 
     private EvalAnswer Answer { get; set; } = new();
 
@@ -275,5 +294,42 @@
         }
 
     }
+
+    #endregion
+
+    #region Seadm
+
+    // Let's make it client-side
+    SeadmService SeadmService = new();
+
+    private Task SeadmAction(char flag)
+    {
+        switch (flag)
+        {
+            case 'y':
+                SeadmService.NextQuestion(true);
+                break;
+
+            case 'n':
+                SeadmService.NextQuestion(false);
+                break;
+
+            case 'b':
+                SeadmService.PreviousQuestion();
+                break;
+
+            case 'r':
+                SeadmService.Reset();
+                break;
+
+            default:
+                throw new Exception(
+                    "SeadmAction(): unexpected flag characeter.");
+        }
+
+        return Task.CompletedTask;
+    }
+
+    #endregion
 
 }
