@@ -99,6 +99,8 @@ namespace TestingGrounds.SEADM.Models
 
         #endregion
 
+        #region Data
+
         public static readonly List<SeadmQuestion> QuestionsSource = new()
         {
             new SeadmQuestion
@@ -212,5 +214,7 @@ namespace TestingGrounds.SEADM.Models
                 Text = "Does the requester have the necessary authority to request the action or the information?",
             },
         };
+
+        #endregion
     }
 }

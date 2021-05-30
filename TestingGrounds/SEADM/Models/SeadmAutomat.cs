@@ -11,6 +11,8 @@ namespace TestingGrounds.SEADM.Models
         public List<SeadmState> States { get; private set; }
         public SeadmState Current { get; set; }
 
+        #region Public methods
+
         public SeadmAutomat()
         {
             States  = _States;
@@ -24,8 +26,6 @@ namespace TestingGrounds.SEADM.Models
                     $"SeadmAutomat constructor could not find the start state.");
             }
         }
-
-        #region Public methods
 
         public string GetQuestion() =>
             Current.GetCurrentQuestion();
@@ -140,6 +140,8 @@ namespace TestingGrounds.SEADM.Models
         }
 
         #endregion
+
+        #region Data
 
         public static readonly List<SeadmTransition> Transitions = new()
         {
@@ -377,5 +379,8 @@ namespace TestingGrounds.SEADM.Models
             new SeadmState("S15"),
             new SeadmState("S16"),
         };
+        
+        #endregion
+
     }
 }
