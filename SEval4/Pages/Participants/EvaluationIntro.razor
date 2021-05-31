@@ -3,7 +3,7 @@
 
 <div id="evaluationIntro">
 
-    @switch (StudyGroups.FirstOrDefault(sg => sg.Id == StudyGroupId)?.Name)
+    @switch (StudyGroup?.Name)
     {
         // SEADM
         case "SEADM":
@@ -80,13 +80,8 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        try
+        if (!StudyGroupId.HasValue)
         {
-            //StudyGroup = new Guid(studyGroup);
-        }
-        catch
-        {
-            // TODO
             await JsRuntime.InvokeVoidAsync("alert", "Given parameter is not a guid.");
         }
 
