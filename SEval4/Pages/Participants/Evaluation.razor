@@ -5,10 +5,10 @@
 
     <h3>Evaluation</h3>
 
-    <EditForm Model="Answer" 
+    <EditForm Model="Answer"
               OnInvalidSubmit="@( async () => await SubmitSingleAnswer(false) )"
               OnValidSubmit="@(   async () => await SubmitSingleAnswer(true) )">
-        <div style="margin-bottom:20px; border:double; border-width:2px; padding:10px;">
+        <div style="margin-bottom:1px; border:double; border-width:2px; padding:10px;">
             <div>
                 <p>
                     <label for="@($"scenario{CurrentScenario.Id.ToString()}")">
@@ -17,21 +17,86 @@
                 </p>
             </div>
         </div>
+        <div style="margin-bottom:20px; border:double; border-width:2px; padding:10px;">
+            <table>
+                <tbody>
+                    <tr>
+                        <td width="70%">
+                            <div id="responses" style="padding:5px;">
+                                <InputRadioGroup @bind-Value="@Answer.ResponseValue" Name="response">
+                                    @foreach (EvalResponse response in Responses.Where(
+                                   r => r.ScenarioId == CurrentScenario.Id))
+                                    {
+                                        <div style="margin-bottom:5px;">
+                                            <CustomRadio name="@($"response")"
+                                                         SelectedValue="response.Id"
+                                                         @bind-Value="Answer.ResponseValue" />
+                                            @response.Text <br />
+                                        </div>
+                                    }
 
-        <div id="responses">
-            <InputRadioGroup @bind-Value="@Answer.ResponseValue" Name="response">
-                @foreach (EvalResponse response in Responses.Where(
-                   r => r.ScenarioId == CurrentScenario.Id))
-                {
-                    @* InputRadio doesn't work well at all, use Custom solution *@
-                    <CustomRadio name="@($"response")"
-                                 SelectedValue="response.Id"
-                                 @bind-Value="Answer.ResponseValue" />
-                    @response.Text <br />
-                }
+                                </InputRadioGroup>
+                            </div>
 
-            </InputRadioGroup>
-        </div>
+                        </td>
+                        <td width="30%">
+                            @* SEADM *@
+                            @if (StudyGroups.FirstOrDefault(sg => sg.Id == StudyGroupId.Value)?.Name == "SEADM")
+                            {
+                                <div id="seadmForm" style="justify-content:center; border:double; border-width:2px; padding:10px;">
+
+                                    <div style="height: 5em; line-height: 1em; text-align: center;">
+                                        <label style="margin-bottom:20px;">
+                                            <b>
+                                                @SeadmService.CurrentState.GetCurrentQuestion()
+                                            </b>
+                                        </label>
+                                    </div>
+
+                                    @* Buttons cannot be 'submit' type, as EditForm will try to submit *@
+                                    <table style="text-align:center; width:100%;">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <button class="btn btn-primary w-75" type="button" 
+                                                            @onclick="@(async () => await SeadmAction('y'))">
+                                                        Yes
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-primary w-75" type="button"
+                                                            @onclick="@(async () => await SeadmAction('n'))">
+                                                        No
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <button class="btn btn-primary w-75" type="button"
+                                                            @onclick="@(async () => await SeadmAction('b'))">
+                                                        Back
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-primary w-75" type="button"
+                                                            @onclick="@(async () => await SeadmAction('r'))">
+                                                        Reset
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            }
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            
+            </div>
 
         <div>
             <button class="btn btn-primary" type="submit">Continue</button>
@@ -42,48 +107,6 @@
             @*<ValidationSummary />*@
         </div>
     </EditForm>
-
-
-    @* SEADM *@
-    @if (StudyGroups.FirstOrDefault(sg => sg.Id == StudyGroupId.Value)?.Name == "SEADM")
-    {
-        <div id="seadmForm">
-            <table>
-                <tbody>
-                    <tr>
-                        <td colspan="2">
-                            <b>@SeadmService.CurrentState.GetCurrentQuestion()</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button class="btn btn-primary" @onclick="@(async () => await SeadmAction('y'))">
-                                Yes
-                            </button>
-                        </td>                                
-                        <td>                                 
-                            <button class="btn btn-primary" @onclick="@(async () => await SeadmAction('n'))">
-                                No
-                            </button>
-                        </td>                                
-                    </tr>                                    
-                    <tr>                                     
-                        <td>                                 
-                            <button class="btn btn-primary" @onclick="@(async () => await SeadmAction('b'))">
-                                Back
-                            </button>
-                        </td>                                
-                        <td>                                 
-                            <button class="btn btn-primary" @onclick="@(async () => await SeadmAction('r'))">
-                                Reset
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-
-            </table>
-        </div>
-    }
 
 </div>
 
@@ -117,7 +140,7 @@
         {
             await JsRuntime.InvokeVoidAsync("alert", "Given parameter is not a guid.");
         }
-
+        
         await base.OnParametersSetAsync();
     }
 
@@ -210,8 +233,14 @@
                 // Do it after the insert to keep the "synchronised"
                 CurrentScenario.IsAnsweredCorrectly = isCorrect;
 
+                string incorrectAnswerMessage = "Incorrect!";
+                if (StudyGroup.Name == "Feedback")
+                {
+                    incorrectAnswerMessage += $"\n{CurrentScenario.Feedback}";
+                }
+
                 // Display small feedback
-                string message = isCorrect ? "Correct!" : "Incorrect!";
+                string message = isCorrect ? "Correct!\nTest" : incorrectAnswerMessage;
                 await JsRuntime.InvokeVoidAsync("alert", message);
 
                 // If last scenario, continue; next scenario otherwise
