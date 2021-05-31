@@ -21,7 +21,7 @@
             <table>
                 <tbody>
                     <tr>
-                        <td width="70%">
+                        <td width="@(StudyGroup?.Name == "SEADM" ? "70%" : "100%")">
                             <div id="responses" style="padding:5px;">
                                 <InputRadioGroup @bind-Value="@Answer.ResponseValue" Name="response">
                                     @foreach (EvalResponse response in Responses.Where(
@@ -39,10 +39,10 @@
                             </div>
 
                         </td>
-                        <td width="30%">
-                            @* SEADM *@
-                            @if (StudyGroups.FirstOrDefault(sg => sg.Id == StudyGroupId.Value)?.Name == "SEADM")
-                            {
+                        @* SEADM *@
+                        @if (StudyGroup?.Name == "SEADM")
+                        {
+                            <td width="30%">
                                 <div id="seadmForm" style="justify-content:center; border:double; border-width:2px; padding:10px;">
 
                                     <div style="height: 5em; line-height: 1em; text-align: center;">
@@ -88,9 +88,9 @@
 
                                     </table>
                                 </div>
-                            }
 
-                        </td>
+                            </td>
+                        }
                     </tr>
                 </tbody>
             </table>
@@ -140,7 +140,7 @@
         {
             await JsRuntime.InvokeVoidAsync("alert", "Given parameter is not a guid.");
         }
-        
+
         await base.OnParametersSetAsync();
     }
 
@@ -240,7 +240,7 @@
                 }
 
                 // Display small feedback
-                string message = isCorrect ? "Correct!\nTest" : incorrectAnswerMessage;
+                string message = isCorrect ? "Correct!" : incorrectAnswerMessage;
                 await JsRuntime.InvokeVoidAsync("alert", message);
 
                 // If last scenario, continue; next scenario otherwise
