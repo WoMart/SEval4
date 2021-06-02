@@ -44,8 +44,40 @@ namespace SEval4.Data.Services
 
         #region Get current questions
 
-        public string GetCurrentQuestion() =>
+        public string GetQuestion() =>
             CurrentState.GetCurrentQuestion();
+
+        #endregion
+
+        #region Is type of state
+
+        #region Starting
+
+        public bool IsStartingState() =>
+            GetStateType() == SeadmStateTypeEnum.Starting;
+
+        #endregion
+
+        #region Regular
+
+        public bool IsRegularState() =>
+            GetStateType() == SeadmStateTypeEnum.Regular;
+
+        #endregion
+
+        #region Terminal
+
+        public bool IsTerminalState() =>
+            GetStateType() == SeadmStateTypeEnum.Terminal;
+
+        #endregion
+
+        #endregion
+
+        #region Get state type
+
+        public SeadmStateTypeEnum GetStateType() =>
+            CurrentState.StateType;
 
         #endregion
 
