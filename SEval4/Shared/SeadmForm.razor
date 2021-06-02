@@ -1,0 +1,101 @@
+﻿<div id="seadmForm" style="justify-content:center; border:double; border-width:2px; padding:10px;">
+
+    <div style="height: 5em; line-height: 1em; text-align: center;">
+        <label style="margin-bottom:20px;">
+            <b>
+                @SeadmService.GetQuestion()
+            </b>
+        </label>
+    </div>
+
+    @* Buttons cannot be 'submit' type, as EditForm will try to submit *@
+    <table style="text-align:center; width:100%;">
+        <tbody>
+            <tr>
+                <td>
+                    <button class="btn btn-primary w-75" type="button"
+                            disabled="@SeadmService.IsTerminalState()"
+                            @onclick="@(async () => await SeadmAction(SeadmActionEnum.Yes))">
+                        Yes
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-primary w-75" type="button"
+                            disabled="@SeadmService.IsTerminalState()"
+                            @onclick="@(async () => await SeadmAction(SeadmActionEnum.No))">
+                        No
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="btn btn-primary w-75" type="button"
+                            disabled="@SeadmService.IsStartingState()"
+                            @onclick="@(async () => await SeadmAction(SeadmActionEnum.Back))">
+                        Back
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-primary w-75" type="button"
+                            disabled="@SeadmService.IsStartingState()"
+                            @onclick="@(async () => await SeadmAction(SeadmActionEnum.Reset))">
+                        Reset
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+
+@code {
+
+    #region SeadmActionEnum
+
+    private enum SeadmActionEnum
+    {
+        Yes,
+        No,
+        Back,
+        Reset
+    };
+
+    #endregion
+
+    #region SeadmAction method
+
+    private SeadmService SeadmService = new();
+
+    private Task SeadmAction(SeadmActionEnum action)
+    {
+        switch (action)
+        {
+            case SeadmActionEnum.Yes:
+                SeadmService.NextQuestion(true);
+                break;
+
+            case SeadmActionEnum.No:
+                SeadmService.NextQuestion(false);
+                break;
+
+            case SeadmActionEnum.Back:
+                SeadmService.PreviousQuestion();
+                break;
+
+            case SeadmActionEnum.Reset:
+                SeadmService.Reset();
+                break;
+
+            default:
+                throw new Exception(
+                    "SeadmAction(): unexpected flag characeter.");
+        }
+
+        return Task.CompletedTask;
+    }
+
+    #endregion
+}

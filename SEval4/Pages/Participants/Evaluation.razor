@@ -43,52 +43,7 @@
                         @if (StudyGroup?.Name == "SEADM")
                         {
                             <td width="30%">
-                                <div id="seadmForm" style="justify-content:center; border:double; border-width:2px; padding:10px;">
-
-                                    <div style="height: 5em; line-height: 1em; text-align: center;">
-                                        <label style="margin-bottom:20px;">
-                                            <b>
-                                                @SeadmService.CurrentState.GetCurrentQuestion()
-                                            </b>
-                                        </label>
-                                    </div>
-
-                                    @* Buttons cannot be 'submit' type, as EditForm will try to submit *@
-                                    <table style="text-align:center; width:100%;">
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <button class="btn btn-primary w-75" type="button" 
-                                                            @onclick="@(async () => await SeadmAction('y'))">
-                                                        Yes
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-primary w-75" type="button"
-                                                            @onclick="@(async () => await SeadmAction('n'))">
-                                                        No
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <button class="btn btn-primary w-75" type="button"
-                                                            @onclick="@(async () => await SeadmAction('b'))">
-                                                        Back
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-primary w-75" type="button"
-                                                            @onclick="@(async () => await SeadmAction('r'))">
-                                                        Reset
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-
-                                    </table>
-                                </div>
-
+                                <SeadmForm />
                             </td>
                         }
                     </tr>
@@ -150,7 +105,12 @@
         Scenarios = await SurveyService.GetEvaluationRoundsAsync(isRandomOrder: true);
         Responses = await SurveyService.GetEvaluationResponsesAsync(isRandomOrder: true);
 
-        StudyGroup = StudyGroups.First(sg => sg.Id == StudyGroupId);
+        StudyGroup = StudyGroups.FirstOrDefault(sg => sg.Id == StudyGroupId);
+
+        if (StudyGroup is null)
+        {
+            // TODO: NavigateTo errorpage
+        }
 
         // Initialise current scenario
         CurrentScenario = GetNextScenario();
@@ -325,40 +285,4 @@
     }
 
     #endregion
-
-    #region Seadm
-
-    // Let's make it client-side
-    SeadmService SeadmService = new();
-
-    private Task SeadmAction(char flag)
-    {
-        switch (flag)
-        {
-            case 'y':
-                SeadmService.NextQuestion(true);
-                break;
-
-            case 'n':
-                SeadmService.NextQuestion(false);
-                break;
-
-            case 'b':
-                SeadmService.PreviousQuestion();
-                break;
-
-            case 'r':
-                SeadmService.Reset();
-                break;
-
-            default:
-                throw new Exception(
-                    "SeadmAction(): unexpected flag characeter.");
-        }
-
-        return Task.CompletedTask;
-    }
-
-    #endregion
-
 }
