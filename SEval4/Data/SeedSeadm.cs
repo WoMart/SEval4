@@ -41,17 +41,17 @@ namespace SEval4.Data
             new SeadmQuestion
             {
                 StateId = "SA",
-                Text = "Accept",
+                Text = "It is safe to fulfil the request.",
             },
             new SeadmQuestion
             {
                 StateId = "SR",
-                Text = "Reject",
+                Text = "Refuse to fulfil the request or defer it to a suitable party.",
             },
             new SeadmQuestion
             {
                 StateId = "SE",
-                Text = "Elaborate",
+                Text = "Ask the requester for elaboration or clarification and evaluate the request based on their answers.",
             },
             new SeadmQuestion
             {
