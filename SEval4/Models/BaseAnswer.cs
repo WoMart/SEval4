@@ -21,6 +21,9 @@ namespace SEval4.Models
         [Required]
         public int ResponseValue { get; set; }
 
+        [Required]
+        public bool IsCorrect { get; set; }
+
         // TODO: EntityFramework is complaining about cascading ForeignKey
         //       Might have to make the Id properties nullable to solve the issue
 
