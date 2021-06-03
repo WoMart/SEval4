@@ -11,6 +11,8 @@ namespace SEval4.Models
         public string Description { get; set; }
         [Required]
         public int Value { get; set; }
+        [Required]
+        public bool IsCorrect { get; set; }
 
         //[ForeignKey(nameof(ScenarioId))]
         //public virtual T Scenario { get; set; }
