@@ -233,20 +233,35 @@ namespace SEval4.Data.Services
 
         #endregion
 
-        #region Baseline Survey
+        #region Scenario Surveys
 
-        public async Task<List<Scenario>> GetBaselineScenariosAsync(bool isRandomOrder = false)
+        public async Task<List<Scenario>> GetScenariosAsync(Guid userId, bool isRandomOrder = false)
         {
+            // Get list of scenarios participant has seen
+            List<int> seenScenarios = await _context.SurveyAnswers
+                .Where(sa => sa.UserId == userId)
+                .Select(sa => sa.ScenarioId)
+                .ToListAsync();
+            
+            // Get Scenarios participant has not seen yet
+            IQueryable<Scenario> scenarios = _context.Scenarios
+                    .Where(s => !seenScenarios.Contains(s.Id));
+
             // Select in random order or by ScenarioId
             IOrderedQueryable<Scenario> orderedScenarios = isRandomOrder
-                ? _context.Scenarios.OrderBy(s => Guid.NewGuid())
-                : _context.Scenarios.OrderBy(s => s.Id);
+                ? scenarios.OrderBy(s => Guid.NewGuid())
+                : scenarios.OrderBy(s => s.Id);
 
+            int allScenariosCount = await _context.Scenarios
+                .CountAsync();
+
+            // Return the half of all scenarios
             return await orderedScenarios
+                .Take(allScenariosCount / 2)
                 .ToListAsync();
         }
 
-        public async Task<List<Response>> GetBaselineResponsesAsync(bool isRandomOrder = false)
+        public async Task<List<Response>> GetResponsesAsync(bool isRandomOrder = false)
         {
             // Select in random order or by pre-defined order
             IOrderedQueryable<Response> orderedResponses = isRandomOrder
