@@ -113,6 +113,16 @@
     {
         if (IsFormValid(out string errorMsg))
         {
+            // Mark the correct answers for easier data analysis
+            foreach (SurveyAnswer answer in Answers)
+            {
+                answer.IsCorrect = Responses
+                    .FirstOrDefault(r => 
+                    r.ScenarioId == answer.ScenarioId 
+                    && r.Value == answer.ResponseValue)
+                    ?.IsCorrect ?? false;
+            }
+
             await SurveyService.SubmitSurveyAnswersAsync(Answers);
 
             // Get the study group ID allocated in personal survey
