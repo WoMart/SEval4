@@ -3,6 +3,21 @@
 
 <div id="survey">
     <h3>Survey</h3>
+    <hr />
+    <b>Glossary:</b>
+    <ul>
+        <li><b>means of correspondence</b> - any type of correspondence including, but not limited to, email, telephone, paper mail, and face-to-face interaction.</li>
+
+        <li><b>phishing</b> - a non-targeted deception attempt where the attacker sends the same deceptive email to several individuals. 
+        (e.g. an e-mail pretending to be a bank requesting you to reset your password by following a malicious link in the e-mail)</li>
+
+        <li><b>spear-phishing</b> - a deception attempt targetting a single individual. 
+        The attacker may have already gathered some information about the individual and tailors their correspondence towards them. 
+        The attacker may also provide a way to contact them back in order to assert trust of the individual. 
+        (e.g. attacker calls an individual claiming they are part of the IT support and need to connect to your computer remotely to solve an issue)</li>
+
+    </ul>
+    <hr />
     <div id="form">
         <EditForm Model="@ParticipantSurvey"
                   OnValidSubmit="@(async () => await Submit(true))"
@@ -14,7 +29,7 @@
                     <b>Please indicate your age.</b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.AgeGroup">
-                    <option value="" selected>--</option>
+                    <option value="" selected></option>
                     @foreach (var option in this.AgeGroups)
                     {
                         <option value="@option.Id">@option.Text</option>
@@ -28,7 +43,7 @@
                     <b>What is your highest level of education?</b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.EducationGroup">
-                    <option value="" selected>--</option>
+                    <option value="" selected></option>
                     @foreach (var option in this.EducationGroups)
                     {
                         <option value="@option.Id">@option.Text</option>
@@ -40,14 +55,13 @@
             <p>
                 <label>
                     <b>
-                        How many years of experience do you have using email, telephone,
-                        paper mail etc. within a professional organisation context?
+                        How many years of experience do you have using <em>means of correspondence</em> within a professional organisation context?
                         e.g. office work involving email communication with clients
                         or other employees of the organisation
                     </b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.ProfessionalExperience">
-                    <option value="" selected>--</option>
+                    <option value="" selected></option>
                     @foreach (var option in this.YearGroups)
                     {
                         <option value="@option.Id">@option.Text</option>
@@ -60,12 +74,12 @@
                 <label>
                     <b>
                         Have you undertaken any formal or professional training related to
-                        safe email, telephone, paper mail etc. usage including how to identify
+                        safe usage of <em>means of correspondence</em>, including how to identify
                         potential phishing emails and how to respond correctly?
                     </b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.HasFormalTraining">
-                    <option value="" selected>--</option>
+                    <option value="" selected></option>
                     <option value="2">Yes</option>
                     <option value="1">No</option>
                 </InputSelect>
@@ -75,15 +89,14 @@
             <p>
                 <label>
                     <b>
-                        Have you undertaken any self-training (informal) related to safe email,
-                        telephone, paper mail etc. usage or actively sought to discover
+                        Have you undertaken any self-training (informal) related to safe usage of <em>means of correspondence</em> or actively sought to discover
                         any information that may help you to better identify potential
                         phishing emails and respond correctly? e.g. reviewing recommended security
                         advice on how to identify phishing emails?
                     </b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.HasInformalTraining">
-                    <option value="" selected>--</option>
+                    <option value="" selected></option>
                     <option value="2">Yes</option>
                     <option value="1">No</option>
                 </InputSelect>
@@ -91,10 +104,10 @@
 
             <p>
                 <label>
-                    <b>Indicate your confidence in detecting phishing attacks received by email, telephone, paper maile etc.</b>
+                    <b>Indicate your confidence in detecting phishing attacks.</b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.PhishingConfidence">
-                    <option value="" selected>--</option>
+                    <option value="" selected></option>
                     @foreach (var opt in this.ConfidenceGroups)
                     {
                         <option value="@opt.Id">@opt.Text</option>
@@ -104,10 +117,10 @@
 
             <p>
                 <label>
-                    <b>Indicate your confidence in detecting a deception attempt in active correspondence.</b>
+                    <b>Indicate your confidence in detecting spear-phishing attacks.</b>
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.HumanConfidence">
-                    <option value="" selected>--</option>
+                    <option value="" selected></option>
                     @foreach (var opt in this.ConfidenceGroups)
                     {
                         <option value="@opt.Id">@opt.Text</option>
@@ -129,7 +142,7 @@
 
 </div>
 @code {
-
+    
     #region Fetch options
 
     private List<AgeGroup> AgeGroups = new();
@@ -206,7 +219,7 @@
 
             // Submit the Personal Survey
             await SurveyService.InsertNewParticipantSurveyAsync(ParticipantSurvey);
-            
+
             // Randomise participant to a study group
             Guid studyGroupId = await SurveyService
                 .AllocateParticipantAsync(UserGuid);
