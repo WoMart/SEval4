@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SEval4.Data;
 
 namespace SEval4.Migrations
 {
     [DbContext(typeof(SEvalDBContext))]
-    partial class SEvalDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210604145454_Feedback")]
+    partial class Feedback
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -720,6 +722,7 @@ namespace SEval4.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("GeneralFeedback")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhishingConfidenceChange")
@@ -727,6 +730,7 @@ namespace SEval4.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ScenarioFeedback")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SpearPhishingConfidenceChange")
@@ -741,6 +745,7 @@ namespace SEval4.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TrainingFeedback")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
