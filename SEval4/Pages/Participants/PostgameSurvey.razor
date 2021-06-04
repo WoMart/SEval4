@@ -3,6 +3,7 @@
 
 <div id="scenarioSurvey">
     <h1>Postgame survey</h1>
+    <hr />
     <div id="form">
 
         <EditForm Model="@Answers" OnSubmit="@( async () => await Submit() )">
@@ -10,8 +11,12 @@
             @foreach (var answer in Answers)
             {
                 int scenarioId = answer.ScenarioId;
-                var scenario = Scenarios.Single(s => s.Id == scenarioId);
-                var responses = Responses.Where(r => r.ScenarioId == scenarioId)
+
+                Scenario scenario = Scenarios
+                    .Single(s => s.Id == scenarioId);
+
+                List<Response> responses = Responses
+                    .Where(r => r.ScenarioId == scenarioId)
                     .ToList();
 
                 <div style="margin-bottom:20px; border:double; border-width:2px; padding:10px;">
@@ -22,6 +27,7 @@
                             </label>
                         </p>
                     </div>
+                    <hr />
                     <div>
                         <InputRadioGroup @bind-Value="answer.ResponseValue" Name="@($"scenario{scenarioId.ToString()}")">
                             @foreach (Response resp in responses)
@@ -35,6 +41,11 @@
                         </InputRadioGroup>
                     </div>
                 </div>
+
+                if (Answers.Last() != answer)
+                {
+                    <hr />
+                }
             }
 
             <div>
@@ -45,6 +56,7 @@
                 <DataAnnotationsValidator />
                 @*<ValidationSummary />*@
             </div>
+
         </EditForm>
     </div>
 </div>
