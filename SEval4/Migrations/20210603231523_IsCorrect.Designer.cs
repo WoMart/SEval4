@@ -10,7 +10,7 @@ using SEval4.Data;
 namespace SEval4.Migrations
 {
     [DbContext(typeof(SEvalDBContext))]
-    [Migration("20210603225221_IsCorrect")]
+    [Migration("20210603231523_IsCorrect")]
     partial class IsCorrect
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -661,8 +661,8 @@ namespace SEval4.Migrations
                     b.Property<bool>("IsFinished")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("StudyGroupId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("StudyGroupId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1168,11 +1168,16 @@ namespace SEval4.Migrations
 
             modelBuilder.Entity("SEval4.Models.StudyGroup", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Guid>("Identifier")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1182,12 +1187,14 @@ namespace SEval4.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e16d04f2-c703-473a-a820-785dbd277127"),
+                            Id = 1,
+                            Identifier = new Guid("38e321c8-43ff-4289-9a0a-553097acf405"),
                             Name = "SEADM"
                         },
                         new
                         {
-                            Id = new Guid("07c9fc6a-6784-4102-8d9e-d391622497b2"),
+                            Id = 2,
+                            Identifier = new Guid("869ae0a0-29ec-4aa5-bfa1-8ec86c56f9e9"),
                             Name = "Feedback"
                         });
                 });
