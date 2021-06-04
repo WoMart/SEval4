@@ -63,14 +63,17 @@
 
             if (guid is null)
             {
-                NavigationManager.NavigateTo("Introduction");
+                NavigationManager.NavigateTo("Introduction"); 
             }
             else
             {
                 UserGuid = guid.Value;
             }
 
-            await GetScenariosAndResponses();
+            if (!Scenarios.Any())
+            {
+                await GetScenariosAndResponses();
+            }
         }
 
         await base.OnAfterRenderAsync(firstRender);
@@ -113,17 +116,7 @@
     {
         if (IsFormValid(out string errorMsg))
         {
-            // Mark the correct answers for easier data analysis
-            foreach (SurveyAnswer answer in Answers)
-            {
-                answer.IsCorrect = Responses
-                    .FirstOrDefault(r => 
-                    r.ScenarioId == answer.ScenarioId 
-                    && r.Value == answer.ResponseValue)
-                    ?.IsCorrect ?? false;
-            }
-
-            await SurveyService.SubmitSurveyAnswersAsync(Answers);
+            await SurveyService.SubmitSurveyAnswersAsync(Answers, "Baseline");
 
             // Get the study group ID allocated in personal survey
             Guid? studyGroup = await SurveyService

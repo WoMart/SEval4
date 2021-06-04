@@ -264,8 +264,20 @@ namespace SEval4.Data.Services
             return await orderedResponses.ToListAsync();
         }
 
-        public async Task<int> SubmitSurveyAnswersAsync(List<SurveyAnswer> answers)
+        public async Task<int> SubmitSurveyAnswersAsync(List<SurveyAnswer> answers, string surveyName)
         {
+            // Mark the correct answers for easier data analysis
+            foreach (SurveyAnswer answer in answers)
+            {
+                answer.SurveyName = surveyName;
+                answer.InsertTime = DateTime.Now;
+                answer.IsCorrect = _context.Responses
+                    .FirstOrDefault(r =>
+                    r.ScenarioId == answer.ScenarioId
+                    && r.Id == answer.ResponseValue)
+                    ?.IsCorrect ?? false;
+            }
+
             // Do some validaiton? Number of elements, Guid is the same and non-empty, etc.
             _context.SurveyAnswers.AddRange(answers);
             return await _context.SaveChangesAsync();

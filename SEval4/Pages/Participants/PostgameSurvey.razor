@@ -113,7 +113,7 @@
     {
         if (IsFormValid(out string errorMsg))
         {
-            await SurveyService.SubmitSurveyAnswersAsync(Answers);
+            await SurveyService.SubmitSurveyAnswersAsync(Answers, "Postgame");
             NavigationManager.NavigateTo("Feedback");
         }
         else
