@@ -27,6 +27,8 @@ namespace SEval4.Data
 
         #region DropDown options
 
+        #region Participant survey
+
         public static readonly AgeGroup[] AgeGroupsSeed =
         {
             new AgeGroup
@@ -169,6 +171,70 @@ namespace SEval4.Data
             },
 
         };
+
+        #endregion
+
+        #region Feedback
+
+        public static readonly StudyHelpfulness[] StudyHelpfulnessSeed =
+        {
+            new StudyHelpfulness
+            {
+                Id = 1,
+                Text = "Very helpful",
+            },
+            new StudyHelpfulness
+            {
+                Id = 2,
+                Text = "Somewhat helpful",
+            },
+            new StudyHelpfulness
+            {
+                Id = 3,
+                Text = "Unsure",
+            },
+            new StudyHelpfulness
+            {
+                Id = 4,
+                Text = "A little helpful",
+            },
+            new StudyHelpfulness
+            {
+                Id = 5,
+                Text = "Not helpful at all",
+            },
+        };
+
+        public static readonly ConfidenceChange[] ConfidenceChangeSeed =
+        {
+            new ConfidenceChange
+            {
+                Id = 1,
+                Text = "Very positively",
+            },
+            new ConfidenceChange
+            {
+                Id = 2,
+                Text = "Somewhat positively",
+            },
+            new ConfidenceChange
+            {
+                Id = 3,
+                Text = "No change at all",
+            },
+            new ConfidenceChange
+            {
+                Id = 4,
+                Text = "Somewhat negatively",
+            },
+            new ConfidenceChange
+            {
+                Id = 5,
+                Text = "Very negatively",
+            },
+        };
+
+        #endregion
 
         #endregion
 
