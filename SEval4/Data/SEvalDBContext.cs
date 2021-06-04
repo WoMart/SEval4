@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SEval4.Models;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SEval4.Data
 {
@@ -16,6 +12,8 @@ namespace SEval4.Data
         #region Participant data
 
         public DbSet<Participant> Participants { get; set; }
+
+        public DbSet<ParticipantFeedback> ParticipantFeedback { get; set; }
 
         #endregion
 
@@ -34,6 +32,10 @@ namespace SEval4.Data
         public DbSet<EducationGroup> EducationGroups { get; set; }
 
         public DbSet<ConfidenceGroup> ConfidenceGroups { get; set; }
+
+        public DbSet<StudyHelpfulness> StudyHelpfulness { get; set; }
+
+        public DbSet<ConfidenceChange> ConfidenceChange { get; set; }
 
         #endregion
 
@@ -91,13 +93,18 @@ namespace SEval4.Data
             SetupTextValueEntity(modelBuilder, SeedSurvey.EducationGroupsSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.ConfidenceGroupsSeed);
 
+            // Feedback options
+            SetupTextValueEntity(modelBuilder, SeedSurvey.StudyHelpfulnessSeed);
+            SetupTextValueEntity(modelBuilder, SeedSurvey.ConfidenceChangeSeed);
+
             // Baseline and postgame scenarios
-            SetupScenarios(modelBuilder,       SeedSurvey.ScenariosSeed);
+            SetupScenarios(modelBuilder, SeedSurvey.ScenariosSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.ResponsesSeed);
 
             // Evaluation scenarios
-            SetupScenarios(modelBuilder,       SeedSurvey.EvalScenariosSeed);
+            SetupScenarios(modelBuilder, SeedSurvey.EvalScenariosSeed);
             SetupTextValueEntity(modelBuilder, SeedSurvey.EvalResponsesSeed);
+
 
             base.OnModelCreating(modelBuilder);
         }
