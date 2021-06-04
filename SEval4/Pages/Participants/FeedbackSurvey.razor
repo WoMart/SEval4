@@ -5,11 +5,69 @@
 
     <h3>Feedback</h3>
     <div id="form">
-        <EditForm Model="@Feedback"
+        <EditForm Model="@ParticipantFeedback"
                   OnValidSubmit="@(async () => await Submit(true))"
                   OnInvalidSubmit="@(async () => await Submit(false))">
 
+            <p>
+                <label>
+                    <b>Did you find the training in this study helpful?</b>
+                </label>
+                <InputSelect class="form-control" @bind-Value="ParticipantFeedback.StudyHelpfulness">
+                    <option value="" selected></option>
+                    @foreach (var option in this.StudyHelpfulness)
+                    {
+                        <option value="@option.Text">@option.Text</option>
+                    }
+                </InputSelect>
+            </p>
 
+            <p>
+                <label>
+                    <b>How has the training affected your confidence in detecting phishing attacks?</b>
+                </label>
+                <InputSelect class="form-control" @bind-Value="ParticipantFeedback.PhishingConfidenceChange">
+                    <option value="" selected></option>
+                    @foreach (var option in this.ConfidenceChange)
+                    {
+                        <option value="@option.Text">@option.Text</option>
+                    }
+                </InputSelect>
+            </p>
+
+            <p>
+                <label>
+                    <b>How has the training affected your confidence in detecting spear-phishing attacks?</b>
+                </label>
+                <InputSelect class="form-control" @bind-Value="ParticipantFeedback.SpearPhishingConfidenceChange">
+                    <option value="" selected></option>
+                    @foreach (var option in this.ConfidenceChange)
+                    {
+                        <option value="@option.Text">@option.Text</option>
+                    }
+                </InputSelect>
+            </p>
+
+            <p>
+                <label>
+                    <b>Do you have any feedback (criticism, improvement ideas, etc.) regarding the scenarios presented during the study? (Leave empty if none)</b>
+                </label>
+                <InputTextArea class="form-control" @bind-Value="ParticipantFeedback.ScenarioFeedback" />
+            </p>
+
+            <p>
+                <label>
+                    <b>Do you have any feedback regarding the training method you have been allocated to? (Leave empty if none)</b>
+                </label>
+                <InputTextArea class="form-control" @bind-Value="ParticipantFeedback.TrainingFeedback" />
+            </p>
+
+            <p>
+                <label>
+                    <b>Lastly, do you have any other feedback regarding the whole study or the website? (Leave empty if none)</b>
+                </label>
+                <InputTextArea class="form-control" @bind-Value="ParticipantFeedback.GeneralFeedback" />
+            </p>
 
             <div>
                 <button class="btn btn-primary" type="submit">Continue</button>
@@ -29,18 +87,13 @@
 
     #region Fetch options
 
-    private List<AgeGroup> AgeGroups = new();
-    private List<YearGroup> YearGroups = new();
-    private List<EducationGroup> EducationGroups = new();
-    private List<ConfidenceGroup> ConfidenceGroups = new();
-
+    private List<StudyHelpfulness> StudyHelpfulness = new();
+    private List<ConfidenceChange> ConfidenceChange = new();
 
     protected override async Task OnInitializedAsync()
     {
-        AgeGroups = await SurveyService.GetAgeGroupsAsync();
-        YearGroups = await SurveyService.GetYearGroupsAsync();
-        EducationGroups = await SurveyService.GetEducationGroupsAsync();
-        ConfidenceGroups = await SurveyService.GetConfidenceGroupsAsync();
+        StudyHelpfulness = await SurveyService.GetStudyHelpfulnessAsync();
+        ConfidenceChange = await SurveyService.GetConfidenceChangeAsync();
 
         await base.OnInitializedAsync();
     }
@@ -74,7 +127,7 @@
 
     #region Submit and continue
 
-    private Feedback Feedback = new();
+    private ParticipantFeedback ParticipantFeedback = new();
     private string ErrorMsg = string.Empty;
     private bool IsBusy = false;
 
@@ -99,11 +152,12 @@
 
         try
         {
-            Feedback.UserId = UserGuid;
+            ParticipantFeedback.UserId = UserGuid;
 
-            // Submit the Personal Survey
-            //await SurveyService.InsertNewParticipantSurveyAsync(Feedback);
+            // Submit the feedback
+            await SurveyService.SubmitParticipantFeedbackAsync(ParticipantFeedback);
 
+            // Update the IsFinished column
             await SurveyService.RecordParticipantFinishedStudy(UserGuid);
 
             NavigationManager.NavigateTo("Thanks");
