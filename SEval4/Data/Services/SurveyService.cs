@@ -164,6 +164,41 @@ namespace SEval4.Data.Services
 
         #endregion
 
+        #region Participant Feedback
+
+        #region Dropdown options
+
+        public async Task<List<StudyHelpfulness>> GetStudyHelpfulnessAsync()
+        {
+            return await _context.StudyHelpfulness
+                .OrderBy(sh => sh.Id)
+                .ToListAsync();
+        }
+
+        public async Task<List<ConfidenceChange>> GetConfidenceChangeAsync()
+        {
+            return await _context.ConfidenceChange
+                .OrderBy(sh => sh.Id)
+                .ToListAsync();
+        }
+
+        #endregion
+
+        public async Task<int> SubmitParticipantFeedbackAsync(ParticipantFeedback feedback)
+        {
+            // Trim the textareas
+            feedback.ScenarioFeedback = feedback.ScenarioFeedback?.Trim();
+            feedback.TrainingFeedback = feedback.TrainingFeedback?.Trim();
+            feedback.GeneralFeedback  = feedback.GeneralFeedback?.Trim();
+
+            feedback.TimeStamp = DateTime.Now;
+
+            _context.ParticipantFeedback.Add(feedback);
+            return await _context.SaveChangesAsync();
+        }
+
+        #endregion
+
         #region IsFinished
 
         public async Task RecordParticipantFinishedStudy(Guid userId, bool isFinished = true)
