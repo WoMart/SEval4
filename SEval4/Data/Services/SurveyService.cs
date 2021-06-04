@@ -95,6 +95,13 @@ namespace SEval4.Data.Services
 
         #region Study group allocation
 
+        public async Task<Guid?> GetStudyGroupIdentifierAsync(int? rowId)
+        {
+            return (await _context.StudyGroups
+                .FirstOrDefaultAsync(sg => sg.Id == rowId.GetValueOrDefault()))
+                ?.Identifier;
+        }
+
         /// <summary>
         /// Allocate user to the study group with lowest number of finished surveys
         /// </summary>
@@ -109,7 +116,7 @@ namespace SEval4.Data.Services
                 throw new Exception("Oh no you were allocated already!");
             }
 
-            Dictionary<Guid, int> allocationCounts = _context.StudyGroups
+            Dictionary<int, int> allocationCounts = _context.StudyGroups
                 .ToDictionary(key => key.Id, value => 0);
 
             // Count number of allocations that already concluded the experiment
@@ -125,7 +132,7 @@ namespace SEval4.Data.Services
             }
 
             // Get ID of the group with lowest count value
-            Guid groupId = allocationCounts
+            int groupId = allocationCounts
                 .OrderBy(gc => gc.Value)
                 .First()
                 .Key;
@@ -137,36 +144,22 @@ namespace SEval4.Data.Services
 
             await UpdateParticipantAsync(participant);
 
-            return groupId;
+            return (await GetStudyGroupIdentifierAsync(groupId))
+                ?? throw new Exception("Service somehow allocated the participant to a nonexistent group.");
         }
 
         public async Task<Guid?> GetUserAllocationGroupAsync(Guid userId)
         {
             Participant participant = await _context.Participants
                 .FirstOrDefaultAsync(p => p.Id == userId);
-            return participant?.StudyGroupId;
+            return await GetStudyGroupIdentifierAsync(
+                participant.StudyGroupId);
         }
 
         public async Task<List<StudyGroup>> GetStudyGroupsAsync()
         {
             return await _context.StudyGroups
                 .ToListAsync();
-        }
-
-        public async Task<bool> IsTheUserAllocatedGroupAsync(Guid userId, Guid? studyGroupId)
-        {
-            if (studyGroupId.HasValue)
-            {
-                return await _context.Participants
-                   .Where(p =>
-                   p.Id == userId &&
-                   p.StudyGroupId == studyGroupId.Value)
-                   .AnyAsync();
-            }
-            else
-            {
-                return false;
-            }
         }
 
         #endregion

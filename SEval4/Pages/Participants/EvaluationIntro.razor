@@ -91,7 +91,7 @@
     protected override async Task OnInitializedAsync()
     {
         StudyGroups = await SurveyService.GetStudyGroupsAsync();
-        StudyGroup  = StudyGroups.First(sg => sg.Id == StudyGroupId);
+        StudyGroup  = StudyGroups.First(sg => sg.Identifier == StudyGroupId);
     }
 
     #endregion
@@ -117,7 +117,7 @@
                 await JsRuntime.InvokeVoidAsync("alert", "DEBUG: No guid in the SessionStorage.");
             }
 
-            if (!StudyGroupId.HasValue || !StudyGroups.Any(sg => sg.Id == StudyGroupId.Value))
+            if (!StudyGroupId.HasValue || !StudyGroups.Any(sg => sg.Identifier == StudyGroupId.Value))
             {
                 // TODO: Navigate to an error page explaining what's wrong
                 //NavigationManager.NavigateTo("InvalidStudy");

@@ -30,8 +30,8 @@
                                         <div style="margin-bottom:5px;">
                                             <CustomRadio name="@($"response")"
                                                          SelectedValue="response.Id"
+                                                         OptionText="@response.Text"
                                                          @bind-Value="Answer.ResponseValue" />
-                                            @response.Text <br />
                                         </div>
                                     }
 
@@ -105,7 +105,7 @@
         Scenarios = await SurveyService.GetEvaluationRoundsAsync(isRandomOrder: true);
         Responses = await SurveyService.GetEvaluationResponsesAsync(isRandomOrder: true);
 
-        StudyGroup = StudyGroups.FirstOrDefault(sg => sg.Id == StudyGroupId);
+        StudyGroup = StudyGroups.FirstOrDefault(sg => sg.Identifier == StudyGroupId);
 
         if (StudyGroup is null)
         {
@@ -141,7 +141,7 @@
                 await JsRuntime.InvokeVoidAsync("alert", "DEBUG: No guid in the SessionStorage.");
             }
 
-            if (!StudyGroupId.HasValue || !StudyGroups.Any(sg => sg.Id == StudyGroupId))
+            if (!StudyGroupId.HasValue || !StudyGroups.Any(sg => sg.Identifier == StudyGroupId))
             {
                 // TODO: Navigate to an error page explaining what's wrong
                 //NavigationManager.NavigateTo("InvalidStudy");#
