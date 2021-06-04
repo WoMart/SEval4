@@ -1,4 +1,5 @@
 ﻿using SEval4.Models;
+using System;
 
 namespace SEval4.Data
 {
@@ -12,11 +13,13 @@ namespace SEval4.Data
             {
                 Id = 1,
                 Name = "SEADM",
+                Identifier = new Guid("c43e55f6-cf02-4cc2-bbd6-601b37f0beb1"),
             },
             new StudyGroup
             {
                 Id = 2,
                 Name = "Feedback",
+                Identifier = new Guid("7a8d2920-cb1c-4f7b-8513-1dc19a2c9634"),
             }
         };
 
@@ -201,7 +204,7 @@ namespace SEval4.Data
             new Scenario
             {
                 Id = 6,
-                Context = "Whilst walking towards the entrance turnstile at the computer lab, a person whom you have never met or seen before approaches you. This person is about the same age as you and looks like a fellow student. The person tells you that he has forgotten his student card at home and can now not enter through the turnstile to use the computers in the lab. The person asks if you could assist him with entering through the turnstile by allowing him to swipe in using your student card. Your card allows you to both swipe in and enter the computer lab. The person looks incredibly stressed and tells you he has an assignment due in 15 minutes that he needs to get access to a computer to submit. You know that there are policies in place that disallow swiping in other students to labs, however it will not harm you in any way to swipe in a fellow student and you could help him pass the course by helping him get to a computer to submit his assignment on time. Which action do you take?",
+                Context = "Whilst walking towards the entrance turnstile at the computer lab, a person whom you have never met or seen before approaches you. This person looks to be in their early 20s and looks like a fellow student. The person tells you that he has forgotten his student card at home and can now not enter through the turnstile to use the computers in the lab. The person asks if you could assist him with entering through the turnstile by allowing him to swipe in using your student card. Your card allows you to both swipe in and enter the computer lab. The person looks incredibly stressed and tells you he has an assignment due in 15 minutes that he needs to get access to a computer to submit. You know that there are policies in place that disallow swiping in other students to labs, however it will not harm you in any way to swipe in a fellow student and you could help him pass the course by helping him get to a computer to submit his assignment on time. Which action do you take?",
             },
             new Scenario
             {

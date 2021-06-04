@@ -8,7 +8,7 @@ namespace SEval4.Models
         [Key]
         public int Id { get; set; }
         [Required]
-        public Guid Identifier { get; set; } = Guid.NewGuid();
+        public Guid Identifier { get; set; }
         [Required]
         public string Name { get; set; }
     }
