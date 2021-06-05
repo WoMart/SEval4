@@ -1,0 +1,38 @@
+﻿<div id="feedbackIntro">
+
+    <h1>Feedback group</h1>
+    <hr />
+
+    <p>
+        You have been allocated to the study group with feedback.
+        In the next page you will be faced with one scenario at a time.
+        Similarly to the previous scenarios, take as much time as you need to read and understand the scenario and the responses.
+        Once you decide which response is the most suitable, click on the square checkbox next to it and click the Continue button to navigate to the next scenario.
+    </p>
+
+    <p>
+        Before the next scenario is displayed, a pop-up notification will appear.
+        This notification will inform you whether your response was correct and provide you with details about the scenario.
+        If your answer was incorrect, the scenario will be displayed again later until the correct answer is selected.
+        All scenarios must be answered correctly to finish the training.
+    </p>
+
+    <p>
+        Click the Test button to see how the notificaiton will look.
+        <button class="btn btn-primary" @onclick="TestPopup">
+            Test
+        </button>
+    </p>
+</div>
+
+@code {
+
+    private async Task TestPopup()
+    {
+        await JsRuntime.InvokeVoidAsync("alert",
+            "(In)Correct! \n**************\n\n" +
+            "Firsly, the notification will inform you whether the answer is correct or incorrect." +
+            "This notification will also display feedback regarding the scenario you are currently viewing and evaluating.");
+    }
+
+}
