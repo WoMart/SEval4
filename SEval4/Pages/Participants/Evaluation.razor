@@ -21,21 +21,24 @@
             <table>
                 <tbody>
                     <tr>
-                        <td width="@(StudyGroup?.Name == "SEADM" ? "70%" : "100%")">
-                            <div id="responses" style="padding:5px;">
-                                <InputRadioGroup @bind-Value="@Answer.ResponseId" Name="response">
-                                    @foreach (EvalResponse response in Responses.Where(
-                                   r => r.ScenarioId == CurrentScenario.Id))
-                                    {
-                                        <div style="margin-bottom:5px;">
-                                            <CustomRadio name="@($"response")"
-                                                         SelectedValue="response.Id"
-                                                         OptionText="@response.Text"
-                                                         @bind-Value="Answer.ResponseId" />
-                                        </div>
-                                    }
+                        <td style="vertical-align: top;"
+                            width="@(StudyGroup?.Name == "SEADM" ? "70%" : "100%")">
+                            <div id="responses" style="padding: 5px;">
 
-                                </InputRadioGroup>
+                                <div style="vertical-align: top;">
+                                    <InputRadioGroup @bind-Value="@Answer.ResponseId" Name="response">
+                                        @foreach (EvalResponse response in Responses.Where(
+                                          r => r.ScenarioId == CurrentScenario.Id))
+                                        {
+                                            <div style="margin-bottom:5px;">
+                                                <CustomRadio name="@($"response")"
+                                                             SelectedValue="response.Id"
+                                                             OptionText="@response.Text"
+                                                             @bind-Value="Answer.ResponseId" />
+                                            </div>
+                                        }
+                                    </InputRadioGroup>
+                                </div>
                             </div>
 
                         </td>
