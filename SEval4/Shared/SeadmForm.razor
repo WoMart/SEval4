@@ -1,16 +1,26 @@
 ﻿<div id="seadmForm" style="justify-content:center; border:double; border-width:2px; padding:10px;">
 
-    <div style="height: 5em; line-height: 1em; text-align: center;">
+
+    @* Buttons cannot be 'submit' type, as EditForm will try to submit *@
+    <table style="text-align:center; width:100%;">
+        <tbody>
+            <tr>
+                <td colspan="2">
+    <div>
         <label style="margin-bottom:20px;">
+            @if(SeadmService.IsTerminalState())
+            {
+                <b>FINAL STATE</b>
+                <hr style="margin-top:.5rem;margin-bottom:.5rem;" />
+            }
             <b>
                 @SeadmService.GetQuestion()
             </b>
         </label>
     </div>
 
-    @* Buttons cannot be 'submit' type, as EditForm will try to submit *@
-    <table style="text-align:center; width:100%;">
-        <tbody>
+                </td>
+            </tr>
             <tr>
                 <td>
                     <button class="btn btn-primary w-75" type="button"
@@ -96,6 +106,13 @@
 
         return Task.CompletedTask;
     }
+
+    #endregion
+
+    #region Visibility
+
+    private string IsNotStartingOpacity => SeadmService.IsStartingState() ? "0.1" : "1";
+    private string IsNotTerminalOpacity => SeadmService.IsTerminalState() ? "0.1" : "1";
 
     #endregion
 }
