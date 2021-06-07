@@ -6,7 +6,7 @@ namespace SEval4.Models
     public class EvalAnswer : BaseAnswer
     {
 
-        //[ForeignKey(nameof(ResponseValue))]
+        //[ForeignKey(nameof(ResponseId))]
         //public virtual EvalResponse Response {get;set;}
     }
 }

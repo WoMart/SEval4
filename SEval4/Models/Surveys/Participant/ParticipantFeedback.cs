@@ -10,7 +10,7 @@ namespace SEval4.Models
         [Required]
         public Guid UserId { get; set; }
         [Required]
-        public DateTime TimeStamp { get; set; }
+        public DateTime CreateDate { get; set; }
 
         // Feedback form
         [Required]

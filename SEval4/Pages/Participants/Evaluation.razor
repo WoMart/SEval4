@@ -23,7 +23,7 @@
                     <tr>
                         <td width="@(StudyGroup?.Name == "SEADM" ? "70%" : "100%")">
                             <div id="responses" style="padding:5px;">
-                                <InputRadioGroup @bind-Value="@Answer.ResponseValue" Name="response">
+                                <InputRadioGroup @bind-Value="@Answer.ResponseId" Name="response">
                                     @foreach (EvalResponse response in Responses.Where(
                                    r => r.ScenarioId == CurrentScenario.Id))
                                     {
@@ -31,7 +31,7 @@
                                             <CustomRadio name="@($"response")"
                                                          SelectedValue="response.Id"
                                                          OptionText="@response.Text"
-                                                         @bind-Value="Answer.ResponseValue" />
+                                                         @bind-Value="Answer.ResponseId" />
                                         </div>
                                     }
 
@@ -175,7 +175,7 @@
     private bool IsAnswerCorrect()
     {
         var response = Responses
-            .First(r => r.Id== Answer.ResponseValue &&
+            .First(r => r.Id== Answer.ResponseId &&
             r.ScenarioId == CurrentScenario.Id);
         return response.IsCorrect;
     }
@@ -241,7 +241,7 @@
     private async Task<bool> InsertAnswerAsync(bool? isCorrect = null)
     {
         Answer.UserId = UserGuid;
-        Answer.InsertTime = DateTime.Now;
+        Answer.CreateTime = DateTime.Now;
         Answer.ScenarioId = CurrentScenario.Id;
         Answer.IsCorrect = isCorrect ?? IsAnswerCorrect();
 

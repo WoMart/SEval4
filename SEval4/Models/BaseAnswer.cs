@@ -10,7 +10,7 @@ namespace SEval4.Models
         public int Id { get; set; }
 
         [Required]
-        public DateTime InsertTime { get; set; }
+        public DateTime CreateTime { get; set; }
 
         [Required]
         public Guid UserId { get; set; }
@@ -19,13 +19,10 @@ namespace SEval4.Models
         public int ScenarioId { get; set; }
 
         [Required]
-        public int ResponseValue { get; set; }
+        public int ResponseId { get; set; }
 
         [Required]
         public bool IsCorrect { get; set; }
-
-        // TODO: EntityFramework is complaining about cascading ForeignKey
-        //       Might have to make the Id properties nullable to solve the issue
 
         //[ForeignKey(nameof(UserId))]
         //public virtual Participant Participant { get; set; }

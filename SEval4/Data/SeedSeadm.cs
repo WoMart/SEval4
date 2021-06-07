@@ -55,6 +55,11 @@ namespace SEval4.Data
             },
             new SeadmQuestion
             {
+                StateId = "SV",
+                Text = "Verify the requester through a third party and decide based on the verification result.",
+            },
+            new SeadmQuestion
+            {
                 StateId = "S1",
                 Text = "Do you understand what is requested?",
             },
@@ -138,11 +143,11 @@ namespace SEval4.Data
                 StateId = "S14",
                 Text = "Can you verify the requester through a third party source?",
             },
-            new SeadmQuestion
-            {
-                StateId = "S15",
-                Text = "Does the verification process reflect the same information as verification requirements?",
-            },
+            //new SeadmQuestion
+            //{
+            //    StateId = "S15",
+            //    Text = "Does the verification process reflect the same information as verification requirements?",
+            //},
             new SeadmQuestion
             {
                 StateId = "S16",
@@ -335,7 +340,8 @@ namespace SEval4.Data
             {
                 StateId = "S14",
                 YesCount = 1,
-                NextStateId = "S15",
+                NextStateId = "SV",
+                //NextStateId = "S15",
             },
             new SeadmTransition
             {
@@ -343,18 +349,18 @@ namespace SEval4.Data
                 YesCount = 0,
                 NextStateId = "SR",
             },
-            new SeadmTransition
-            {
-                StateId = "S15",
-                YesCount = 1,
-                NextStateId = "S16",
-            },
-            new SeadmTransition
-            {
-                StateId = "S15",
-                YesCount = 0,
-                NextStateId = "SR",
-            },
+            //new SeadmTransition
+            //{
+            //    StateId = "S15",
+            //    YesCount = 1,
+            //    NextStateId = "S16",
+            //},
+            //new SeadmTransition
+            //{
+            //    StateId = "S15",
+            //    YesCount = 0,
+            //    NextStateId = "SR",
+            //},
             new SeadmTransition
             {
                 StateId = "S16",

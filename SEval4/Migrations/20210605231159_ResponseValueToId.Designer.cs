@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SEval4.Data;
 
 namespace SEval4.Migrations
 {
     [DbContext(typeof(SEvalDBContext))]
-    partial class SEvalDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210605231159_ResponseValueToId")]
+    partial class ResponseValueToId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -696,26 +698,11 @@ namespace SEval4.Migrations
                     b.Property<DateTime?>("AllocationTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("BaselineSurveyCompletionTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("EvaluationCompletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FeedbackCompletionTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsFinished")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ParticipantSurveyCompletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("PostgameSurveyCompletionTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<int?>("StudyGroupId")
                         .HasColumnType("int");

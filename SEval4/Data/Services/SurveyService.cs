@@ -4,6 +4,7 @@ using SEval4.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SEval4.Data.Services
@@ -93,13 +94,21 @@ namespace SEval4.Data.Services
 
         #endregion
 
-        #region Study group allocation
+        #region Study group
 
         public async Task<Guid?> GetStudyGroupIdentifierAsync(int? rowId)
         {
             return (await _context.StudyGroups
                 .FirstOrDefaultAsync(sg => sg.Id == rowId.GetValueOrDefault()))
                 ?.Identifier;
+        }
+
+        public async Task<string> GetStudyGroupName(int? rowId)
+        {
+            StudyGroup studyGroup = await _context.StudyGroups
+                .FirstOrDefaultAsync(sg => sg.Id == rowId);
+
+            return studyGroup?.Name ?? "NULL";
         }
 
         /// <summary>
@@ -164,37 +173,71 @@ namespace SEval4.Data.Services
 
         #endregion
 
-        #region Participant Feedback
+        #region Progression
 
-        #region Dropdown options
-
-        public async Task<List<StudyHelpfulness>> GetStudyHelpfulnessAsync()
+        public async Task<bool> UpdateParticipantSurveyUpdateCompetionTime(Guid userId, DateTime? time = null)
         {
-            return await _context.StudyHelpfulness
-                .OrderBy(sh => sh.Id)
-                .ToListAsync();
+            Participant participant = await GetParticipantAsync(userId);
+
+            if (participant != null)
+            {
+                participant.ParticipantSurveyCompletionTime = time ?? DateTime.Now;
+                await _context.SaveChangesAsync();
+            }
+
+            return participant != null;
         }
 
-        public async Task<List<ConfidenceChange>> GetConfidenceChangeAsync()
+        public async Task<bool> UpdateBaselineSurveyUpdateCompetionTime(Guid userId, DateTime? time = null)
         {
-            return await _context.ConfidenceChange
-                .OrderBy(sh => sh.Id)
-                .ToListAsync();
+            Participant participant = await GetParticipantAsync(userId);
+
+            if (participant != null)
+            {
+                participant.BaselineSurveyCompletionTime = time ?? DateTime.Now;
+                await _context.SaveChangesAsync();
+            }
+
+            return participant != null;
         }
 
-        #endregion
-
-        public async Task<int> SubmitParticipantFeedbackAsync(ParticipantFeedback feedback)
+        public async Task<bool> UpdateEvaluationUpdateCompetionTime(Guid userId, DateTime? time = null)
         {
-            // Trim the textareas
-            feedback.ScenarioFeedback = feedback.ScenarioFeedback?.Trim();
-            feedback.TrainingFeedback = feedback.TrainingFeedback?.Trim();
-            feedback.GeneralFeedback  = feedback.GeneralFeedback?.Trim();
+            Participant participant = await GetParticipantAsync(userId);
 
-            feedback.TimeStamp = DateTime.Now;
+            if (participant != null)
+            {
+                participant.EvaluationCompletionTime = time ?? DateTime.Now;
+                await _context.SaveChangesAsync();
+            }
 
-            _context.ParticipantFeedback.Add(feedback);
-            return await _context.SaveChangesAsync();
+            return participant != null;
+        }
+
+        public async Task<bool> UpdatePostgameSurveyUpdateCompetionTime(Guid userId, DateTime? time = null)
+        {
+            Participant participant = await GetParticipantAsync(userId);
+
+            if (participant != null)
+            {
+                participant.PostgameSurveyCompletionTime = time ?? DateTime.Now;
+                await _context.SaveChangesAsync();
+            }
+
+            return participant != null;
+        }
+
+        public async Task<bool> UpdateFeedbackUpdateCompetionTime(Guid userId, DateTime? time = null)
+        {
+            Participant participant = await GetParticipantAsync(userId);
+
+            if (participant != null)
+            {
+                participant.FeedbackCompletionTime = time ?? DateTime.Now;
+                await _context.SaveChangesAsync();
+            }
+
+            return participant != null;
         }
 
         #endregion
@@ -254,7 +297,12 @@ namespace SEval4.Data.Services
         public async Task<int> InsertNewParticipantSurveyAsync(ParticipantSurvey survey)
         {
             await _context.ParticipantSurveys.AddAsync(survey);
-            return await _context.SaveChangesAsync();
+            int rowsAffected = await _context.SaveChangesAsync();
+            if (rowsAffected > 0)
+            {
+                await UpdateParticipantSurveyUpdateCompetionTime(survey.UserId);
+            }
+            return rowsAffected;
         }
 
         #endregion
@@ -305,17 +353,29 @@ namespace SEval4.Data.Services
             foreach (SurveyAnswer answer in answers)
             {
                 answer.SurveyName = surveyName;
-                answer.InsertTime = DateTime.Now;
+                answer.CreateTime = DateTime.Now;
                 answer.IsCorrect = _context.Responses
                     .FirstOrDefault(r =>
                     r.ScenarioId == answer.ScenarioId
-                    && r.Id == answer.ResponseValue)
+                    && r.Id == answer.ResponseId)
                     ?.IsCorrect ?? false;
             }
 
             // Do some validaiton? Number of elements, Guid is the same and non-empty, etc.
             _context.SurveyAnswers.AddRange(answers);
-            return await _context.SaveChangesAsync();
+            int rowsAffected = await _context.SaveChangesAsync();
+            if (rowsAffected > 0)
+            {
+                if (surveyName == "Baseline")
+                {
+                    await UpdateBaselineSurveyUpdateCompetionTime(answers[0].UserId);
+                }
+                else if (surveyName == "Postgame")
+                {
+                    await UpdatePostgameSurveyUpdateCompetionTime(answers[0].UserId);
+                }
+            }
+            return rowsAffected;
         }
 
         #endregion
@@ -364,7 +424,12 @@ namespace SEval4.Data.Services
                 .ToList();
 
             _context.AttemptCounts.AddRange(attemptCounts);
-            return await _context.SaveChangesAsync();
+            int rowsAffected = await _context.SaveChangesAsync();
+            if (rowsAffected > 0)
+            {
+                await UpdateEvaluationUpdateCompetionTime(userId);
+            }
+            return rowsAffected;
         }
 
         public async Task<List<AttemptCount>> GetAttemptCountAsync(Guid userId)
@@ -378,6 +443,292 @@ namespace SEval4.Data.Services
 
         #endregion
 
+        #region Participant Feedback
+
+        #region Dropdown options
+
+        public async Task<List<StudyHelpfulness>> GetStudyHelpfulnessAsync()
+        {
+            return await _context.StudyHelpfulness
+                .OrderBy(sh => sh.Id)
+                .ToListAsync();
+        }
+
+        public async Task<List<ConfidenceChange>> GetConfidenceChangeAsync()
+        {
+            return await _context.ConfidenceChange
+                .OrderBy(sh => sh.Id)
+                .ToListAsync();
+        }
+
+        #endregion
+
+        public async Task<int> SubmitParticipantFeedbackAsync(ParticipantFeedback feedback)
+        {
+            // Trim the textareas
+            feedback.ScenarioFeedback = feedback.ScenarioFeedback?.Trim();
+            feedback.TrainingFeedback = feedback.TrainingFeedback?.Trim();
+            feedback.GeneralFeedback  = feedback.GeneralFeedback?.Trim();
+
+            feedback.CreateDate = DateTime.Now;
+
+            _context.ParticipantFeedback.Add(feedback);
+            int rowsAffected = await _context.SaveChangesAsync();
+            if (rowsAffected > 0)
+            {
+                await UpdateFeedbackUpdateCompetionTime(feedback.UserId);
+            }
+            return rowsAffected;
+        }
+
+        #endregion
+
+        #region Get CSV data
+
+        public async Task<string> ParticipantsToCsvAsync()
+        {
+            var builder = new StringBuilder();
+
+            AddCsvLine(builder, new string[]
+            {
+                nameof(Participant.Id),
+                nameof(Participant.IsFinished),
+                nameof(Participant.CreationTime),
+                nameof(Participant.StudyGroup),
+                nameof(Participant.AllocationTime),
+            });
+
+            List<Participant> participants = await _context.Participants
+                .ToListAsync();
+
+            foreach (Participant participant in participants)
+            {
+                AddCsvLine(builder, new string[]
+                    {
+                        participant.Id.ToString(),
+                        participant.IsFinished ? "1" : "0",
+                        participant.CreationTime.ToString(),
+                        await GetStudyGroupName(participant.StudyGroupId),
+                        GetValueStringOrNullText(participant.AllocationTime),
+                    });
+            }
+
+            return builder.ToString();
+        }
+
+        public async Task<string> ParticipantSurveysToCsvAsync()
+        {
+            var builder = new StringBuilder();
+
+            AddCsvLine(builder, new string[]
+            {
+                nameof(ParticipantSurvey.Id),
+                nameof(ParticipantSurvey.UserId),
+                nameof(ParticipantSurvey.AgeGroup),
+                nameof(ParticipantSurvey.EducationGroup),
+                nameof(ParticipantSurvey.ProfessionalExperience),
+                nameof(ParticipantSurvey.HasFormalTraining),
+                nameof(ParticipantSurvey.HasInformalTraining),
+                nameof(ParticipantSurvey.PhishingConfidence),
+                nameof(ParticipantSurvey.SpearPhishingConfidence),
+            });
+
+            List<ParticipantSurvey> surveys = await _context.ParticipantSurveys
+                .ToListAsync();
+
+            foreach (ParticipantSurvey survey in surveys)
+            {
+                AddCsvLine(builder, new string[]
+                    {
+                        survey.Id.ToString(),
+                        survey.UserId.ToString(),
+                        survey.AgeGroup,
+                        survey.EducationGroup,
+                        survey.ProfessionalExperience,
+                        survey.HasFormalTraining,
+                        survey.HasInformalTraining,
+                        survey.PhishingConfidence,
+                        survey.SpearPhishingConfidence,
+                    });
+            }
+
+            return builder.ToString();
+        }
+
+        public async Task<string> SurveyAnswersToCsvAsync()
+        {
+            var builder = new StringBuilder();
+
+            AddCsvLine(builder, new string[]
+            {
+                nameof(SurveyAnswer.Id),
+                nameof(SurveyAnswer.CreateTime),
+                nameof(SurveyAnswer.UserId),
+                nameof(SurveyAnswer.SurveyName),
+                nameof(SurveyAnswer.ScenarioId),
+                nameof(SurveyAnswer.ResponseId),
+                nameof(SurveyAnswer.IsCorrect),
+            });
+
+            List<SurveyAnswer> evalAnswers = await _context.SurveyAnswers
+                .OrderBy(ac => ac.UserId)
+                .ThenBy(ac => ac.SurveyName)
+                .ThenBy(ac => ac.ScenarioId)
+                .ToListAsync();
+
+            foreach (SurveyAnswer evalAnswer in evalAnswers)
+            {
+                string responseDescription = _context.Responses
+                    .First(r => r.Id == evalAnswer.ResponseId)
+                    .Description;
+
+                AddCsvLine(builder, new string[]
+                    {
+                        evalAnswer.Id.ToString(),
+                        evalAnswer.CreateTime.ToString(),
+                        evalAnswer.UserId.ToString(),
+                        evalAnswer.SurveyName,
+                        evalAnswer.ScenarioId.ToString(),
+                        responseDescription,
+                        evalAnswer.IsCorrect ? "1" : "0",
+                    });
+            }
+
+            return builder.ToString();
+        }
+
+        public async Task<string> EvaluationAnswersToCsvAsync()
+        {
+            var builder = new StringBuilder();
+
+            AddCsvLine(builder, new string[]
+            {
+                nameof(EvalAnswer.Id),
+                nameof(EvalAnswer.CreateTime),
+                nameof(EvalAnswer.UserId),
+                nameof(EvalAnswer.ScenarioId),
+                nameof(EvalAnswer.ResponseId),
+                nameof(EvalAnswer.IsCorrect),
+            });
+
+            List<EvalAnswer> evalAnswers = await _context.EvaluationAnswers
+                .OrderBy(ac => ac.UserId)
+                .ThenBy(ac => ac.ScenarioId)
+                .ToListAsync();
+
+            foreach (EvalAnswer evalAnswer in evalAnswers)
+            {
+                string responseText = _context.EvaluationResponses
+                    .First(r => r.Id == evalAnswer.ResponseId)
+                    .Description;
+
+                AddCsvLine(builder, new string[]
+                    {
+                        evalAnswer.Id.ToString(),
+                        evalAnswer.CreateTime.ToString(),
+                        evalAnswer.UserId.ToString(),
+                        evalAnswer.ScenarioId.ToString(),
+                        responseText,
+                        evalAnswer.IsCorrect ? "1" : "0",
+                    });
+            }
+
+            return builder.ToString();
+        }
+
+        public async Task<string> AttemptCountsToCsvAsync()
+        {
+            var builder = new StringBuilder();
+
+            AddCsvLine(builder, new string[]
+            {
+                nameof(AttemptCount.Id),
+                nameof(AttemptCount.UserId),
+                nameof(AttemptCount.ScenarioId),
+                nameof(AttemptCount.Attempts),
+            });
+
+            List<AttemptCount> attemptCounts = await _context.AttemptCounts
+                .OrderBy(ac => ac.Id)
+                .ThenBy(ac => ac.ScenarioId)
+                .ToListAsync();
+
+            foreach (AttemptCount attemptCount in attemptCounts)
+            {
+                AddCsvLine(builder, new string[]
+                    {
+                        attemptCount.Id.ToString(),
+                        attemptCount.UserId.ToString(),
+                        attemptCount.ScenarioId.ToString(),
+                        attemptCount.Attempts.ToString(),
+                    });
+            }
+
+            return builder.ToString();
+        }
+
+        public async Task<string> ParticipantFeedbackToCsvAsync()
+        {
+            var builder = new StringBuilder();
+
+            AddCsvLine(builder, new string[]
+            {
+                nameof(ParticipantFeedback.Id),
+                nameof(ParticipantFeedback.UserId),
+                nameof(ParticipantFeedback.CreateDate),
+                nameof(ParticipantFeedback.StudyHelpfulness),
+                nameof(ParticipantFeedback.PhishingConfidenceChange),
+                nameof(ParticipantFeedback.SpearPhishingConfidenceChange),
+                nameof(ParticipantFeedback.ScenarioFeedback),
+                nameof(ParticipantFeedback.TrainingFeedback),
+                nameof(ParticipantFeedback.GeneralFeedback),
+            });
+
+            List<ParticipantFeedback> feedbacks = await _context.ParticipantFeedback
+                .ToListAsync();
+            foreach (ParticipantFeedback feedback in feedbacks)
+            {
+                AddCsvLine(builder, new string[]
+                    {
+                        feedback.Id.ToString(),
+                        feedback.UserId.ToString(),
+                        feedback.CreateDate.ToString(),
+                        feedback.StudyHelpfulness,
+                        feedback.PhishingConfidenceChange,
+                        feedback.SpearPhishingConfidenceChange,
+                        GetValueStringOrNullText(feedback.ScenarioFeedback),
+                        GetValueStringOrNullText(feedback.TrainingFeedback),
+                        GetValueStringOrNullText(feedback.GeneralFeedback),
+                    });
+            }
+
+            return builder.ToString();
+        }
+
+        #endregion
+
+        #region Private helpers
+
+        private void AddCsvLine(StringBuilder builder, string[] data, string delimeter = "\t")
+        {
+            builder.AppendLine(string.Join(delimeter, data));
+        }
+        private string GetValueStringOrNullText(string value)
+        {
+            return string.IsNullOrWhiteSpace(value)
+                ? "NULL"
+                : value.ToString();
+        }
+
+        private string GetValueStringOrNullText<T>(T? value)
+            where T : struct
+        {
+            return value.HasValue
+                ? value.ToString()
+                : "NULL";
+        }
+
+        #endregion
 
         #region For development
 

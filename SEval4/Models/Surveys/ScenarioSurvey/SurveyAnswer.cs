@@ -8,7 +8,7 @@ namespace SEval4.Models
         [Required]
         public string SurveyName { get; set; }
 
-        //[ForeignKey(nameof(ResponseValue))]
+        //[ForeignKey(nameof(ResponseId))]
         //public virtual Response Response { get; set; }
     }
 }

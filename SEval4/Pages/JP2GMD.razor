@@ -1,0 +1,59 @@
+﻿@page "/jp2gmd"
+
+<h3>jp2gmd</h3>
+<button class="btn btn-primary" @onclick="@(async () => await Download("Participant"))">
+    Participant
+</button>
+<button class="btn btn-primary" @onclick="@(async () => await Download("Survey"))">
+    Survey
+</button>
+<button class="btn btn-primary" @onclick="@(async () => await Download("Participant"))">
+    Base/Post
+</button>
+<button class="btn btn-primary" @onclick="@(async () => await Download("Survey"))">
+    Evaluation
+</button>
+<button class="btn btn-primary" @onclick="@(async () => await Download("Scenarios"))">
+    Attempts
+</button>
+<button class="btn btn-primary" @onclick="@(async () => await Download("Evaluation"))">
+    Feedback
+</button>
+@*<a href="jp2gmd" download="@Download" >Download</a>*@
+
+
+<textarea style="width:100%;height:20em;">
+@Data
+</textarea>
+
+@code {
+
+    private Dictionary<string, string> CsvData = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        CsvData = new()
+        {
+            { "Participant", await SurveyService.ParticipantsToCsvAsync() },
+            { "Survey", await SurveyService.ParticipantSurveysToCsvAsync() },
+            { "Scenarios", await SurveyService.SurveyAnswersToCsvAsync() },
+            { "Evaluation", await SurveyService.EvaluationAnswersToCsvAsync() },
+            { "Attempts", await SurveyService.AttemptCountsToCsvAsync() },
+            { "Feedback", await SurveyService.ParticipantFeedbackToCsvAsync() },
+        };
+
+        foreach (var pair in CsvData)
+        {
+            Data += $"-- {pair.Key.ToUpper()}\n{pair.Value}\n";
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    private string Data = string.Empty;
+
+    private async Task Download(string table)
+    {
+        Data = CsvData[table];
+    }
+}

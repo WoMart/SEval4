@@ -32,7 +32,7 @@
                     <option value="" selected></option>
                     @foreach (var option in this.AgeGroups)
                     {
-                        <option value="@option.Id">@option.Text</option>
+                        <option value="@option.Text">@option.Text</option>
                     }
                 </InputSelect>
             </p>
@@ -46,7 +46,7 @@
                     <option value="" selected></option>
                     @foreach (var option in this.EducationGroups)
                     {
-                        <option value="@option.Id">@option.Text</option>
+                        <option value="@option.Text">@option.Text</option>
                     }
                 </InputSelect>
             </p>
@@ -64,7 +64,7 @@
                     <option value="" selected></option>
                     @foreach (var option in this.YearGroups)
                     {
-                        <option value="@option.Id">@option.Text</option>
+                        <option value="@option.Text">@option.Text</option>
                     }
                 </InputSelect>
             </p>
@@ -80,8 +80,8 @@
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.HasFormalTraining">
                     <option value="" selected></option>
-                    <option value="2">Yes</option>
-                    <option value="1">No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
                 </InputSelect>
             </p>
 
@@ -97,8 +97,8 @@
                 </label>
                 <InputSelect class="form-control" @bind-Value="ParticipantSurvey.HasInformalTraining">
                     <option value="" selected></option>
-                    <option value="2">Yes</option>
-                    <option value="1">No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
                 </InputSelect>
             </p>
 
@@ -119,7 +119,7 @@
                 <label>
                     <b>Indicate your confidence in detecting spear-phishing attacks.</b>
                 </label>
-                <InputSelect class="form-control" @bind-Value="ParticipantSurvey.HumanConfidence">
+                <InputSelect class="form-control" @bind-Value="ParticipantSurvey.SpearPhishingConfidence">
                     <option value="" selected></option>
                     @foreach (var opt in this.ConfidenceGroups)
                     {

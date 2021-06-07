@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SEval4.Data;
 
 namespace SEval4.Migrations
 {
     [DbContext(typeof(SEvalDBContext))]
-    partial class SEvalDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210605200831_RenameTimestampColumn")]
+    partial class RenameTimestampColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,13 +233,13 @@ namespace SEval4.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreateTime")
+                    b.Property<DateTime>("InsertTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ResponseId")
+                    b.Property<int>("ResponseValue")
                         .HasColumnType("int");
 
                     b.Property<int>("ScenarioId")
@@ -696,26 +698,11 @@ namespace SEval4.Migrations
                     b.Property<DateTime?>("AllocationTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("BaselineSurveyCompletionTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("EvaluationCompletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FeedbackCompletionTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsFinished")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ParticipantSurveyCompletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("PostgameSurveyCompletionTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<int?>("StudyGroupId")
                         .HasColumnType("int");
@@ -773,33 +760,26 @@ namespace SEval4.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AgeGroup")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("AgeGroup")
+                        .HasColumnType("int");
 
-                    b.Property<string>("EducationGroup")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("EducationGroup")
+                        .HasColumnType("int");
 
-                    b.Property<string>("HasFormalTraining")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("HasFormalTraining")
+                        .HasColumnType("int");
 
-                    b.Property<string>("HasInformalTraining")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("HasInformalTraining")
+                        .HasColumnType("int");
 
-                    b.Property<string>("PhishingConfidence")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("HumanConfidence")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ProfessionalExperience")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PhishingConfidence")
+                        .HasColumnType("int");
 
-                    b.Property<string>("SpearPhishingConfidence")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProfessionalExperience")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -1351,13 +1331,13 @@ namespace SEval4.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreateTime")
+                    b.Property<DateTime>("InsertTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ResponseId")
+                    b.Property<int>("ResponseValue")
                         .HasColumnType("int");
 
                     b.Property<int>("ScenarioId")

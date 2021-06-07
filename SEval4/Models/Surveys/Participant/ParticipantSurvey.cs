@@ -12,26 +12,26 @@ namespace SEval4.Models
         [Required]
         public Guid UserId { get; set; }
 
-        [Required, Range(1, 6)]
-        public int AgeGroup { get; set; }
+        [Required]
+        public string AgeGroup { get; set; }
 
-        [Required, Range(1, 6)]
-        public int EducationGroup { get; set; }
+        [Required]
+        public string EducationGroup { get; set; }
 
-        [Required, Range(1, 4)]
-        public int ProfessionalExperience { get; set; }
+        [Required]
+        public string ProfessionalExperience { get; set; }
 
-        [Required, Range(1, 2)]
-        public int HasFormalTraining { get; set; }
+        [Required]
+        public string HasFormalTraining { get; set; }
 
-        [Required, Range(1, 2)]
-        public int HasInformalTraining { get; set; }
+        [Required]
+        public string HasInformalTraining { get; set; }
 
-        [Required, Range(1, 5)]
-        public int PhishingConfidence { get; set; }
+        [Required]
+        public string PhishingConfidence { get; set; }
 
-        [Required, Range(1, 5)]
-        public int HumanConfidence { get; set; }
+        [Required]
+        public string SpearPhishingConfidence { get; set; }
     }
 
 }
