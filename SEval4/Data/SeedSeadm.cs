@@ -27,7 +27,7 @@ namespace SEval4.Data
             new SeadmState("S12"),
             new SeadmState("S13"),
             new SeadmState("S14"),
-            new SeadmState("S15"),
+            //new SeadmState("S15"),
             new SeadmState("S16"),
 
         };
