@@ -705,6 +705,102 @@ namespace SEval4.Data.Services
             return builder.ToString();
         }
 
+        public async Task<string> AttemptCountForFriedmannAsync()
+        {
+            var builder = new StringBuilder();
+
+            List<AttemptCount> attemptCounts =
+                await _context.AttemptCounts.ToListAsync();
+
+            List<string> columnNames = new()
+            {
+                nameof(AttemptCount.UserId),
+            };
+
+            string[] scenarioIds = attemptCounts
+                .Select(p => p.ScenarioId.ToString())
+                .Distinct()
+                .OrderBy(id => id)
+                .ToArray();
+
+            foreach (string scenarioId in scenarioIds)
+            {
+                columnNames.Add($"Scenario {scenarioId}");
+            }
+
+            AddCsvLine(builder, columnNames.ToArray());
+
+            foreach (var participantAttempts in attemptCounts
+                .GroupBy(ac => ac.UserId, ac => ac))
+            {
+
+                if (participantAttempts.Count() == scenarioIds.Length)
+                {
+                    List<string> values = new()
+                    {
+                        participantAttempts.FirstOrDefault()?.UserId.ToString(),
+                    };
+
+                    values.AddRange(participantAttempts
+                        .OrderBy(a => a.ScenarioId)
+                        .Select(a => a.Attempts.ToString())
+                        .ToList());
+
+                    AddCsvLine(builder, values.ToArray());
+                }
+            }
+
+            return builder.ToString();
+
+        }
+
+        public async Task<string> PostgameResultsForIndependentTTestAsync()
+        {
+            StringBuilder builder = new();
+
+            // Count correct postgame survey answers for each participant
+            var postgameResults =  _context.SurveyAnswers
+                .Where(sa => sa.SurveyName == "Postgame")
+                .AsEnumerable()
+                .GroupBy(sa => sa.UserId, sa => sa)
+                .Select(sa => new
+                {
+                    UserId = sa.First().UserId,
+                    CorrectAnswers = sa.Sum(a => Convert.ToInt32(a.IsCorrect)),
+                });
+
+            // Prepare participants who concluded the study
+            var participants = _context.Participants
+                .Where(p => p.IsFinished);
+
+            // Match participant's results with their study group
+            var correctAnswersCountPerGroup = postgameResults
+                .Join(participants,
+                    sa => sa.UserId,
+                    p => p.Id,
+                    (sa, p) => new string[]
+                    {
+                        p.Id.ToString(),
+                        p.StudyGroupId.ToString(),
+                        sa.CorrectAnswers.ToString(),
+                    })
+                .OrderBy(cnt => cnt[1]);
+
+            AddCsvLine(builder, new string[]
+            {
+                nameof(SurveyAnswer.UserId),
+                nameof(Participant.StudyGroupId),
+                "CorrectAnswersCount",
+            });
+
+            foreach (var answerCount in correctAnswersCountPerGroup)
+            {
+                AddCsvLine(builder, answerCount);
+            }
+
+            return builder.ToString();
+        }
+
         #endregion
 
         #region Private helpers

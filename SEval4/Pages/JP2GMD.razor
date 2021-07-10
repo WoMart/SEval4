@@ -7,17 +7,23 @@
 <button class="btn btn-primary" @onclick="@(async () => await Download("Survey"))">
     Survey
 </button>
-<button class="btn btn-primary" @onclick="@(async () => await Download("Participant"))">
+<button class="btn btn-primary" @onclick="@(async () => await Download("Scenarios"))">
     Base/Post
 </button>
-<button class="btn btn-primary" @onclick="@(async () => await Download("Survey"))">
+<button class="btn btn-primary" @onclick="@(async () => await Download("Evaluation"))">
     Evaluation
 </button>
-<button class="btn btn-primary" @onclick="@(async () => await Download("Scenarios"))">
+<button class="btn btn-primary" @onclick="@(async () => await Download("Attempts"))">
     Attempts
 </button>
-<button class="btn btn-primary" @onclick="@(async () => await Download("Evaluation"))">
+<button class="btn btn-primary" @onclick="@(async () => await Download("Feedback"))">
     Feedback
+</button>
+<button class="btn btn-primary" @onclick="@(async () => await Download("Friedmann"))">
+    Friedmann
+</button>
+<button class="btn btn-primary" @onclick="@(async () => await Download("IndepTTest"))">
+    Indep. T-test
 </button>
 @*<a href="jp2gmd" download="@Download" >Download</a>*@
 
@@ -40,6 +46,8 @@
             { "Evaluation", await SurveyService.EvaluationAnswersToCsvAsync() },
             { "Attempts", await SurveyService.AttemptCountsToCsvAsync() },
             { "Feedback", await SurveyService.ParticipantFeedbackToCsvAsync() },
+            { "Friedmann", await SurveyService.AttemptCountForFriedmannAsync() },
+            { "IndepTTest", await SurveyService.PostgameResultsForIndependentTTestAsync() },
         };
 
         foreach (var pair in CsvData)
