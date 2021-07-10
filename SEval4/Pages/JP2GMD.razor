@@ -25,6 +25,9 @@
 <button class="btn btn-primary" @onclick="@(async () => await Download("IndepTTest"))">
     Indep. T-test
 </button>
+<button class="btn btn-primary" @onclick="@(async () => await Download("Wilcoxon"))">
+    Wilcoxon signed rank
+</button>
 @*<a href="jp2gmd" download="@Download" >Download</a>*@
 
 
@@ -48,6 +51,7 @@
             { "Feedback", await SurveyService.ParticipantFeedbackToCsvAsync() },
             { "Friedmann", await SurveyService.AttemptCountForFriedmannAsync() },
             { "IndepTTest", await SurveyService.PostgameResultsForIndependentTTestAsync() },
+            { "Wilcoxon", await SurveyService.BaseAndPostResultsForWilcoxonAsync() },
         };
 
         foreach (var pair in CsvData)

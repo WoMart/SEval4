@@ -751,7 +751,6 @@ namespace SEval4.Data.Services
             }
 
             return builder.ToString();
-
         }
 
         public async Task<string> PostgameResultsForIndependentTTestAsync()
@@ -794,6 +793,52 @@ namespace SEval4.Data.Services
             });
 
             foreach (var answerCount in correctAnswersCountPerGroup)
+            {
+                AddCsvLine(builder, answerCount);
+            }
+
+            return builder.ToString();
+        }
+
+        public async Task<string> BaseAndPostResultsForWilcoxonAsync()
+        {
+            StringBuilder builder = new();
+
+            // Prepare participants who concluded the study
+            var participants = _context.Participants
+                .Where(p => p.IsFinished);
+
+            // Count correct postgame survey answers for each participant
+            var correctSurveyAnswers = (await _context.SurveyAnswers.ToListAsync())
+                .GroupBy(sa => sa.UserId)
+                .Select(sa => new
+                {
+                    UserId = sa.Key,
+                    Baseline = sa.Where(a => a.SurveyName == "Baseline")
+                        .Sum(a => Convert.ToInt32(a.IsCorrect)),
+                    Postgame = sa.Where(a => a.SurveyName == "Postgame")
+                        .Sum(a => Convert.ToInt32(a.IsCorrect)),
+                })
+                .Join(participants,
+                    csa => csa.UserId,
+                    p => p.Id,
+                    (csa, p) => new string[]
+                    {
+                        p.Id.ToString(),
+                        csa.Baseline.ToString(),
+                        csa.Postgame.ToString(),
+                    })
+                .OrderBy(csa => csa[1])
+                .ThenByDescending(csa => csa[2]);
+
+            AddCsvLine(builder, new string[]
+            {
+                nameof(SurveyAnswer.UserId),
+                "Baseline",
+                "Postgame",
+            });
+
+            foreach (var answerCount in correctSurveyAnswers)
             {
                 AddCsvLine(builder, answerCount);
             }
