@@ -121,7 +121,6 @@ namespace SEval4.Data.Services
             Guid? checkStudyGroupId = await GetUserAllocationGroupAsync(userId);
             if (checkStudyGroupId != null)
             {
-                // TODO: Something else
                 throw new Exception("Oh no you were allocated already!");
             }
 
@@ -871,14 +870,5 @@ namespace SEval4.Data.Services
 
         #endregion
 
-        #region For development
-
-        public async Task<List<ParticipantSurvey>> GetParticipantSurveysAsync()
-        {
-            return await _context.ParticipantSurveys
-                .ToListAsync();
-        }
-
-        #endregion
     }
 }
