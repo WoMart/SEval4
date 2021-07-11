@@ -10,7 +10,7 @@ using SEval4.Data;
 namespace SEval4.Migrations
 {
     [DbContext(typeof(SEvalDBContext))]
-    [Migration("20210710201625_Production")]
+    [Migration("20210711182950_Production")]
     partial class Production
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
