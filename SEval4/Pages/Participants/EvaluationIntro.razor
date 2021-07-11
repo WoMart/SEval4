@@ -8,68 +8,7 @@
         // SEADM
         case "SEADM":
             {
-                <div id="seadmIntro">
-
-                    <h1>Detection model group</h1>
-                    <hr />
-
-                    <div>
-                        <p>
-                            You have been allocated to the study group with feedback.
-                            In the next page you will be faced with one scenario at a time.
-                            Similarly to the previous scenarios, take as much time as you need to read and understand the scenario and the responses.
-                            If your answer was incorrect, the scenario will be displayed again later until the correct answer is selected.
-                            All scenarios must be answered correctly to finish the training.
-                        </p>
-
-                        <p>
-                            A detection model will be available to you as you evaulate the scenarios for the best response.
-                            The detection model is based on <b>Social Engineering Attack Detection Model (Ver. 2)</b> designed to help assess requests for social engineering attempts.
-                            It consists of several "yes or no" questions about the request or situation described in the scenario. 
-                            Below is the detection model you will use in the evaluation.
-                            You will also find the graphs representing the orginal detection model (<b>left</b>), and the the detection model adjusted for the scenario (<b>right</b>).
-                            Click on the image to see it in full size in a new tab. 
-                            In case the images do not display, you can find them following <a href="https://imgur.com/a/d9lzhzV">this link</a>.
-                         </p>
-                        
-                        <hr />
-
-                        <div style="width:30%; margin:auto;">
-                            <SeadmForm />
-                        </div>
-                        
-                        <p>
-                            Click <b>Yes</b> or <b>No</b> to answer the question displayed. <br /> 
-                            Click <b>Back</b> to return to the previous question and <b>Reset</b> to return to the first question.
-
-                        </p>
-                        
-                        <hr />
-                    </div>
-
-                    <div>
-                        <p>
-                            Note that the graph <b>on the right</b> represents the model used in this evaluation. <br />
-                            The model on the left is the original detection model and is displayed only to showcase the adjustements made.
-                        </p>
-
-                        @{ 
-                            string originalGraph = "/Images/seadmv2graph.png";
-                            string adjustedGraph = "/Images/adjustedseadmv2graph.png";
-
-                            <a href="@originalGraph" target="_blank">
-                                <img src="@originalGraph" style="width:49%; border:solid;" align="left" alt="Original SEADM model"/>
-                            </a>
-
-                            <a href="@adjustedGraph" target="_blank">
-                                <img src="@adjustedGraph" style="width:49%; border:solid;" align="right" alt="Adjusted SEADM model" />
-                            </a>
-
-                            // alternative: https://imgur.com/a/d9lzhzV
-                        }
-
-                    </div>
-                </div>
+                <SEADMInformation />
             }
             break;
 
@@ -150,16 +89,14 @@
             }
             else
             {
-                // TODO
-                //NavigationManager.NavigateTo("Introduction");
+                NavigationManager.NavigateTo("Introduction");
                 await JsRuntime.InvokeVoidAsync("alert", "DEBUG: No guid in the SessionStorage.");
             }
 
             if (!StudyGroupId.HasValue || !StudyGroups.Any(sg => sg.Identifier == StudyGroupId.Value))
             {
-                // TODO: Navigate to an error page explaining what's wrong
-                //NavigationManager.NavigateTo("InvalidStudy");
                 await JsRuntime.InvokeVoidAsync("alert", "DEBUG: Invalid study number.");
+                NavigationManager.NavigateTo("Error");
             }
         }
 

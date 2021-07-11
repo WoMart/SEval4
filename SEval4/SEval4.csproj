@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Test\**" />
+    <Content Remove="Pages\Test\**" />
+    <EmbeddedResource Remove="Pages\Test\**" />
+    <None Remove="Pages\Test\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Cloudcrate.AspNetCore.Blazor.Browser.Storage" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.5" />
@@ -17,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Pages\Test\" />
   </ItemGroup>
 
   <ItemGroup>
