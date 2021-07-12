@@ -757,9 +757,8 @@ namespace SEval4.Data.Services
             StringBuilder builder = new();
 
             // Count correct postgame survey answers for each participant
-            var postgameResults =  _context.SurveyAnswers
+            var postgameResults =  (await _context.SurveyAnswers.ToListAsync())
                 .Where(sa => sa.SurveyName == "Postgame")
-                .AsEnumerable()
                 .GroupBy(sa => sa.UserId, sa => sa)
                 .Select(sa => new
                 {
@@ -843,6 +842,19 @@ namespace SEval4.Data.Services
             }
 
             return builder.ToString();
+        }
+
+        public async Task<Dictionary<string, int>> GetNumberOfFinishedParticipantsAsync()
+        {
+            bool[] participants = await _context.Participants
+                .Select(p => p.IsFinished)
+                .ToArrayAsync();
+
+            return new Dictionary<string, int>
+            {
+                { "Total", participants.Length },
+                { "Finished", participants.Count(p => p) }
+            };
         }
 
         #endregion

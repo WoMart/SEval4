@@ -1,6 +1,19 @@
 ﻿@page "/jp2gmd"
 
-<h3>jp2gmd</h3>
+<h3>Sneaky way of getting data</h3>
+
+@if (ParticipantCounts.ContainsKey("Total") && ParticipantCounts.ContainsKey("Finished"))
+{
+    <p>
+        @ParticipantCounts["Total"] people have started the survey.<br />
+        @ParticipantCounts["Finished"] people have completed the survey.
+    </p>
+}
+else
+{
+    <p>Loading</p>
+}
+
 <button class="btn btn-primary" @onclick="@(async () => await Download("Participant"))">
     Participant
 </button>
@@ -37,10 +50,16 @@
 
 @code {
 
+    private Dictionary<string, int> ParticipantCounts = new();
+
+    private string Data = string.Empty;
+
     private Dictionary<string, string> CsvData = new();
 
     protected override async Task OnInitializedAsync()
     {
+        ParticipantCounts = await SurveyService.GetNumberOfFinishedParticipantsAsync();
+
         CsvData = new()
         {
             { "Participant", await SurveyService.ParticipantsToCsvAsync() },
@@ -61,8 +80,6 @@
 
         await base.OnInitializedAsync();
     }
-
-    private string Data = string.Empty;
 
     private async Task Download(string table)
     {
