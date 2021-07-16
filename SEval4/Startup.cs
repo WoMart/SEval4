@@ -42,19 +42,25 @@ namespace SEval4
 
             #region Database
 
+            string connStr = 
+#if DEBUG
+                "SevalDev"
+#else
+                "SevalProd"
+#endif
+                ;
             // Define database context
             services.AddDbContext<SEvalDBContext>(
                 context => context.UseSqlServer(
-                    Configuration.GetConnectionString("SevalDev")
-                    .Replace("%DataDirectory%", _dataDirectory)
+                    Configuration.GetConnectionString(connStr)
                     ));
 
             // Define Service to utilise the database
             services.AddScoped<SurveyService>();
 
-            #endregion
+#endregion
 
-            #region Client-side storage
+#region Client-side storage
 
             // Enables Cloudcrate's Local- and SessionStorage
             services.AddStorage();
@@ -64,7 +70,7 @@ namespace SEval4
                 sp => new ClientStorage(
                     sp.GetService<Microsoft.JSInterop.IJSRuntime>()));
 
-            #endregion
+#endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
