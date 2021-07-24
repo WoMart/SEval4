@@ -86,12 +86,12 @@ namespace SEval4.Data
             new SeadmQuestion
             {
                 StateId = "S6",
-                Text = "Is the requested action or information avaiable to the public?",
+                Text = "Is the requested action or information available to the public?",
             },
             new SeadmQuestion
             {
                 StateId = "S7",
-                Text = "Is this a pre-approved request that can be perofrmed to avoid a life-threatening emergency?",
+                Text = "Is this a pre-approved request that can be performed to avoid a life-threatening emergency?",
             },
             new SeadmQuestion
             {
