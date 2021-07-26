@@ -27,9 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Images\adjustedseadmv2graph.drawio" />
     <None Include="wwwroot\Images\adjustedseadmv2graph.png" />
-    <None Include="wwwroot\Images\seadmv2graph.drawio" />
     <None Include="wwwroot\Images\seadmv2graph.png" />
   </ItemGroup>
 
