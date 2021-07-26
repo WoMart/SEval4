@@ -71,7 +71,7 @@ namespace SEval4.Data
             : base(options)
         {
             // Apply any pending migrations
-            Database.Migrate();
+            //Database.Migrate();
 
             Debug.WriteLine($"Context created: {ContextId}.");
         }
